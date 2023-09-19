@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 6509361d320075d47b40959a282d8987
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _BaseMap: {instanceID: 0}
+  - _EmissionMap: {instanceID: 0}
+  - _OcclusionMap: {instanceID: 0}
+  - _OutlineZOffsetMaskTex: {instanceID: 0}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
