@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerState
 {
@@ -9,8 +10,9 @@ public class PlayerState
     protected Player player;
     string AnimationName;
     protected Rigidbody rb;
+    protected float X_Input, Y_Input;
 
-    public float StateTimer = 0f;
+    protected float StateTimer = 0f;
     protected bool isAnimationFinishTriggerCalled;
 
     public PlayerState(Player player, PlayerStateMachine stateMachine, string AnimationName)
@@ -18,6 +20,7 @@ public class PlayerState
         this.player = player;
         this.stateMachine = stateMachine;
         this.AnimationName = AnimationName;
+        rb = player.rb;
     }
     public virtual void Enter()
     {
@@ -25,13 +28,18 @@ public class PlayerState
         player.anim.SetBool(AnimationName, true);
         isAnimationFinishTriggerCalled = false;
     }
-    public virtual void Upadate()
+    public virtual void Update()
     {
         Debug.Log("Update State : " + AnimationName);
 
         StateTimer -= Time.deltaTime;
+
+        X_Input = Input.GetAxis("Horizontal");
+        Y_Input = Input.GetAxis("Vertical");
+
+
     }
-    public virtual void FixedUpadate()
+    public virtual void FixedUpdate()
     {
         Debug.Log("FixedUpdate State : " + AnimationName);
 

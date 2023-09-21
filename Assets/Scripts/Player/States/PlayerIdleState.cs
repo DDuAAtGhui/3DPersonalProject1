@@ -11,16 +11,19 @@ public class PlayerIdleState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
+        player.SetVelocityToZero();
     }
 
-    public override void FixedUpadate()
+    public override void FixedUpdate()
     {
-        base.FixedUpadate();
+        base.FixedUpdate();
     }
 
-    public override void Upadate()
+    public override void Update()
     {
-        base.Upadate();
+        base.Update();
+        if (X_Input != 0 || Y_Input != 0)
+            stateMachine.ChangeState(player.runState);
     }
     public override void Exit()
     {

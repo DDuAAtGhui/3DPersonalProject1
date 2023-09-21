@@ -8,15 +8,35 @@ public class PlayerRunState : PlayerGroundState
     {
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override void Enter()
     {
-        
+        base.Enter();
+    }
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        player.SetVelocityXZ(X_Input * player.MoveSpeed, Y_Input * player.MoveSpeed);
+
+        Vector3 movement = new Vector3(X_Input, 0, Y_Input).normalized * player.MoveSpeed * Time.fixedDeltaTime;
+        Quaternion targetRotation = Quaternion.LookRotation(movement);
+
+        if (movement != Vector3.zero)
+            player.transform.rotation = Quaternion.Lerp(player.transform.rotation, targetRotation, Time.fixedDeltaTime * 25);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
     {
-        
+        base.Update();
+
+
+
+
+        if (X_Input == 0 && Y_Input == 0)
+            stateMachine.ChangeState(player.idleState);
+    }
+    public override void Exit()
+    {
+        base.Exit();
     }
 }

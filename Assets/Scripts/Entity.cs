@@ -9,6 +9,8 @@ public class Entity : MonoBehaviour
     public Rigidbody rb { get; private set; }
     #endregion
     #region infos
+    [Header("Move Info")]
+    [SerializeField] public float MoveSpeed = 10f;
     #endregion
     protected virtual void Awake()
     {
@@ -28,5 +30,12 @@ public class Entity : MonoBehaviour
     protected virtual void FixedUpdate()
     {
 
+    }
+
+    public void SetVelocityToZero() => rb.velocity = Vector3.zero;
+    public void SetVelocityXZ(float X, float Z)
+    {
+        Vector3 normalizedVector = rb.velocity = new Vector3(X, rb.velocity.y, Z).normalized;
+        rb.velocity = normalizedVector * MoveSpeed;
     }
 }

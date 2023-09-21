@@ -8,15 +8,23 @@ public class PlayerWalkState : PlayerGroundState
     {
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override void Enter()
     {
-        
+        base.Enter();
+    }
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
     {
-        
+        base.Update();
     }
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+
 }
