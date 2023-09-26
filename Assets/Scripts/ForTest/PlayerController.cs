@@ -15,7 +15,23 @@ public class PlayerController : MonoBehaviour
     #region infos
     [Header("Move Info")]
     [SerializeField] float MoveSpeed = 5f;
-    [SerializeField] float SpeedMultiplierToRun = 2.5f;
+    [SerializeField] float SpeedMultiplierToWalk = 2.5f;
+    [SerializeField] float CurrentSpeed;
+    [SerializeField] float targetSpeed;
+
+    [Header("Rotate Info")]
+    //1프레임당 회전 감소율
+    [SerializeField] float rotationFactorPerFrame = 25f;
+
+    [Header("Input Info")]
+
+    [Header("Camera Info")]
+    [SerializeField][Tooltip("마우스 X축 현재속도")] float Mouse_X;
+    [SerializeField][Tooltip("마우스 Y축 현재속도")] float Mouse_Y;
+    [SerializeField] Vector2 look;
+    Vector3 vcamForward;
+    [SerializeField] float Mouse_sensitivity = 1f;
+
     #endregion
 
     //current : 월드 좌표계 중심으로 움직임
@@ -26,16 +42,9 @@ public class PlayerController : MonoBehaviour
     Vector3 localMovement;
     bool isMovementPressed;
 
-    Vector3 currentRunMovement;
-    bool isRunPressed;
+    Vector3 currentWalkMovement;
+    bool isWalkPressed;
 
-    [Header("Rotate Info")]
-    //1프레임당 회전 감소율
-    [SerializeField] float rotationFactoerPerFram = 2.5f;
-
-    [Header("Camera Info")]
-    [SerializeField] float Mouse_X, Mouse_Y;
-    [SerializeField] float Mouse_sensitivity = 1f;
     private void Awake()
     {
         CC = GetComponent<CharacterController>();
@@ -45,22 +54,22 @@ public class PlayerController : MonoBehaviour
         playerInput = new PlayerInputSystem();
 
         //인스턴스 생성
-        //started 콜백에 onMovementInput 메소드 등록
-        playerInput.CharacterControls.Move.started += onMovementInput;
+        //started 콜백에 onMoveAction 메소드 등록
+        playerInput.CharacterControls.Move.started += onMoveAction;
 
         //키가 떼졌는지를 감지하는 콜백
-        playerInput.CharacterControls.Move.canceled += onMovementInput;
+        playerInput.CharacterControls.Move.canceled += onMoveAction;
 
         //조이스틱은 스틱으로 컨트롤하니까 perform필수임
         //근데 키보드도 결국 4방향만 할거 아니면 perform하는게 좋음
         //performed은 0과 1사이의 값을 콜백받음
-        playerInput.CharacterControls.Move.performed += onMovementInput;
+        playerInput.CharacterControls.Move.performed += onMoveAction;
 
 
-        playerInput.CharacterControls.Run.started += onRun;
-        playerInput.CharacterControls.Run.canceled += onRun;
+        playerInput.CharacterControls.Walk.started += onWalkAction;
+        playerInput.CharacterControls.Walk.canceled += onWalkAction;
 
-        playerInput.CharacterControls.Look.performed += onLook;
+        playerInput.CharacterControls.Look.performed += onLookAction;
     }
 
     private void Start()
@@ -72,14 +81,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (isRunPressed)
-            CC.Move(localMovement * SpeedMultiplierToRun * MoveSpeed * Time.deltaTime);
+        if (isWalkPressed)
+            CC.Move(currentWalkMovement * SpeedMultiplierToWalk * MoveSpeed * Time.deltaTime);
 
         else
             CC.Move(currentMovement * MoveSpeed * Time.deltaTime);
 
-        handleRotation();
         handleAnimation();
+        handleRotation();
     }
     private void FixedUpdate()
     {
@@ -96,15 +105,16 @@ public class PlayerController : MonoBehaviour
         playerInput.CharacterControls.Disable();
     }
 
-    void onMovementInput(InputAction.CallbackContext context)
+    void onMoveAction(InputAction.CallbackContext context)
     {
         //WASD 입력값 저장
         currentMovementInput = context.ReadValue<Vector2>();
         currentMovement.x = currentMovementInput.x;
         currentMovement.z = currentMovementInput.y;
 
-        currentRunMovement.x = currentMovementInput.x * SpeedMultiplierToRun;
-        currentRunMovement.z = currentMovementInput.y * SpeedMultiplierToRun;
+        currentWalkMovement.x = currentMovementInput.x * SpeedMultiplierToWalk;
+        currentWalkMovement.z = currentMovementInput.y * SpeedMultiplierToWalk;
+
         //WASD중에 하나라도 눌렸는지 체크
         isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
 
@@ -112,24 +122,20 @@ public class PlayerController : MonoBehaviour
         localMovement = transform.TransformDirection(new Vector3(currentMovementInput.x, 0, currentMovementInput.y));
     }
 
-    void onRun(InputAction.CallbackContext context)
+    void onWalkAction(InputAction.CallbackContext context)
     {
-        isRunPressed = context.ReadValueAsButton();
+        isWalkPressed = context.ReadValueAsButton();
     }
 
-    void onLook(InputAction.CallbackContext context)
+    void onLookAction(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<Vector2>() * Mouse_sensitivity);
+        look = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        Mouse_X = context.ReadValue<Vector2>().x * Mouse_sensitivity;
+        Mouse_Y = context.ReadValue<Vector2>().y * Mouse_sensitivity;
     }
     void handleAnimation()
     {
-        float CurrentSpeed;
-
-        if (isRunPressed)
-            CurrentSpeed = Mathf.Abs(localMovement.x) * MoveSpeed * SpeedMultiplierToRun + Mathf.Abs(localMovement.z) * MoveSpeed * SpeedMultiplierToRun;
-
-        else
-            CurrentSpeed = Mathf.Abs(localMovement.x) * MoveSpeed + Mathf.Abs(localMovement.z) * MoveSpeed;
+        CurrentSpeed = CC.velocity.magnitude;
 
         anim.SetFloat("Speed", CurrentSpeed);
     }
@@ -137,17 +143,14 @@ public class PlayerController : MonoBehaviour
 
     void handleRotation()
     {
-        Vector3 position2LookAt = new Vector3(currentMovementInput.x, 0, currentMovementInput.y);
+        vcamForward = Vcam.transform.forward;
 
-        Quaternion currentRotation = transform.rotation;
 
-        //if (isMovementPressed)
-        //{
-        //    Quaternion targetRotation = Quaternion.LookRotation(position2LookAt);
-        //    transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactoerPerFram * Time.deltaTime);
+        if (isMovementPressed)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(currentMovement);
 
-        //}
-        //
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationFactorPerFrame * Time.deltaTime);
+        }
     }
-
 }
