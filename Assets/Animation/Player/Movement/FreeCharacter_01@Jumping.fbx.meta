@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d136ecc8b669889469ba6bef52b679a5
+guid: 7ef513f77cf20b54b95f53e128da04f7
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -17,14 +17,7 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
-      copied configuration does not match position in animation file:\n\t'Bip001
-      L Thigh' : position error = 110.178825 mm\n\t'Bip001 L Calf' : position error
-      = 443.588470 mm\n\t'Bip001 L Foot' : position error = 362.745361 mm\n\t'Bip001
-      L Toe0' : position error = 152.139282 mm\n\t'Bip001 R Thigh' : position error
-      = 110.178825 mm\n\t'Bip001 R Calf' : position error = 443.588409 mm\n\t'Bip001
-      R Foot' : position error = 362.745361 mm\n\t'Bip001 R Toe0' : position error
-      = 152.139267 mm\n"
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -40,25 +33,25 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Running
+      name: Jumping
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 0
-      lastFrame: 15
+      firstFrame: 15.800001
+      lastFrame: 39.2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
@@ -535,19 +528,19 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: FreeCharacter_01@Running(Clone)
+    - name: FreeCharacter_01@Jumping(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: -0.10286766, y: -0.043072857, z: -0.051563084, w: 0.9924234}
+      rotation: {x: 0.009249003, y: -0.36897922, z: -0.0036642498, w: 0.9293844}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001
-      parentName: FreeCharacter_01@Running(Clone)
-      position: {x: -0.0020170615, y: 0.8839512, z: -0.015325823}
-      rotation: {x: -0.46599478, y: 0.4547788, z: 0.5817664, w: 0.4874147}
+      parentName: FreeCharacter_01@Jumping(Clone)
+      position: {x: 0.0012912324, y: 0.9491579, z: -0.0069476683}
+      rotation: {x: -0.30518165, y: 0.65959775, z: 0.6378534, w: 0.25482938}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Pelvis
       parentName: Bip001
-      position: {x: -0.01077294, y: 0.09744987, z: 0.18654078}
+      position: {x: -0.00549646, y: 0.000000007450581, z: 0.09517438}
       rotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Spine

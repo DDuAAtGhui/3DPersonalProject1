@@ -53,6 +53,24 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": ""InvertVector2(invertX=false)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""882cdf46-27c4-49a8-b21f-1bf42bf09760"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CurosrVisible"",
+                    ""type"": ""Button"",
+                    ""id"": ""7a050235-dfbd-4f97-b574-47febf249d79"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -143,6 +161,28 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71f5a0d9-00a6-4daf-8acd-29747ababfe4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04d2d1ad-0b5d-48ae-921f-86fc2f23be2e"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CurosrVisible"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -154,6 +194,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_CharacterControls_Move = m_CharacterControls.FindAction("Move", throwIfNotFound: true);
         m_CharacterControls_Walk = m_CharacterControls.FindAction("Walk", throwIfNotFound: true);
         m_CharacterControls_Look = m_CharacterControls.FindAction("Look", throwIfNotFound: true);
+        m_CharacterControls_Jump = m_CharacterControls.FindAction("Jump", throwIfNotFound: true);
+        m_CharacterControls_CurosrVisible = m_CharacterControls.FindAction("CurosrVisible", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -218,6 +260,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Move;
     private readonly InputAction m_CharacterControls_Walk;
     private readonly InputAction m_CharacterControls_Look;
+    private readonly InputAction m_CharacterControls_Jump;
+    private readonly InputAction m_CharacterControls_CurosrVisible;
     public struct CharacterControlsActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -225,6 +269,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_CharacterControls_Move;
         public InputAction @Walk => m_Wrapper.m_CharacterControls_Walk;
         public InputAction @Look => m_Wrapper.m_CharacterControls_Look;
+        public InputAction @Jump => m_Wrapper.m_CharacterControls_Jump;
+        public InputAction @CurosrVisible => m_Wrapper.m_CharacterControls_CurosrVisible;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -243,6 +289,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @CurosrVisible.started += instance.OnCurosrVisible;
+            @CurosrVisible.performed += instance.OnCurosrVisible;
+            @CurosrVisible.canceled += instance.OnCurosrVisible;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -256,6 +308,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @CurosrVisible.started -= instance.OnCurosrVisible;
+            @CurosrVisible.performed -= instance.OnCurosrVisible;
+            @CurosrVisible.canceled -= instance.OnCurosrVisible;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -278,5 +336,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnCurosrVisible(InputAction.CallbackContext context);
     }
 }
