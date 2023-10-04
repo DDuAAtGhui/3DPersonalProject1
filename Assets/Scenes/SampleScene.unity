@@ -401,7 +401,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121253711}
-  m_LocalRotation: {x: 0.522716, y: 0.000000016399946, z: -0.000000010055653, w: 0.8525069}
+  m_LocalRotation: {x: 0.522716, y: -0.000000016399943, z: 0.000000010055651, w: 0.8525069}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6148,6 +6148,7 @@ MonoBehaviour:
   Log_StateOnCollisionEnter: 0
   Log_StateOnCollisionStay: 0
   Log_PlayerSpeed: 0
+  Log_isBusy: 0
 --- !u!43 &668952609
 Mesh:
   m_ObjectHideFlags: 0
@@ -9500,7 +9501,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221937996}
-  m_LocalRotation: {x: 0.5470777, y: -0.000000046112568, z: 0.00000003013702, w: 0.83708185}
+  m_LocalRotation: {x: 0.5470777, y: 0.000000046112568, z: -0.00000003013702, w: 0.83708185}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
