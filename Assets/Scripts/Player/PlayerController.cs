@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
     [Header("Camera Info")]
     [SerializeField] CinemachineFreeLook VCamera;
     Vector3 LookDir;
-    [SerializeField] Transform orientation;
+    [SerializeField] Transform orientation; //플레이어 원점
+
 
     [Header("Input Info")]
     public Vector2 _inputXZ; // WASD
