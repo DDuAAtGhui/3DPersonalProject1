@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - Eneym
+  - Enemy
   - 
   - 
   - 
@@ -27,8 +27,8 @@ TagManager:
   - 
   - Ground
   - Wall
-  - Water
-  - 
+  - PlayerHitBox
+  - Obstacle
   - 
   - 
   - 

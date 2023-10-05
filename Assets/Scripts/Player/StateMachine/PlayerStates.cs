@@ -43,6 +43,7 @@ public class PlayerStates
         anim = player.anim;
         #endregion
 
+        player.Can_moveHorizontally = true;
     }
 
     public virtual void Update()
@@ -52,6 +53,7 @@ public class PlayerStates
 
         StateTimer -= Time.deltaTime;
 
+        Move();
         ApplyGravity();
     }
 
@@ -71,6 +73,9 @@ public class PlayerStates
     {
         if (player.Log_StateExit)
             Debug.Log("Exit : " + this.GetType().Name);
+
+        StateTimer = 0;
+        player.Can_moveHorizontally = true;
     }
 
     public virtual void OnCollisionEnter(Collision collision)
@@ -100,7 +105,7 @@ public class PlayerStates
             targetSpeed = 0f;
 
         //플레이어 horizon 벨로시티
-        float currentHorizontalSpeed = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
+        float currentHorizontalVelocity = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
 
         //타겟스피드에서 벨로시티값이 벗어남 허용치
         float speedOffset = 0.1f;
@@ -108,10 +113,10 @@ public class PlayerStates
         float inputMagnitude = player.ApplyAnalogMovement ? player._inputXZ.magnitude : 1f;
 
         //횡 속도 기준치에서 벗어날경우 보간해서 보정
-        if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-            currentHorizontalSpeed > targetSpeed + speedOffset)
+        if (currentHorizontalVelocity < targetSpeed - speedOffset ||
+            currentHorizontalVelocity > targetSpeed + speedOffset)
         {
-            speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+            speed = Mathf.Lerp(currentHorizontalVelocity, targetSpeed * inputMagnitude,
                 Time.deltaTime * player.SpeedChangeRate);
 
             //소숫점 3자리 반올림
@@ -139,15 +144,22 @@ public class PlayerStates
             float rotation = Mathf.SmoothDampAngle(player.transform.eulerAngles.y, targetRotation,
                 ref rotationVelocity, player.RotatonSmoothTime);
 
-            //카메라 위치에 비례하여 회전
-            player.transform.rotation = Quaternion.Euler(0, rotation, 0);
+            //카메라 위치에 비례하여 회전, 공중에 뜬 상태면 회전 불가
+            if (player.isGrounded)
+                player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
         Vector3 targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
+        if (player.isGrounded && player.Can_moveHorizontally)
+            CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
+                + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
 
-        CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
-            + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+        //공중에 뜬 상태면 조작 불가
+        else if (!player.isGrounded || !player.Can_moveHorizontally)
+            CC.Move(new Vector3(CC.velocity.x, 0, CC.velocity.z).normalized * (speed * Time.deltaTime)
+                 + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+
 
         anim.SetFloat(player.animIDSpeed, animationBlend);
         anim.SetFloat(player.animIDMotionSpeed, inputMagnitude);
@@ -186,7 +198,7 @@ public class PlayerStates
 
             // 수직 벨로시티 무한히 감소하는 것 방지
             if (verticalVelocity < 0.0f)
-                verticalVelocity = -1.0f;
+                verticalVelocity = player.groundedGravity;
         }
         else
         {
@@ -202,6 +214,5 @@ public class PlayerStates
             verticalVelocity += player.Gravity * player.mass * Time.deltaTime;
         }
     }
-
     #endregion
 }

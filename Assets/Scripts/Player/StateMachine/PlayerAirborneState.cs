@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerAirborneState : PlayerStates
 {
+    protected float fallingTimer = 0f;
     public PlayerAirborneState(Player player, PlayerStateMachine stateMachine)
         : base(player, stateMachine)
     {
     }
-
     public override void Enter()
     {
         base.Enter();
@@ -17,8 +17,6 @@ public class PlayerAirborneState : PlayerStates
     {
         base.Update();
 
-        if (player.isGrounded)
-            stateMachine.ChangeState(player.idleState);
     }
     public override void Exit()
     {
