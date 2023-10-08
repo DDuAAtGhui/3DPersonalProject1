@@ -17,7 +17,8 @@ public class PlayerGroundedState : PlayerStates
     {
         base.Update();
 
-        if (speed <= 0.1f && player._inputXZ == Vector2.zero && GetType().Name != "PlayerIdleState")
+
+        if (speed <= 0.1f && player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.idleState);
 
         if (speed > 0.1f && speed <= 7f)
@@ -33,14 +34,13 @@ public class PlayerGroundedState : PlayerStates
         //제자리 점프시 Ground체크가 살짝 되기때문에 그때 유지된 Veloicty값에 영향받아 움직이는거 방지
         if (player._inputJump && !player.isBusy && player._inputXZ == Vector2.zero)
         {
-            player.HorizontalStop();
+            player.horizontalStop = true;
             stateMachine.ChangeState(player.jumpState);
         }
 
         //움직이다가 점프
         if (player._inputJump && !player.isBusy && player._inputXZ != Vector2.zero)
             stateMachine.ChangeState(player.jumpState);
-
     }
     public override void FixedUpdate()
     {

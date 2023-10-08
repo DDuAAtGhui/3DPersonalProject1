@@ -27,6 +27,10 @@ public class PlayerStates
     protected float jumpTimeoutDelta;
     protected float fallTimeoutDelta;
     #endregion
+
+    #region 관리용 변수
+    public bool isAnimEnd;
+    #endregion
     public PlayerStates(Player player, PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
@@ -43,13 +47,17 @@ public class PlayerStates
         anim = player.anim;
         #endregion
 
-        player.Can_moveHorizontally = true;
+        player.Can_InputHorizontally = true;
+        isAnimEnd = false;
     }
 
     public virtual void Update()
     {
         if (player.Log_StateUpdate)
             Debug.Log("Update : " + this.GetType().Name);
+
+        if (player.Log_isAnimEnd)
+            Debug.Log("isAnimEnd : " + isAnimEnd);
 
         StateTimer -= Time.deltaTime;
 
@@ -75,7 +83,7 @@ public class PlayerStates
             Debug.Log("Exit : " + this.GetType().Name);
 
         StateTimer = 0;
-        player.Can_moveHorizontally = true;
+        player.Can_InputHorizontally = true;
     }
 
     public virtual void OnCollisionEnter(Collision collision)
@@ -99,10 +107,13 @@ public class PlayerStates
         if (walkSpeed != player.moveSpeed / 2.0f)
             walkSpeed = player.moveSpeed / 2.0f;
 
-        float targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+        if (player._inputXZ == Vector2.zero || player.horizontalStop)
+            player.moveSpeed = 0;
 
-        if (player._inputXZ == Vector2.zero)
-            targetSpeed = 0f;
+        else
+            player.moveSpeed = player.temp_moveSpeed;
+
+        float targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
 
         //플레이어 horizon 벨로시티
         float currentHorizontalVelocity = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
@@ -145,18 +156,18 @@ public class PlayerStates
                 ref rotationVelocity, player.RotatonSmoothTime);
 
             //카메라 위치에 비례하여 회전, 공중에 뜬 상태면 회전 불가
-            if (player.isGrounded)
+            if (player.Can_InputHorizontally)
                 player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
         Vector3 targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
-        if (player.isGrounded && player.Can_moveHorizontally)
+        if (player.isGrounded && player.Can_InputHorizontally)
             CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
                 + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
 
         //공중에 뜬 상태면 조작 불가
-        else if (!player.isGrounded || !player.Can_moveHorizontally)
+        else if (!player.isGrounded || !player.Can_InputHorizontally)
             CC.Move(new Vector3(CC.velocity.x, 0, CC.velocity.z).normalized * (speed * Time.deltaTime)
                  + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
 

@@ -2,7 +2,6 @@
 public class PlayerStateMachine
 {
     public PlayerStates currentState { get; private set; }
-
     public void Initialize(PlayerStates currentState)
     {
         this.currentState = currentState;

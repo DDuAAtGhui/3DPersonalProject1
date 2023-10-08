@@ -26,9 +26,11 @@ public class Player : Entity
 
     [Header("Move Info")]
     [SerializeField] public float moveSpeed = 3f;
+    [HideInInspector] public float temp_moveSpeed;
     [SerializeField] public float RotatonSmoothTime = 0.12f;
     [SerializeField] public float SpeedChangeRate = 10.0f;
-    [HideInInspector] public bool Can_moveHorizontally = true;
+    [HideInInspector] public bool Can_InputHorizontally = true;
+    [HideInInspector] public bool horizontalStop;
 
     //[HideInInspector] public float walkSpeed;
 
@@ -77,6 +79,7 @@ public class Player : Entity
     [HideInInspector] public int animIDFreeFall;
     [HideInInspector] public int animIDLanding_Roll;
     [HideInInspector] public int animIDLanding_Small;
+    [HideInInspector] public int animIDLanding_Hard;
     [HideInInspector] public int animIDGrounded;
     #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -133,6 +136,8 @@ public class Player : Entity
         base.Start();
         stateMachine.Initialize(idleState);
         animParameterToHash();
+
+        temp_moveSpeed = moveSpeed;
     }
 
     public override void Update()
@@ -251,6 +256,7 @@ public class Player : Entity
         animIDFreeFall = Animator.StringToHash("Falling");
         animIDLanding_Small = Animator.StringToHash("Landing_Small");
         animIDLanding_Roll = Animator.StringToHash("Landing_Roll");
+        animIDLanding_Hard = Animator.StringToHash("Landing_Hard");
         animIDGrounded = Animator.StringToHash("Grounded");
     }
     private void CalculateDigitalInputToAnalog()
@@ -271,6 +277,7 @@ public class Player : Entity
             Debug.Log("플레이어가 여유로운 상태");
         isBusy = false;
     }
+    public void isAnimEnd() => stateMachine.currentState.isAnimEnd = true;
     #endregion
 
     #region 인풋액션 - 액션들
@@ -293,11 +300,6 @@ public class Player : Entity
     void onCurosrVisible(InputAction.CallbackContext context)
     {
         _inputCurosrVisible = context.ReadValueAsButton();
-    }
-
-    public void HorizontalStop()
-    {
-        CC.Move(new Vector3(0, transform.position.y, 0));
     }
 
     private void OnDrawGizmos()
@@ -337,6 +339,7 @@ public class Player : Entity
     [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리 표시")] public bool Log_distanceToObstacle = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물의 이름을 표시")] public bool Log_WhatisRayHitObstacle = true;
+    [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
     //[Space(10)]
     //[Header("MEMBER DEBUG OPTION")]
     //public bool DEBUG_targetRotaion = false;
