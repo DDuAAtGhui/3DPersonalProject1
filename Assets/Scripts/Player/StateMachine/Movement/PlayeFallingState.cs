@@ -14,7 +14,6 @@ public class PlayeFallingState : PlayerAirborneState
     {
         base.Enter();
         anim.SetBool(player.animIDFreeFall, true);
-
         StateTimer = player.CoyoteTime;
 
         //경사로에서 잘 붙어있을 수 있게 GroundedGravity를 크게 설정해놨기 때문에
@@ -32,6 +31,7 @@ public class PlayeFallingState : PlayerAirborneState
 
         if (player.isGrounded)
             stateMachine.ChangeState(player.landingState);
+
 
         else if (player._inputJump && StateTimer >= 0f)
             stateMachine.ChangeState(player.jumpState);

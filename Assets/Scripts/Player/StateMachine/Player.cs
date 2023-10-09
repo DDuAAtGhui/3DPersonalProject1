@@ -29,7 +29,8 @@ public class Player : Entity
     [HideInInspector] public float temp_moveSpeed;
     [SerializeField] public float RotatonSmoothTime = 0.12f;
     [SerializeField] public float SpeedChangeRate = 10.0f;
-    [HideInInspector] public bool Can_InputHorizontally = true;
+    [HideInInspector] public bool Can_MoveHorizontally = true;
+    [HideInInspector] public bool Can_Rotate = true;
     [HideInInspector] public bool horizontalStop;
 
     //[HideInInspector] public float walkSpeed;
@@ -81,6 +82,7 @@ public class Player : Entity
     [HideInInspector] public int animIDLanding_Small;
     [HideInInspector] public int animIDLanding_Hard;
     [HideInInspector] public int animIDGrounded;
+    [HideInInspector] public int animIDParkour_StepUp;
     #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
     public PlayerStateMachine stateMachine { get; private set; }
@@ -90,6 +92,7 @@ public class Player : Entity
     public PlayerJumpState jumpState { get; private set; }
     public PlayeFallingState fallingState { get; private set; }
     public PlayerLandingState landingState { get; private set; }
+    public PlayerStepUpState stepUpState { get; private set; }
     private void Awake()
     {
 
@@ -101,6 +104,7 @@ public class Player : Entity
         jumpState = new PlayerJumpState(this, stateMachine);
         fallingState = new PlayeFallingState(this, stateMachine);
         landingState = new PlayerLandingState(this, stateMachine);
+        stepUpState = new PlayerStepUpState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -258,6 +262,7 @@ public class Player : Entity
         animIDLanding_Roll = Animator.StringToHash("Landing_Roll");
         animIDLanding_Hard = Animator.StringToHash("Landing_Hard");
         animIDGrounded = Animator.StringToHash("Grounded");
+        animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
     }
     private void CalculateDigitalInputToAnalog()
     {
@@ -277,6 +282,7 @@ public class Player : Entity
             Debug.Log("플레이어가 여유로운 상태");
         isBusy = false;
     }
+    public void Stop() => horizontalStop = true;
     public void isAnimEnd() => stateMachine.currentState.isAnimEnd = true;
     #endregion
 

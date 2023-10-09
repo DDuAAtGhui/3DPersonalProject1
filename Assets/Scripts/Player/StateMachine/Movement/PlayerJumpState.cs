@@ -31,7 +31,7 @@ public class PlayerJumpState : PlayerAirborneState
         base.Update();
 
         if (StateTimer > 0)
-            player.Can_InputHorizontally = false;
+            player.Can_MoveHorizontally = false;
 
 
         if (!player.isGrounded && verticalVelocity <= 0f && !player.isBusy)
@@ -44,7 +44,6 @@ public class PlayerJumpState : PlayerAirborneState
     {
         //점프키 누르고 있을때 콜백에서 계속 값 읽어들여서 반복점프 되는거 방지
         player._inputJump = false;
-        player.horizontalStop = false;
         anim.SetBool(player.animIDJump, false);
         base.Exit();
     }

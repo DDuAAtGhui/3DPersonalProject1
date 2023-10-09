@@ -13,7 +13,14 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
     }
+    public override void Update()
+    {
+        base.Update();
 
+        if (player.distanceToObstacle <= 0.5f && player._inputJump)
+            stateMachine.ChangeState(player.stepUpState);
+
+    }
     public override void Exit()
     {
         base.Exit();
@@ -24,8 +31,4 @@ public class PlayerIdleState : PlayerGroundedState
         base.OnCollisionEnter(collision);
     }
 
-    public override void Update()
-    {
-        base.Update();
-    }
 }

@@ -34,7 +34,7 @@ public class PlayerGroundedState : PlayerStates
         //제자리 점프시 Ground체크가 살짝 되기때문에 그때 유지된 Veloicty값에 영향받아 움직이는거 방지
         if (player._inputJump && !player.isBusy && player._inputXZ == Vector2.zero)
         {
-            player.horizontalStop = true;
+            player.Stop();
             stateMachine.ChangeState(player.jumpState);
         }
 
@@ -54,6 +54,7 @@ public class PlayerGroundedState : PlayerStates
     public override void Exit()
     {
         base.Exit();
+        player.horizontalStop = false;
     }
     public override void OnCollisionEnter(Collision collision)
     {
