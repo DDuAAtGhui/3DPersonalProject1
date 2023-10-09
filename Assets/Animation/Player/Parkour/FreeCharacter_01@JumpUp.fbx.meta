@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a93b0da9c29a1194fa84f9b185313de6
+guid: e5d90107da552e54f811bb9735dc2619
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,25 +33,25 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walking
+      name: Running Jump
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 0
-      lastFrame: 31
+      firstFrame: 18.8
+      lastFrame: 65
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
-      loopBlendPositionY: 1
-      loopBlendPositionXZ: 1
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
@@ -528,19 +528,19 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: FreeCharacter_01@Walking(Clone)
+    - name: FreeCharacter_01@JumpUp(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: -0.036919072, y: 0.024433134, z: -0.034208134, w: 0.9984337}
+      rotation: {x: -0.06308004, y: 0.12101025, z: -0.032115076, w: 0.9901243}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001
-      parentName: FreeCharacter_01@Walking(Clone)
-      position: {x: 0.0040140073, y: 0.99261785, z: -0.003171791}
-      rotation: {x: 0.5249363, y: -0.46603754, z: -0.5076361, w: -0.4995563}
+      parentName: FreeCharacter_01@JumpUp(Clone)
+      position: {x: 0.008290727, y: 0.9079143, z: -0.019789394}
+      rotation: {x: -0.5537653, y: 0.40326738, z: 0.46637815, w: 0.55965245}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Pelvis
       parentName: Bip001
-      position: {x: -0.003304048, y: 0.069851115, z: 0.057211854}
+      position: {x: -0.008564236, y: 0.047087267, z: 0.14829479}
       rotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Spine
@@ -809,7 +809,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 1
     hasExtraRoot: 1
-    skeletonHasParents: 0
+    skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3

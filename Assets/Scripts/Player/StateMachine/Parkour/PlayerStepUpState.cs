@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStepUpState : PlayerStates
+public class PlayerStepUpState : PlayerParkourState
 {
     public PlayerStepUpState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -12,6 +12,7 @@ public class PlayerStepUpState : PlayerStates
     {
         base.Enter();
         anim.SetBool(player.animIDParkour_StepUp, true);
+        player.SetControllable(false);
     }
     public override void Update()
     {
@@ -19,7 +20,8 @@ public class PlayerStepUpState : PlayerStates
     }
     public override void Exit()
     {
-        anim.SetBool(player.animIDParkour_StepUp, false);
         base.Exit();
+        anim.SetBool(player.animIDParkour_StepUp, false);
+        player.SetControllable(true);
     }
 }

@@ -17,7 +17,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Update();
 
-        if (player.distanceToObstacle <= 0.5f && player._inputJump)
+        if (player.heightToObstacle > 0 && player.heightToObstacle <= 0.6f && player._inputJump)
             stateMachine.ChangeState(player.stepUpState);
 
     }

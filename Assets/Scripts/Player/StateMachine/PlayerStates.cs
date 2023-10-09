@@ -22,7 +22,7 @@ public class PlayerStates
     protected float verticalVelocity;
     protected float terminalVelocity = 160f; //종말속도
     protected float rotationVelocity;
-
+    protected Vector3 targetDirection;
     [Header("Jump And Gravity")]
     protected float jumpTimeoutDelta;
     protected float fallTimeoutDelta;
@@ -63,6 +63,7 @@ public class PlayerStates
 
         Move();
         ApplyGravity();
+        whenLostControl();
     }
 
     public virtual void FixedUpdate()
@@ -97,6 +98,10 @@ public class PlayerStates
         if (player.Log_StateOnCollisionStay)
             Debug.Log("Collision Stay Class : " + this.GetType().Name);
     }
+    //public virtual void OnAnimatorMove()
+    //{
+    //    Debug.Log("AA");
+    //}
 
     #region 메소드들
     protected void Move()
@@ -106,6 +111,9 @@ public class PlayerStates
 
         if (walkSpeed != player.moveSpeed / 2.0f)
             walkSpeed = player.moveSpeed / 2.0f;
+
+        if (!player.isControlable)
+            return;
 
         if (player._inputXZ == Vector2.zero || player.horizontalStop)
             player.moveSpeed = 0;
@@ -160,7 +168,7 @@ public class PlayerStates
                 player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
-        Vector3 targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
+        targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
         if (player.isGrounded && player.Can_MoveHorizontally)
             CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
@@ -202,6 +210,10 @@ public class PlayerStates
     }
     protected void ApplyGravity()
     {
+        if (!player.isControlable)
+            return;
+
+
         if (player.isGrounded)
         {
             // 낙하 타이머 초기화
@@ -223,6 +235,13 @@ public class PlayerStates
         if (verticalVelocity < terminalVelocity)
         {
             verticalVelocity += player.Gravity * player.mass * Time.deltaTime;
+        }
+    }
+    protected void whenLostControl()
+    {
+        if (!player.isControlable)
+        {
+            //변수 초기해줘야 하는거 있으면 해주기
         }
     }
     #endregion

@@ -5,5 +5,7 @@ using UnityEngine;
 public struct  ParkourAbleObstacleHitData
 {
     public bool forwardHitFound;
+    public bool heightHitFound;
     public RaycastHit forwardHit;
+    public RaycastHit heighHit;
 }
