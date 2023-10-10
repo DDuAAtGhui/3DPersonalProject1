@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +19,18 @@ public class Player : Entity
     [HideInInspector] public bool PlayFallingAnimation = false;
 
     [Header("Parkour Info")]
-    [HideInInspector] ParkourAbleObstacleHitData hitData;
+    public List<ParkourAction> parkourActions;
+    [HideInInspector] public ParkourAbleObstacleHitData hitData;
     [SerializeField] Vector3 forwardRayOffset = new Vector3(0, 0.25f, 0); //맨 처음 플레이어 앞으로 Ray 발사
     [SerializeField] float forwardRayLength = 0.5f;
     [SerializeField] float heightRayLength = 100f;
+    [SerializeField] float backSideRayLength = 100f;
     [SerializeField] public LayerMask ParkourAble;
     [HideInInspector][SerializeField] public float distanceToObstacle;
     [HideInInspector][SerializeField] public float heightToObstacle;
+    [HideInInspector][SerializeField] public float thicknessOfObstacle;
+    [HideInInspector][SerializeField] public int parkourActionIndex = 0;
+
 
     [Header("Move Info")]
     [SerializeField] public float moveSpeed = 3f;
@@ -85,8 +91,9 @@ public class Player : Entity
     [HideInInspector] public int animIDLanding_Small;
     [HideInInspector] public int animIDLanding_Hard;
     [HideInInspector] public int animIDGrounded;
-    [HideInInspector] public int animIDParkour_StepUp;
     [HideInInspector] public int animIDParkouring;
+    [HideInInspector] public int animIDParkour_StepUp;
+    [HideInInspector] public int animIDParkour_JumpUp;
     #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
     public PlayerStateMachine stateMachine { get; private set; }
@@ -96,7 +103,9 @@ public class Player : Entity
     public PlayerJumpState jumpState { get; private set; }
     public PlayeFallingState fallingState { get; private set; }
     public PlayerLandingState landingState { get; private set; }
+    public PlayerParkourState parkourState { get; private set; }
     public PlayerStepUpState stepUpState { get; private set; }
+    public PlayerJumpUpState jumpUpState { get; private set; }
     private void Awake()
     {
 
@@ -108,7 +117,9 @@ public class Player : Entity
         jumpState = new PlayerJumpState(this, stateMachine);
         fallingState = new PlayeFallingState(this, stateMachine);
         landingState = new PlayerLandingState(this, stateMachine);
+        parkourState = new PlayerParkourState(this, stateMachine);
         stepUpState = new PlayerStepUpState(this, stateMachine);
+        jumpUpState = new PlayerJumpUpState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -168,6 +179,7 @@ public class Player : Entity
         if (Log_WhatisRayHitObstacle)
             if (hitData.forwardHit.transform != null)
                 Debug.Log($"감지된 장애물 이름 : {hitData.forwardHit.transform.name}");
+
     }
 
     public override void FixedUpdate()
@@ -246,7 +258,10 @@ public class Player : Entity
             Debug.DrawRay(hitData.forwardHit.point + Vector3.up * heightRayLength, Vector3.down * heightRayLength, hitData.heightHitFound ? Color.green : Color.gray);
 
             distanceToObstacle = hitData.forwardHit.distance;
-            heightToObstacle = heightRayLength - hitData.heighHit.distance;
+            heightToObstacle = hitData.heighHit.point.y - transform.position.y; ////플레이어 - 장애물간의 정확한 높이차
+
+            //두께 검사
+            Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * backSideRayLength, Color.red);
         }
 
         else
@@ -282,9 +297,50 @@ public class Player : Entity
         animIDLanding_Roll = Animator.StringToHash("Landing_Roll");
         animIDLanding_Hard = Animator.StringToHash("Landing_Hard");
         animIDGrounded = Animator.StringToHash("Grounded");
-        animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
         animIDParkouring = Animator.StringToHash("Parkouring"); //파쿠르 중일땐 기본 애니메이션에서 탈출하는 용도로 사용
+        animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
+        animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
     }
+
+    //상태머신 활용형
+    public void PerformParkourState(params PlayerStates[] parkourStates)
+    {
+        parkourActionIndex = 0;
+
+
+        parkourActions.ForEach(action =>
+        {
+            if (Log_ParkourPossibleState)
+                Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
+
+            //인덱스 초과 예외처리
+            //State를 여러개 갖고있고, 여러개 변수를 넣을때 인덱스로 따로 구분 안해주면 ture 걸릴때 무조건 첫번째로 파라미터에 넣은 액션이 나오기떄문에
+            //params로 무한히 받고 배열 인덱스로 따로 관리해줌
+            if (parkourActionIndex < parkourStates.Length && action.CheckIfPossible())
+            {
+                //타겟매칭 활성화 하면 실행
+                if (action.EnableTargetMatching)
+                    MatchTarget(action);
+
+                stateMachine.ChangeState(parkourStates[parkourActionIndex]);
+
+            }
+            parkourActionIndex++;
+        });
+    }
+    void MatchTarget(ParkourAction action)
+    {
+        Debug.Log("MatchTarget Excuted");
+
+        //이미 타겟 매칭중이면 쓸데없는 실행 X
+        if (anim.isMatchingTarget)
+            return;
+
+        //MatchTargetWeightMask : y축만 매칭하고싶으니까 0,1,0
+        anim.MatchTarget(action.MatchPosition, transform.rotation, action.MatchBodyPart,
+            new MatchTargetWeightMask(Vector3.up, 0), action.MatchStartTime, action.MatchTargetTime);
+    }
+
     private void CalculateDigitalInputToAnalog()
     {
         GetAxisStyle_inputXZ =
@@ -304,7 +360,6 @@ public class Player : Entity
         isBusy = false;
     }
     public void isHorizontalStop(bool horizontalStop) => this.horizontalStop = horizontalStop;
-
     public void SetControllable(bool isControlable)
     {
         //파쿠르할때 콜라이더 걸려서 안올라가는거 방지
@@ -372,7 +427,9 @@ public class Player : Entity
     [Tooltip("플레이어의 벨로시티")] public bool Log_PlayerCurrentVelocity = true;
     [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리와 높이 표시")] public bool Log_RayInfo_Obstacle_DistanceAndHeight = true;
+    [Tooltip("플레이어 앞에 있는 장애물의 두께 표시")] public bool Log_ObstacleThickness = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물의 이름을 표시")] public bool Log_WhatisRayHitObstacle = true;
+    [Tooltip("파쿠르 스크립터블 오브젝트 에셋 참 거짓 상태 정보")] public bool Log_ParkourPossibleState = true;
     [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
     //[Space(10)]
     //[Header("MEMBER DEBUG OPTION")]
@@ -408,4 +465,43 @@ public class Player : Entity
     //}
 
     #endregion
+
+    //#region 연습용
+    //bool inAction;
+    //IEnumerator DoParkourAction(ParkourAction action)
+    //{
+    //    inAction = true;
+    //    SetControllable(false);
+
+    //    anim.CrossFade(action.AniName, 0.2f);
+    //    yield return null;
+
+    //    var animState = anim.GetNextAnimatorStateInfo(0);
+
+    //    if (!animState.IsName(action.AniName))
+    //        Debug.LogError("The parkour animation is wrong!");
+
+    //    yield return new WaitForSeconds(animState.length);
+
+    //    float timer = 0f;
+
+    //    while (timer <= animState.length)
+    //    {
+    //        timer += Time.deltaTime;
+
+    //        // 파쿠르동안 오브젝트 방향으로 회전하기
+    //        if (action.RotateToObstacle)
+    //            Quaternion.RotateTowards(transform.rotation, action.TargetRotation, 회전보정속도);
+
+    //        if (action.EnableTargetMatching)
+    //            MatchTarget(action);
+
+    //        yield return null;
+    //    }
+
+    //    SetControllable(true);
+    //    inAction = false;
+    //}
+
+    //#endregion
 }
