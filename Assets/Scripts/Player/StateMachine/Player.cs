@@ -202,13 +202,6 @@ public class Player : Entity
     {
         stateMachine.currentState.OnCollisionStay(collision);
     }
-
-
-    //루트모션 덮어씌우기 가능
-    //public void OnAnimatorMove()
-    //{
-    //    stateMachine.currentState.OnAnimatorMove();
-    //}
     #endregion
 
     #region 메소드들
@@ -260,8 +253,8 @@ public class Player : Entity
             distanceToObstacle = hitData.forwardHit.distance;
             heightToObstacle = hitData.heighHit.point.y - transform.position.y; ////플레이어 - 장애물간의 정확한 높이차
 
-            //두께 검사
-            Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * backSideRayLength, Color.red);
+            ////두께 검사
+            //Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * backSideRayLength, Color.red);
         }
 
         else
@@ -320,25 +313,36 @@ public class Player : Entity
             {
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
+                {
                     MatchTarget(action);
 
+                    Debug.Log($"==================\n" +
+                        $"MatchTarget Info\n" +
+                        $"anim.targetPosition : {anim.targetPosition} \n " +
+                        $"action.MatchPosition : {action.MatchPosition} \n " +
+                        $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
+                        $"action.MatchStartTime : {action.MatchStartTime}\n" +
+                        $"action.MatchTargetTime : {action.MatchTargetTime}");
+                }
                 stateMachine.ChangeState(parkourStates[parkourActionIndex]);
 
             }
             parkourActionIndex++;
         });
     }
-    void MatchTarget(ParkourAction action)
+    public void MatchTarget(ParkourAction action)
     {
-        Debug.Log("MatchTarget Excuted");
-
         //이미 타겟 매칭중이면 쓸데없는 실행 X
         if (anim.isMatchingTarget)
             return;
 
         //MatchTargetWeightMask : y축만 매칭하고싶으니까 0,1,0
-        anim.MatchTarget(action.MatchPosition, transform.rotation, action.MatchBodyPart,
+        anim.MatchTarget(action.MatchPosition + Vector3.up * 5, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(Vector3.up, 0), action.MatchStartTime, action.MatchTargetTime);
+
+
+
+
     }
 
     private void CalculateDigitalInputToAnalog()
@@ -350,12 +354,12 @@ public class Player : Entity
     public IEnumerator nowBusy(float seconds)
     {
         isBusy = true;
-        if (isBusy)
+        if (isBusy && Log_isBusy)
             Debug.Log("플레이어가 바쁜상태");
 
         yield return new WaitForSeconds(seconds);
 
-        if (isBusy)
+        if (!isBusy && Log_isBusy)
             Debug.Log("플레이어가 여유로운 상태");
         isBusy = false;
     }

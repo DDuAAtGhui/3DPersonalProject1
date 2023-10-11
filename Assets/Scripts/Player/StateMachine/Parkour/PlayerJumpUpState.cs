@@ -11,8 +11,11 @@ public class PlayerJumpUpState : PlayerParkourState
     public override void Enter()
     {
         base.Enter();
+
         anim.SetBool(player.animIDParkour_JumpUp, true);
         player.SetControllable(false);
+
+        //anim.CrossFade("JumpUp", 0.1f);
     }
     public override void Update()
     {

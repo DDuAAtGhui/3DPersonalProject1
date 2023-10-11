@@ -30,7 +30,7 @@ public class PlayerParkourState : PlayerStates
     public override void Exit()
     {
         base.Exit();
-        anim.applyRootMotion = false;
+        //anim.applyRootMotion = false;
         anim.SetBool(player.animIDParkouring, false);
     }
 
