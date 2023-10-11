@@ -166,7 +166,9 @@ public class Player : Entity
         CursorContorl();
         CameraControl();
         GroundCheck();
-        ParkourAbleObstacleCheck();
+
+        if (!inParkourAction)
+            ParkourAbleObstacleCheck();
         CalculateDigitalInputToAnalog();
         //DebugLog();
 
@@ -262,7 +264,6 @@ public class Player : Entity
             distanceToObstacle = 0;
             heightToObstacle = 0;
         }
-
         return hitData;
     }
 
@@ -296,8 +297,10 @@ public class Player : Entity
     }
 
     //상태머신 활용형
+    [HideInInspector] public bool inParkourAction;
     public void PerformParkourState(params PlayerStates[] parkourStates)
     {
+        inParkourAction = true;
         parkourActionIndex = 0;
 
 
@@ -314,7 +317,8 @@ public class Player : Entity
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
                 {
-                    MatchTarget(action);
+                    if (action.EnableTargetMatching)
+                        PerformMatchTarget(action);
 
                     Debug.Log($"==================\n" +
                         $"MatchTarget Info\n" +
@@ -325,26 +329,24 @@ public class Player : Entity
                         $"action.MatchTargetTime : {action.MatchTargetTime}");
                 }
                 stateMachine.ChangeState(parkourStates[parkourActionIndex]);
-
             }
             parkourActionIndex++;
         });
+        inParkourAction = false;
     }
-    public void MatchTarget(ParkourAction action)
+    public void PerformMatchTarget(ParkourAction action)
     {
         //이미 타겟 매칭중이면 쓸데없는 실행 X
-        if (anim.isMatchingTarget)
-            return;
+        //if (anim.isMatchingTarget)
+        //{
+        //    Debug.Log("타겟매칭 적용중");
+        //    return;
+        //}
 
         //MatchTargetWeightMask : y축만 매칭하고싶으니까 0,1,0
-        anim.MatchTarget(action.MatchPosition + Vector3.up * 5, transform.rotation, action.MatchBodyPart,
-            new MatchTargetWeightMask(Vector3.up, 0), action.MatchStartTime, action.MatchTargetTime);
-
-
-
-
+        anim.MatchTarget(action.MatchPosition, transform.rotation, action.MatchBodyPart,
+            new MatchTargetWeightMask(Vector3.zero, 0), action.MatchStartTime, action.MatchTargetTime);
     }
-
     private void CalculateDigitalInputToAnalog()
     {
         GetAxisStyle_inputXZ =

@@ -73,8 +73,11 @@ public class ParkourAction : ScriptableObject
             TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
 
         if (enableTargetMatching)
+            // MatchPosition = hitData.heighHit.point;
             MatchPosition = hitData.heighHit.point;
 
+
+        Debug.Log("MatchPosition :" + MatchPosition);
         return true;
     }
 

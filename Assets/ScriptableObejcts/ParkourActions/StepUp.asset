@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animName: StepUp
   minHeight: 0.3
-  maxHeight: 0.71
+  maxHeight: 0.75
   minDistance: 0
   maxDistance: 0
   rotateToObstacle: 0
   rotateMultiflier: 100
   enableTargetMatching: 1
   matchBodyPart: 3
-  matchStartTime: 0.4
-  matchTargetTime: 0.48
+  matchStartTime: 0.55
+  matchTargetTime: 0.9
