@@ -17,7 +17,7 @@ MonoBehaviour:
   maxHeight: 0.75
   minDistance: 0
   maxDistance: 0
-  rotateToObstacle: 0
+  rotateToObstacle: 1
   rotateMultiflier: 100
   enableTargetMatching: 1
   matchBodyPart: 3

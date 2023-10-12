@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class Player : Entity
 {
@@ -29,8 +30,9 @@ public class Player : Entity
     [HideInInspector][SerializeField] public float distanceToObstacle;
     [HideInInspector][SerializeField] public float heightToObstacle;
     [HideInInspector][SerializeField] public float thicknessOfObstacle;
-    [HideInInspector][SerializeField] public int parkourActionIndex = 0;
-
+    [HideInInspector] public bool inParkourAction;
+    [HideInInspector] public int currentParkourActionIndex;
+    [HideInInspector] int parkourActionIndex = 0;
 
     [Header("Move Info")]
     [SerializeField] public float moveSpeed = 3f;
@@ -94,6 +96,7 @@ public class Player : Entity
     [HideInInspector] public int animIDParkouring;
     [HideInInspector] public int animIDParkour_StepUp;
     [HideInInspector] public int animIDParkour_JumpUp;
+    [HideInInspector] public int animIDParkour_CrouchToClimbUp;
     #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
     public PlayerStateMachine stateMachine { get; private set; }
@@ -106,6 +109,7 @@ public class Player : Entity
     public PlayerParkourState parkourState { get; private set; }
     public PlayerStepUpState stepUpState { get; private set; }
     public PlayerJumpUpState jumpUpState { get; private set; }
+    public PlayerCrouchToClimbUpState crouchToClimbUpState { get; private set; }
     private void Awake()
     {
 
@@ -120,6 +124,7 @@ public class Player : Entity
         parkourState = new PlayerParkourState(this, stateMachine);
         stepUpState = new PlayerStepUpState(this, stateMachine);
         jumpUpState = new PlayerJumpUpState(this, stateMachine);
+        crouchToClimbUpState = new PlayerCrouchToClimbUpState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -182,6 +187,10 @@ public class Player : Entity
             if (hitData.forwardHit.transform != null)
                 Debug.Log($"감지된 장애물 이름 : {hitData.forwardHit.transform.name}");
 
+
+        //foreach (var action in parkourActions)
+        //    PerformMatchTarget(action);
+        //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
     }
 
     public override void FixedUpdate()
@@ -236,6 +245,8 @@ public class Player : Entity
 
         anim.SetBool(animIDGrounded, isGrounded);
     }
+
+    [HideInInspector] Vector3 heightHitPointSnapShot;
     public ParkourAbleObstacleHitData ParkourAbleObstacleCheck()
     {
         hitData = new ParkourAbleObstacleHitData();
@@ -254,7 +265,7 @@ public class Player : Entity
 
             distanceToObstacle = hitData.forwardHit.distance;
             heightToObstacle = hitData.heighHit.point.y - transform.position.y; ////플레이어 - 장애물간의 정확한 높이차
-
+            heightHitPointSnapShot = hitData.heighHit.point;
             ////두께 검사
             //Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * backSideRayLength, Color.red);
         }
@@ -294,10 +305,10 @@ public class Player : Entity
         animIDParkouring = Animator.StringToHash("Parkouring"); //파쿠르 중일땐 기본 애니메이션에서 탈출하는 용도로 사용
         animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
         animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
+        animIDParkour_CrouchToClimbUp = Animator.StringToHash("Parkour_CrouchToClimbUp");
     }
 
     //상태머신 활용형
-    [HideInInspector] public bool inParkourAction;
     public void PerformParkourState(params PlayerStates[] parkourStates)
     {
         inParkourAction = true;
@@ -306,6 +317,8 @@ public class Player : Entity
 
         parkourActions.ForEach(action =>
         {
+
+
             if (Log_ParkourPossibleState)
                 Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
 
@@ -314,19 +327,21 @@ public class Player : Entity
             //params로 무한히 받고 배열 인덱스로 따로 관리해줌
             if (parkourActionIndex < parkourStates.Length && action.CheckIfPossible())
             {
+                currentParkourActionIndex = parkourActionIndex;
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
                 {
-                    if (action.EnableTargetMatching)
-                        PerformMatchTarget(action);
+                    //anim.transform.position = new Vector3(transform.position.x,
+                    //transform.position.y + 0.3701868f, transform.position.z);
+                    StartCoroutine(PerformMatchTargetCor(action));
 
-                    Debug.Log($"==================\n" +
-                        $"MatchTarget Info\n" +
-                        $"anim.targetPosition : {anim.targetPosition} \n " +
-                        $"action.MatchPosition : {action.MatchPosition} \n " +
-                        $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
-                        $"action.MatchStartTime : {action.MatchStartTime}\n" +
-                        $"action.MatchTargetTime : {action.MatchTargetTime}");
+                    //Debug.Log($"==================\n" +
+                    //$"MatchTarget Info\n" +
+                    //$"anim.targetPosition : {anim.targetPosition} \n " +
+                    //$"action.MatchPosition : {action.MatchPosition} \n " +
+                    //$"action.MatchBodyPart : {action.MatchBodyPart}\n" +
+                    //$"action.MatchStartTime : {action.MatchStartTime}\n" +
+                    //$"action.MatchTargetTime : {action.MatchTargetTime}");
                 }
                 stateMachine.ChangeState(parkourStates[parkourActionIndex]);
             }
@@ -334,18 +349,46 @@ public class Player : Entity
         });
         inParkourAction = false;
     }
-    public void PerformMatchTarget(ParkourAction action)
-    {
-        //이미 타겟 매칭중이면 쓸데없는 실행 X
-        //if (anim.isMatchingTarget)
-        //{
-        //    Debug.Log("타겟매칭 적용중");
-        //    return;
-        //}
 
-        //MatchTargetWeightMask : y축만 매칭하고싶으니까 0,1,0
-        anim.MatchTarget(action.MatchPosition, transform.rotation, action.MatchBodyPart,
-            new MatchTargetWeightMask(Vector3.zero, 0), action.MatchStartTime, action.MatchTargetTime);
+
+    //Stop 반드시 걸어줄것. 현재 ParkourStates에서 Stop 걸어줌
+    IEnumerator PerformMatchTargetCor(ParkourAction action)
+    {
+        while (true)
+        {
+            //1프레임 단위로 끊어줌
+            //MatchTarget보다 반드시 위에
+            yield return null;
+
+            MatchTarget(action);
+        }
+    }
+
+    public void MatchTarget(ParkourAction action)
+    {
+        Debug.Log("anim.isMatchingTarget : " + anim.isMatchingTarget);
+
+        //이미 타겟 매칭중이면 쓸데없는 실행 X
+        if (anim.isMatchingTarget)
+        {
+            Debug.Log("타겟매칭 적용중");
+            return;
+        }
+
+        switch (action.MatchBodyPart)
+        {
+            case AvatarTarget.LeftFoot:
+            case AvatarTarget.RightFoot:
+                anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
+                new MatchTargetWeightMask(new Vector3(0, 1, 0), 0), action.MatchStartTime, action.MatchTargetTime);
+                break;
+
+            //MatchTargetWeightMask : y,z축만 매칭하고싶으니까 0,1,1
+            default:
+                anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
+                new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), action.MatchStartTime, action.MatchTargetTime);
+                break;
+        }
     }
     private void CalculateDigitalInputToAnalog()
     {
@@ -472,42 +515,43 @@ public class Player : Entity
 
     #endregion
 
-    //#region 연습용
-    //bool inAction;
-    //IEnumerator DoParkourAction(ParkourAction action)
-    //{
-    //    inAction = true;
-    //    SetControllable(false);
+    #region 연습용
+    IEnumerator DoParkourAction(ParkourAction action)
+    {
+        inParkourAction = true;
+        anim.applyRootMotion = true;
+        SetControllable(false);
 
-    //    anim.CrossFade(action.AniName, 0.2f);
-    //    yield return null;
 
-    //    var animState = anim.GetNextAnimatorStateInfo(0);
+        anim.CrossFade(action.AniName, 0.2f);
+        yield return null;
 
-    //    if (!animState.IsName(action.AniName))
-    //        Debug.LogError("The parkour animation is wrong!");
+        var animState = anim.GetNextAnimatorStateInfo(0);
 
-    //    yield return new WaitForSeconds(animState.length);
+        if (!animState.IsName(action.AniName))
+            Debug.LogError("The parkour animation is wrong!");
 
-    //    float timer = 0f;
+        yield return new WaitForSeconds(animState.length);
 
-    //    while (timer <= animState.length)
-    //    {
-    //        timer += Time.deltaTime;
+        float timer = 0f;
 
-    //        // 파쿠르동안 오브젝트 방향으로 회전하기
-    //        if (action.RotateToObstacle)
-    //            Quaternion.RotateTowards(transform.rotation, action.TargetRotation, 회전보정속도);
+        while (timer <= animState.length)
+        {
+            timer += Time.deltaTime;
 
-    //        if (action.EnableTargetMatching)
-    //            MatchTarget(action);
+            // 파쿠르동안 오브젝트 방향으로 회전하기
+            if (action.RotateToObstacle)
+                Quaternion.RotateTowards(transform.rotation, action.TargetRotation, action.RotateMultiflier * Time.deltaTime);
 
-    //        yield return null;
-    //    }
+            if (action.EnableTargetMatching)
+                MatchTarget(action);
 
-    //    SetControllable(true);
-    //    inAction = false;
-    //}
+            yield return null;
+        }
 
-    //#endregion
+        anim.applyRootMotion = false;
+        SetControllable(true);
+        inParkourAction = false;
+    }
+    #endregion
 }

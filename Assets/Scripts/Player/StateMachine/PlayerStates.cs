@@ -30,19 +30,19 @@ public class PlayerStates
 
     #region 관리용 변수
     public bool isAnimEnd;
-    protected ParkourAction parkourAction;
     #endregion
     public PlayerStates(Player player, PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
         this.player = player;
-        parkourAction = player.parkourActions[player.parkourActionIndex];
     }
 
     public virtual void Enter()
     {
         if (player.Log_StateEnter)
             Debug.Log("Enter : " + this.GetType().Name);
+
+
 
         #region 플레이어쪽 멤버 연결
         CC = player.CC;

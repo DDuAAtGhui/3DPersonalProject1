@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: CrouchToClimbUp
   m_EditorClassIdentifier: 
   animName: CrouchToClimbUp
-  minHeight: 1.44
+  minHeight: 1.45
   maxHeight: 4.15
   minDistance: 0
   maxDistance: 0
-  rotateToObstacle: 0
+  rotateToObstacle: 1
   rotateMultiflier: 150
   enableTargetMatching: 1
-  matchBodyPart: 0
-  matchStartTime: 0
-  matchTargetTime: 0
+  matchBodyPart: 5
+  matchStartTime: 0.06
+  matchTargetTime: 0.24

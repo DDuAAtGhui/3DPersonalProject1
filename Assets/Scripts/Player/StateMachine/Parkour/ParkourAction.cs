@@ -66,18 +66,15 @@ public class ParkourAction : ScriptableObject
         float height = player.heightToObstacle;
         float distance = player.distanceToObstacle;
 
-        if (height < minHeight || height > maxHeight)
+        if (!hitData.heightHitFound || height < minHeight || height > maxHeight)
             return false;
 
         if (rotateToObstacle)
             TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
 
         if (enableTargetMatching)
-            // MatchPosition = hitData.heighHit.point;
             MatchPosition = hitData.heighHit.point;
 
-
-        Debug.Log("MatchPosition :" + MatchPosition);
         return true;
     }
 
