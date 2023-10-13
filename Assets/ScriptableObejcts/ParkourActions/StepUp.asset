@@ -15,11 +15,14 @@ MonoBehaviour:
   animName: StepUp
   minHeight: 0.3
   maxHeight: 0.75
-  minDistance: 0
-  maxDistance: 0
+  minDistance: 0.3
+  maxDistance: 1
+  obstacleTag: Obstacle_Standable
   rotateToObstacle: 1
   rotateMultiflier: 100
   enableTargetMatching: 1
   matchBodyPart: 3
   matchStartTime: 0.55
   matchTargetTime: 0.9
+  matchPositionWeight: {x: 0, y: 1, z: 0}
+  matchPositionRotateWeight: 0

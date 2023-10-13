@@ -17,8 +17,9 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Update();
 
-        if (player._inputJump)
-            player.PerformParkourState(player.stepUpState, player.jumpUpState, player.crouchToClimbUpState);
+        if (player._inputJump && player.hitData.forwardHitFound)
+            player.PerformParkourState(player.stepUpState, player.jumpUpState, player.crouchToClimbUpState,
+                player.jumpOver_RollState);
 
     }
     public override void Exit()

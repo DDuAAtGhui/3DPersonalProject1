@@ -15,7 +15,10 @@ public class PlayerParkourState : PlayerStates
     {
         base.Enter();
         anim.applyRootMotion = true;
+        player.inParkourAction = true;
+
         anim.SetBool(player.animIDParkouring, true);
+        player.SetControllable(false);
 
         parkourAction = player.parkourActions[player.currentParkourActionIndex];
     }
@@ -36,7 +39,9 @@ public class PlayerParkourState : PlayerStates
     public override void Exit()
     {
         base.Exit();
-        //anim.applyRootMotion = false;
+        player.inParkourAction = false;
+
+        player.SetControllable(true);
         anim.SetBool(player.animIDParkouring, false);
         player.StopAllCoroutines();
     }

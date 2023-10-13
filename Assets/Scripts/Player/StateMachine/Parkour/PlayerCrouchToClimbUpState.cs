@@ -12,8 +12,6 @@ public class PlayerCrouchToClimbUpState : PlayerParkourState
     {
         base.Enter();
         anim.SetBool(player.animIDParkour_CrouchToClimbUp, true);
-        player.SetControllable(false);
-      //  player.StartCoroutine("DoParkourAction", player.parkourActions[2]);
     }
     public override void Update()
     {
@@ -23,8 +21,6 @@ public class PlayerCrouchToClimbUpState : PlayerParkourState
     {
         base.Exit();
         anim.SetBool(player.animIDParkour_CrouchToClimbUp, false);
-        player.SetControllable(true);
-
     }
 
 }

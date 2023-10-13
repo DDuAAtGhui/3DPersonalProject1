@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 765fa762c8d5d73418b257dbea8f76d4, type: 3}
-  m_Name: CrouchToClimbUp
+  m_Name: JumpOver_Roll
   m_EditorClassIdentifier: 
-  animName: CrouchToClimbUp
-  minHeight: 1.45
-  maxHeight: 4.15
+  animName: JumpOver_Roll
+  minHeight: 0.3
+  maxHeight: 1.5
   minDistance: 0.3
   maxDistance: 1
-  obstacleTag: Obstacle_Standable
+  obstacleTag: Obstacle_Fence
   rotateToObstacle: 1
   postActionDelay: 0
   rotateMultiflier: 150
   enableTargetMatching: 1
-  matchBodyPart: 5
+  matchBodyPart: 4
   matchStartTime: 0.06
-  matchTargetTime: 0.24
-  matchPositionWeight: {x: 0, y: 1.2, z: 0.7}
+  matchTargetTime: 0.17
+  matchPositionWeight: {x: 0, y: 1, z: 1}
   matchPositionRotateWeight: 0
-  forwardMovement: 0

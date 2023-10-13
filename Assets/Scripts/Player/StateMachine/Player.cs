@@ -97,6 +97,7 @@ public class Player : Entity
     [HideInInspector] public int animIDParkour_StepUp;
     [HideInInspector] public int animIDParkour_JumpUp;
     [HideInInspector] public int animIDParkour_CrouchToClimbUp;
+    [HideInInspector] public int animIDParkour_JumpOver_Roll;
     #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
     public PlayerStateMachine stateMachine { get; private set; }
@@ -110,6 +111,7 @@ public class Player : Entity
     public PlayerStepUpState stepUpState { get; private set; }
     public PlayerJumpUpState jumpUpState { get; private set; }
     public PlayerCrouchToClimbUpState crouchToClimbUpState { get; private set; }
+    public PlayerJumpOver_RollState jumpOver_RollState { get; private set; }
     private void Awake()
     {
 
@@ -125,6 +127,7 @@ public class Player : Entity
         stepUpState = new PlayerStepUpState(this, stateMachine);
         jumpUpState = new PlayerJumpUpState(this, stateMachine);
         crouchToClimbUpState = new PlayerCrouchToClimbUpState(this, stateMachine);
+        jumpOver_RollState = new PlayerJumpOver_RollState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -188,6 +191,7 @@ public class Player : Entity
                 Debug.Log($"감지된 장애물 이름 : {hitData.forwardHit.transform.name}");
 
 
+
         //foreach (var action in parkourActions)
         //    PerformMatchTarget(action);
         //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
@@ -246,7 +250,7 @@ public class Player : Entity
         anim.SetBool(animIDGrounded, isGrounded);
     }
 
-    [HideInInspector] Vector3 heightHitPointSnapShot;
+    [HideInInspector] Vector3 heightHitPointSnapShot; //가장 최근의 장애물 높이 기억 (초기화X)
     public ParkourAbleObstacleHitData ParkourAbleObstacleCheck()
     {
         hitData = new ParkourAbleObstacleHitData();
@@ -306,12 +310,12 @@ public class Player : Entity
         animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
         animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
         animIDParkour_CrouchToClimbUp = Animator.StringToHash("Parkour_CrouchToClimbUp");
+        animIDParkour_JumpOver_Roll = Animator.StringToHash("Parkour_JumpOver_Roll");
     }
 
     //상태머신 활용형
     public void PerformParkourState(params PlayerStates[] parkourStates)
     {
-        inParkourAction = true;
         parkourActionIndex = 0;
 
 
@@ -331,31 +335,35 @@ public class Player : Entity
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
                 {
-                    //anim.transform.position = new Vector3(transform.position.x,
-                    //transform.position.y + 0.3701868f, transform.position.z);
                     StartCoroutine(PerformMatchTargetCor(action));
 
-                    //Debug.Log($"==================\n" +
-                    //$"MatchTarget Info\n" +
-                    //$"anim.targetPosition : {anim.targetPosition} \n " +
-                    //$"action.MatchPosition : {action.MatchPosition} \n " +
-                    //$"action.MatchBodyPart : {action.MatchBodyPart}\n" +
-                    //$"action.MatchStartTime : {action.MatchStartTime}\n" +
-                    //$"action.MatchTargetTime : {action.MatchTargetTime}");
+                    #region 디버그
+                    if (Log_TargetMatch)
+                    {
+                        Debug.Log($"==================\n" +
+                         $"MatchTarget Info\n" +
+                         $"anim.targetPosition : {anim.targetPosition} \n " +
+                         $"action.MatchPosition : {action.MatchPosition} \n " +
+                         $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
+                         $"action.MatchStartTime : {action.MatchStartTime}\n" +
+                         $"action.MatchTargetTime : {action.MatchTargetTime}");
+                    }
+                    #endregion
                 }
                 stateMachine.ChangeState(parkourStates[parkourActionIndex]);
             }
             parkourActionIndex++;
         });
-        inParkourAction = false;
     }
 
 
     //Stop 반드시 걸어줄것. 현재 ParkourStates에서 Stop 걸어줌
     IEnumerator PerformMatchTargetCor(ParkourAction action)
     {
-        while (true)
+        float timer = 0f;
+        while (timer <= anim.GetNextAnimatorStateInfo(0).length)
         {
+            timer += Time.deltaTime;
             //1프레임 단위로 끊어줌
             //MatchTarget보다 반드시 위에
             yield return null;
@@ -374,21 +382,10 @@ public class Player : Entity
             Debug.Log("타겟매칭 적용중");
             return;
         }
+        anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
+        new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
+        action.MatchStartTime, action.MatchTargetTime);
 
-        switch (action.MatchBodyPart)
-        {
-            case AvatarTarget.LeftFoot:
-            case AvatarTarget.RightFoot:
-                anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
-                new MatchTargetWeightMask(new Vector3(0, 1, 0), 0), action.MatchStartTime, action.MatchTargetTime);
-                break;
-
-            //MatchTargetWeightMask : y,z축만 매칭하고싶으니까 0,1,1
-            default:
-                anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
-                new MatchTargetWeightMask(new Vector3(0, 1, 1), 0), action.MatchStartTime, action.MatchTargetTime);
-                break;
-        }
     }
     private void CalculateDigitalInputToAnalog()
     {
@@ -476,43 +473,11 @@ public class Player : Entity
     [Tooltip("플레이어의 벨로시티")] public bool Log_PlayerCurrentVelocity = true;
     [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리와 높이 표시")] public bool Log_RayInfo_Obstacle_DistanceAndHeight = true;
+    [Tooltip("파쿠르 타겟매칭 정보 표시")] public bool Log_TargetMatch = true;
     [Tooltip("플레이어 앞에 있는 장애물의 두께 표시")] public bool Log_ObstacleThickness = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물의 이름을 표시")] public bool Log_WhatisRayHitObstacle = true;
     [Tooltip("파쿠르 스크립터블 오브젝트 에셋 참 거짓 상태 정보")] public bool Log_ParkourPossibleState = true;
     [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
-    //[Space(10)]
-    //[Header("MEMBER DEBUG OPTION")]
-    //public bool DEBUG_targetRotaion = false;
-    //public bool DEBUG_VCamera_transform_eulerAngles_y = false;
-    //public bool DEBUG_inputDirection = false;
-    //public bool DEBUG_LookDir = false;
-    //public bool DEBUG_rotationVelocity = false;
-    //public bool DEBUG_GetAxisStyle_inputXZ = false;
-    //public bool DEBUG_verticalVelocity = false;
-    //void DebugLog()
-    //{
-    //    if (DEBUG_targetRotaion)
-    //        Debug.Log("targetRotation : " + targetRotation);
-
-    //    if (DEBUG_VCamera_transform_eulerAngles_y)
-    //        Debug.Log("VCamera.transform.eulerAngles.y : " + VCamera.transform.eulerAngles.y);
-
-    //    if (DEBUG_inputDirection)
-    //        Debug.Log("inputDirection : " + inputDirection);
-
-    //    if (DEBUG_LookDir)
-    //        Debug.Log("LookDir : " + LookDir);
-
-    //    if (DEBUG_rotationVelocity)
-    //        Debug.Log("rotationVelocity : " + rotationVelocity);
-
-    //    if (DEBUG_GetAxisStyle_inputXZ)
-    //        Debug.Log("GetAxisStyle_inputXZ : " + GetAxisStyle_inputXZ);
-
-    //    if (DEBUG_verticalVelocity)
-    //        Debug.Log("verticalVelocity : " + verticalVelocity);
-    //}
-
     #endregion
 
     #region 연습용
@@ -531,23 +496,22 @@ public class Player : Entity
         if (!animState.IsName(action.AniName))
             Debug.LogError("The parkour animation is wrong!");
 
-        yield return new WaitForSeconds(animState.length);
-
         float timer = 0f;
-
         while (timer <= animState.length)
         {
             timer += Time.deltaTime;
 
             // 파쿠르동안 오브젝트 방향으로 회전하기
             if (action.RotateToObstacle)
-                Quaternion.RotateTowards(transform.rotation, action.TargetRotation, action.RotateMultiflier * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.TargetRotation, action.RotateMultiflier * Time.deltaTime);
 
             if (action.EnableTargetMatching)
                 MatchTarget(action);
 
             yield return null;
         }
+
+        yield return new WaitForSeconds(action.PostActionDelay);
 
         anim.applyRootMotion = false;
         SetControllable(true);

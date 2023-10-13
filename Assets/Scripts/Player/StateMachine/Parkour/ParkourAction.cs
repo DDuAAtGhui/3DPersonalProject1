@@ -12,11 +12,13 @@ public class ParkourAction : ScriptableObject
     [SerializeField] float maxHeight;
     [SerializeField] float minDistance;
     [SerializeField] float maxDistance;
+    [SerializeField] string obstacleTag;
     #endregion
-
     #region 파쿠르 시 장애물 방향으로 회전
     [Header("Rotate To Obstacle")]
     [SerializeField] bool rotateToObstacle;
+    //애니메이션 여러개 섞어서 사용 할 때 컨트롤 복귀에 딜레이 걸거면 사용
+    [SerializeField] float postActionDelay;
     [SerializeField] float rotateMultiflier = 150f;
     public Quaternion TargetRotation { get; set; }
     #endregion
@@ -32,9 +34,16 @@ public class ParkourAction : ScriptableObject
 
     //애니메이션 클립에서 매칭하려는 신체부위로 착지하려는 시간(퍼센트)
     [SerializeField] float matchTargetTime;
+    //x,y,z 축의 가중치. 1이면 매칭포지션을 그 축에 정확히 맞추는것
+    [SerializeField] Vector3 matchPositionWeight = new Vector3(0, 1, 0);
+    [SerializeField] float matchPositionRotateWeight = 0f;
+
 
     //매칭이 일어날 좌표
     public Vector3 MatchPosition { get; set; }
+
+    [Header("Optional")]
+    [SerializeField] float forwardMovement = 0f;
     #endregion
 
     //기본 사용
@@ -42,7 +51,9 @@ public class ParkourAction : ScriptableObject
     {
         float height = hitdata.heighHit.point.y - playerTransform.position.y;
 
-
+        //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
+        if (!string.IsNullOrEmpty(obstacleTag) && hitdata.forwardHit.transform.tag != obstacleTag)
+            return false;
 
         if (height < minHeight || height > maxHeight)
             return false;
@@ -66,7 +77,12 @@ public class ParkourAction : ScriptableObject
         float height = player.heightToObstacle;
         float distance = player.distanceToObstacle;
 
-        if (!hitData.heightHitFound || height < minHeight || height > maxHeight)
+        //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
+        if (!string.IsNullOrEmpty(obstacleTag) && hitData.forwardHit.transform.tag != obstacleTag)
+            return false;
+
+        //거리와 높이 체크
+        if (!hitData.heightHitFound || height < minHeight || height > maxHeight || distance < minDistance || distance > maxDistance)
             return false;
 
         if (rotateToObstacle)
@@ -80,9 +96,14 @@ public class ParkourAction : ScriptableObject
 
     public string AniName => animName;
     public bool RotateToObstacle => rotateToObstacle;
+    public float PostActionDelay => postActionDelay;
     public float RotateMultiflier => rotateMultiflier;
     public bool EnableTargetMatching => enableTargetMatching;
     public AvatarTarget MatchBodyPart => matchBodyPart;
     public float MatchStartTime => matchStartTime;
     public float MatchTargetTime => matchTargetTime;
+    public Vector3 MatchPositionWeight => matchPositionWeight;
+    public float MatchPositionRotateWeight => matchPositionRotateWeight;
+    //Optional
+    public float ForwardMovement => forwardMovement;
 }
