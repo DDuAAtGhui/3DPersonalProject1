@@ -10,10 +10,11 @@ public class Player : Entity
 {
     [HideInInspector] public bool isBusy { get; private set; }
     #region components
+    [Header("Player")]
+    public GameManager gameManager;
     [HideInInspector] public CharacterController CC;
     [HideInInspector] public PlayerInputSystem playerInput;
     [HideInInspector] public Animator anim;
-
     #endregion
     #region infos
     //개별 Collision
@@ -26,7 +27,7 @@ public class Player : Entity
     [SerializeField] float forwardRayLength = 0.5f;
     [SerializeField] float heightRayLength = 100f;
     [SerializeField] float backSideRayLength = 100f;
-    [SerializeField] public LayerMask ParkourAble;
+
     [HideInInspector][SerializeField] public float distanceToObstacle;
     [HideInInspector][SerializeField] public float heightToObstacle;
     [HideInInspector][SerializeField] public float thicknessOfObstacle;
@@ -71,34 +72,16 @@ public class Player : Entity
 
     [Header("Input Info")]
     public Vector2 _inputXZ; // WASD
-    public bool _inputWalk; // Left Shift
-    public bool _inputCurosrVisible; // Left Alt
-    public bool _inputJump; // Space
+    [HideInInspector] public bool _inputWalk; // Left Shift
+    [HideInInspector] public bool _inputCurosrVisible; // Left Alt
+    [HideInInspector] public bool _inputJump; // Space
     public bool ApplyAnalogMovement = false;
     public bool isControlable = true;
     [HideInInspector] public Vector3 inputDirection;
 
-    // GetAxis스타일 쓰고싶으면 사용
-    [HideInInspector] public Vector2 GetAxisStyle_inputXZ;
-    [HideInInspector] public Vector2 current_GetAxisStyle_inputXZ;
-    [SerializeField] public float _inputXZtoGetAxisStyeSmoothTime = 0.05f;
+
     #endregion
 
-    #region 애니메이터 파라미터 해쉬화
-    [HideInInspector] public int animIDSpeed;
-    [HideInInspector] public int animIDMotionSpeed;
-    [HideInInspector] public int animIDJump;
-    [HideInInspector] public int animIDFreeFall;
-    [HideInInspector] public int animIDLanding_Roll;
-    [HideInInspector] public int animIDLanding_Small;
-    [HideInInspector] public int animIDLanding_Hard;
-    [HideInInspector] public int animIDGrounded;
-    [HideInInspector] public int animIDParkouring;
-    [HideInInspector] public int animIDParkour_StepUp;
-    [HideInInspector] public int animIDParkour_JumpUp;
-    [HideInInspector] public int animIDParkour_CrouchToClimbUp;
-    [HideInInspector] public int animIDParkour_JumpOver_Roll;
-    #endregion
     #region 상태들, 객체선언, 인풋시스템 콜백
     public PlayerStateMachine stateMachine { get; private set; }
     public PlayerIdleState idleState { get; private set; }
@@ -162,7 +145,6 @@ public class Player : Entity
     {
         base.Start();
         stateMachine.Initialize(idleState);
-        animParameterToHash();
 
         temp_moveSpeed = moveSpeed;
     }
@@ -171,30 +153,28 @@ public class Player : Entity
     {
         base.Update();
         stateMachine.currentState.Update();
-        CursorContorl();
         CameraControl();
         GroundCheck();
 
+        #region 디버그 로그
         if (!inParkourAction)
             ParkourAbleObstacleCheck();
-        CalculateDigitalInputToAnalog();
-        //DebugLog();
 
-        if (Log_PlayerCurrentVelocity)
+        if (gameManager.Log_PlayerCurrentVelocity)
             Debug.Log("Velocity : " + CC.velocity);
 
-        if (Log_RayInfo_Obstacle_DistanceAndHeight)
+        if (gameManager.Log_RayInfo_Obstacle_DistanceAndHeight)
             Debug.Log($"장애물 거리 : {distanceToObstacle}, 장애물의 높이 : {heightToObstacle} ");
 
-        if (Log_WhatisRayHitObstacle)
+        if (gameManager.Log_WhatisRayHitObstacle)
             if (hitData.forwardHit.transform != null)
                 Debug.Log($"감지된 장애물 이름 : {hitData.forwardHit.transform.name}");
 
+        if (gameManager.Log_Local_ForwardHitPoint && hitData.forwardHitFound)
+            Debug.Log("Local Foward HitPoint : "
+                + LocalFowardHitPoint);
+        #endregion
 
-
-        //foreach (var action in parkourActions)
-        //    PerformMatchTarget(action);
-        //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
     }
 
     public override void FixedUpdate()
@@ -247,70 +227,51 @@ public class Player : Entity
 
         PlayFallingAnimation = !Physics.Raycast(transform.position, Vector3.down, CanPlayFallingAnimationDistance, CanPlayFallingAimationLayer);
 
-        anim.SetBool(animIDGrounded, isGrounded);
+        anim.SetBool(gameManager.animIDGrounded, isGrounded);
     }
 
     [HideInInspector] Vector3 heightHitPointSnapShot; //가장 최근의 장애물 높이 기억 (초기화X)
+    [HideInInspector] Vector3 LocalFowardHitPoint;
     public ParkourAbleObstacleHitData ParkourAbleObstacleCheck()
     {
         hitData = new ParkourAbleObstacleHitData();
 
         hitData.forwardHitFound = Physics.Raycast(transform.position + forwardRayOffset, transform.forward, out hitData.forwardHit,
-            forwardRayLength, ParkourAble);
+            forwardRayLength, Obstacle);
 
         Debug.DrawRay(transform.position + forwardRayOffset, transform.forward * forwardRayLength, hitData.forwardHitFound ? Color.green : Color.gray);
 
         if (hitData.forwardHitFound)
         {
             //위에서 아래로 발사하는 방식
-            hitData.heightHitFound = Physics.Raycast(hitData.forwardHit.point + Vector3.up * heightRayLength, Vector3.down, out hitData.heighHit, heightRayLength, ParkourAble);
+            hitData.heightHitFound = Physics.Raycast(hitData.forwardHit.point + Vector3.up * heightRayLength, Vector3.down, out hitData.heighHit, heightRayLength, Obstacle);
 
             Debug.DrawRay(hitData.forwardHit.point + Vector3.up * heightRayLength, Vector3.down * heightRayLength, hitData.heightHitFound ? Color.green : Color.gray);
+
+            LocalFowardHitPoint = hitData.forwardHit.transform.InverseTransformPoint(hitData.forwardHit.point);
 
             distanceToObstacle = hitData.forwardHit.distance;
             heightToObstacle = hitData.heighHit.point.y - transform.position.y; ////플레이어 - 장애물간의 정확한 높이차
             heightHitPointSnapShot = hitData.heighHit.point;
+
             ////두께 검사
             //Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * backSideRayLength, Color.red);
+
+
+            if (gameManager.Visible_MatchPosition)
+                gameManager.TargetMatchOffsetStandard.SetActive(true);
+            gameManager.TargetMatchOffsetStandard.transform.position = heightHitPointSnapShot;
+
+
         }
 
         else
         {
             distanceToObstacle = 0;
             heightToObstacle = 0;
+            gameManager.TargetMatchOffsetStandard.SetActive(false);
         }
         return hitData;
-    }
-
-    void CursorContorl()
-    {
-        if (Cursor.lockState == CursorLockMode.Locked && _inputCurosrVisible)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-
-        else if (Cursor.lockState == CursorLockMode.None && !_inputCurosrVisible)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
-    void animParameterToHash()
-    {
-        animIDSpeed = Animator.StringToHash("Speed");
-        animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-        animIDJump = Animator.StringToHash("Jump");
-        animIDFreeFall = Animator.StringToHash("Falling");
-        animIDLanding_Small = Animator.StringToHash("Landing_Small");
-        animIDLanding_Roll = Animator.StringToHash("Landing_Roll");
-        animIDLanding_Hard = Animator.StringToHash("Landing_Hard");
-        animIDGrounded = Animator.StringToHash("Grounded");
-        animIDParkouring = Animator.StringToHash("Parkouring"); //파쿠르 중일땐 기본 애니메이션에서 탈출하는 용도로 사용
-        animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
-        animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
-        animIDParkour_CrouchToClimbUp = Animator.StringToHash("Parkour_CrouchToClimbUp");
-        animIDParkour_JumpOver_Roll = Animator.StringToHash("Parkour_JumpOver_Roll");
     }
 
     //상태머신 활용형
@@ -318,12 +279,9 @@ public class Player : Entity
     {
         parkourActionIndex = 0;
 
-
         parkourActions.ForEach(action =>
         {
-
-
-            if (Log_ParkourPossibleState)
+            if (gameManager.Log_ParkourPossibleState)
                 Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
 
             //인덱스 초과 예외처리
@@ -335,10 +293,18 @@ public class Player : Entity
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
                 {
+                    //부호는 테스트 하면서 확인
+                    gameManager.TargetMatchOffsetStandard.transform.localPosition =
+new Vector3(gameManager.TargetMatchOffsetStandard.transform.localPosition.x + action.MatchPositionOffset.x
+, gameManager.TargetMatchOffsetStandard.transform.localPosition.y + action.MatchPositionOffset.y
+, gameManager.TargetMatchOffsetStandard.transform.localPosition.z + -Mathf.Sign(LocalFowardHitPoint.z) * action.MatchPositionOffset.z);
+
+                    gameManager.TargetMatchOffsetStandard.transform.rotation = transform.rotation;
+
                     StartCoroutine(PerformMatchTargetCor(action));
 
                     #region 디버그
-                    if (Log_TargetMatch)
+                    if (gameManager.Log_TargetMatch)
                     {
                         Debug.Log($"==================\n" +
                          $"MatchTarget Info\n" +
@@ -361,9 +327,12 @@ public class Player : Entity
     IEnumerator PerformMatchTargetCor(ParkourAction action)
     {
         float timer = 0f;
+
         while (timer <= anim.GetNextAnimatorStateInfo(0).length)
         {
             timer += Time.deltaTime;
+
+
             //1프레임 단위로 끊어줌
             //MatchTarget보다 반드시 위에
             yield return null;
@@ -374,34 +343,38 @@ public class Player : Entity
 
     public void MatchTarget(ParkourAction action)
     {
-        Debug.Log("anim.isMatchingTarget : " + anim.isMatchingTarget);
+        //Debug.Log("anim.isMatchingTarget : " + anim.isMatchingTarget);
+        //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
 
         //이미 타겟 매칭중이면 쓸데없는 실행 X
         if (anim.isMatchingTarget)
         {
-            Debug.Log("타겟매칭 적용중");
+            if (gameManager.Log_TargetMatch)
+                Debug.Log("타겟매칭 적용중");
             return;
         }
-        anim.MatchTarget(heightHitPointSnapShot, transform.rotation, action.MatchBodyPart,
+
+        //TargetMatchOffsetStandard 이게 heightHit스냅샷을 가지고 있고 오프셋까지 적용되는 좌표계임
+        anim.MatchTarget(gameManager.TargetMatchOffsetStandard.transform.position, transform.rotation, action.MatchBodyPart,
         new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
         action.MatchStartTime, action.MatchTargetTime);
+    }
 
-    }
-    private void CalculateDigitalInputToAnalog()
+    public void ResetMatchTarget()
     {
-        GetAxisStyle_inputXZ =
-        Vector2.SmoothDamp(GetAxisStyle_inputXZ, _inputXZ,
-        ref current_GetAxisStyle_inputXZ, _inputXZtoGetAxisStyeSmoothTime);
+        anim.MatchTarget(Vector3.zero, Quaternion.identity, AvatarTarget.Root,
+            new MatchTargetWeightMask(Vector3.zero, 0f), 0.0f, 0.0f);
     }
+
     public IEnumerator nowBusy(float seconds)
     {
         isBusy = true;
-        if (isBusy && Log_isBusy)
+        if (isBusy && gameManager.Log_isBusy)
             Debug.Log("플레이어가 바쁜상태");
 
         yield return new WaitForSeconds(seconds);
 
-        if (!isBusy && Log_isBusy)
+        if (!isBusy && gameManager.Log_isBusy)
             Debug.Log("플레이어가 여유로운 상태");
         isBusy = false;
     }
@@ -417,9 +390,8 @@ public class Player : Entity
 
     #region 인풋액션 - 액션들
     void onMoveAction(InputAction.CallbackContext context)
-    {
-        _inputXZ = context.ReadValue<Vector2>();
-    }
+        => _inputXZ = context.ReadValue<Vector2>();
+
 
     void onWalkAction(InputAction.CallbackContext context)
     {
@@ -447,38 +419,12 @@ public class Player : Entity
 
     #region 캐릭터 컨트롤러 쓸 때 항상 해줘야하는거
     //인풋시스템 쓸 때 항상 키고 끄고 해줘야함
-    private void OnEnable()
-    {
-        playerInput.CharacterControls.Enable();
-    }
+    private void OnEnable() => playerInput.CharacterControls.Enable();
+    void OnDisable() => playerInput.CharacterControls.Disable();
 
-    void OnDisable()
-    {
-        playerInput.CharacterControls.Disable();
 
-    }
     #endregion
 
-    #region DEBUG_OPTION
-    [Space(15)]
-    [Header("STATE DEBUG OPTION")]
-    [Tooltip("상태 진입 실행된 클래스 이름 표시")] public bool Log_StateEnter = true;
-    [Tooltip("상태 Update 실행된 클래스 이름 표시")] public bool Log_StateUpdate = true;
-    [Tooltip("상태 FixedUpdate 실행된 클래스 이름 표시")] public bool Log_StateFixedUpdate = true;
-    [Tooltip("상태 LateUpdate 실행된 클래스 이름 표시")] public bool Log_StateLateUpdate = true;
-    [Tooltip("상태 탈출 실행된 클래스 이름 표시")] public bool Log_StateExit = true;
-    [Tooltip("플레이어 접촉시작 클래스 이름 표시")] public bool Log_StateOnCollisionEnter = true;
-    [Tooltip("플레이어 접촉중 클래스 이름 표시")] public bool Log_StateOnCollisionStay = true;
-    [Tooltip("플레이어 현재 스피드 표시")] public bool Log_PlayerSpeed = true;
-    [Tooltip("플레이어의 벨로시티")] public bool Log_PlayerCurrentVelocity = true;
-    [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
-    [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리와 높이 표시")] public bool Log_RayInfo_Obstacle_DistanceAndHeight = true;
-    [Tooltip("파쿠르 타겟매칭 정보 표시")] public bool Log_TargetMatch = true;
-    [Tooltip("플레이어 앞에 있는 장애물의 두께 표시")] public bool Log_ObstacleThickness = true;
-    [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물의 이름을 표시")] public bool Log_WhatisRayHitObstacle = true;
-    [Tooltip("파쿠르 스크립터블 오브젝트 에셋 참 거짓 상태 정보")] public bool Log_ParkourPossibleState = true;
-    [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
-    #endregion
 
     #region 연습용
     IEnumerator DoParkourAction(ParkourAction action)
@@ -487,7 +433,7 @@ public class Player : Entity
         anim.applyRootMotion = true;
         SetControllable(false);
 
-
+        anim.SetBool("mirrorAction", action.Mirror);
         anim.CrossFade(action.AniName, 0.2f);
         yield return null;
 

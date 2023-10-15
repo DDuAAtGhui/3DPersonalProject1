@@ -15,9 +15,7 @@ public class PlayerJumpState : PlayerAirborneState
     public override void Enter()
     {
         base.Enter();
-
-
-        anim.SetBool(player.animIDJump, true);
+        anim.SetBool(gameManager.animIDJump, true);
 
         //최소 점프 보장 시간
         StateTimer = 0.2f;
@@ -45,10 +43,10 @@ public class PlayerJumpState : PlayerAirborneState
     }
     public override void Exit()
     {
+        base.Exit();
+
         //점프키 누르고 있을때 콜백에서 계속 값 읽어들여서 반복점프 되는거 방지
         player._inputJump = false;
-        anim.SetBool(player.animIDJump, false);
-        base.Exit();
+        anim.SetBool(gameManager.animIDJump, false);
     }
-
 }

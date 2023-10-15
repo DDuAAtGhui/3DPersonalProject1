@@ -11,7 +11,7 @@ public class PlayerStepUpState : PlayerParkourState
     public override void Enter()
     {
         base.Enter();
-        anim.SetBool(player.animIDParkour_StepUp, true);
+        anim.SetBool(gameManager.animIDParkour_StepUp, true);
     }
     public override void Update()
     {
@@ -20,6 +20,6 @@ public class PlayerStepUpState : PlayerParkourState
     public override void Exit()
     {
         base.Exit();
-        anim.SetBool(player.animIDParkour_StepUp, false);
+        anim.SetBool(gameManager.animIDParkour_StepUp, false);
     }
 }

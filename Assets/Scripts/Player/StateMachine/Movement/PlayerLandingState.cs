@@ -19,7 +19,7 @@ public class PlayerLandingState : PlayerStates
         {
             player.Can_MoveHorizontally = false;
             player.Can_Rotate = false;
-            anim.SetBool(player.animIDLanding_Roll, true);
+            anim.SetBool(gameManager.animIDLanding_Roll, true);
             roll = true;
         }
 
@@ -28,14 +28,14 @@ public class PlayerLandingState : PlayerStates
             player.isHorizontalStop(true);
             player.Can_MoveHorizontally = false;
             player.Can_Rotate = false;
-            anim.SetBool(player.animIDLanding_Hard, true);
+            anim.SetBool(gameManager.animIDLanding_Hard, true);
             hard = true;
         }
 
 
         else if (player.totalFallingTime < 0.5f)
         {
-            anim.SetBool(player.animIDLanding_Small, true);
+            anim.SetBool(gameManager.animIDLanding_Small, true);
             small = true;
         }
     }
@@ -70,9 +70,9 @@ public class PlayerLandingState : PlayerStates
         roll = false;
         hard = false;
         small = false;
-        anim.SetBool(player.animIDLanding_Roll, false);
-        anim.SetBool(player.animIDLanding_Hard, false);
-        anim.SetBool(player.animIDLanding_Small, false);
+        anim.SetBool(gameManager.animIDLanding_Roll, false);
+        anim.SetBool(gameManager.animIDLanding_Hard, false);
+        anim.SetBool(gameManager.animIDLanding_Small, false);
         base.Exit();
     }
 }

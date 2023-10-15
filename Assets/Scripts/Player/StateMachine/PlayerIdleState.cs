@@ -12,6 +12,8 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
+        //idle일때 벨로시티 초기화
+        CC.Move(Vector3.zero);
     }
     public override void Update()
     {
@@ -25,6 +27,7 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Exit()
     {
         base.Exit();
+
     }
 
     public override void OnCollisionEnter(Collision collision)

@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
+//스크립터블 오브젝트같은건 게임중에 값 변하고 게임 꺼져도 초기화 안되니까
+//중간중간 변해야 하는값 같은거 있으면 임시 변수 만들어서 그거 활용해야함
 [CreateAssetMenu(menuName = "Parkour System/New parkour action")]
 public class ParkourAction : ScriptableObject
 {
@@ -27,7 +31,9 @@ public class ParkourAction : ScriptableObject
     //matchStartTime와 matchTargetTime시간 사이에서 보정이 이루어진다
     [Header("Target Matching")]
     [SerializeField] bool enableTargetMatching = true;
-    [SerializeField] AvatarTarget matchBodyPart;
+    [SerializeField] protected AvatarTarget matchBodyPart; //원본 바디파트
+    protected AvatarTarget temp_BodyPart; //데이터 오염 방지
+
 
     //애니메이션 클립에서 캐릭터가 땅으로부터 떨어지는 시간(퍼센트)
     [SerializeField] float matchStartTime;
@@ -36,6 +42,7 @@ public class ParkourAction : ScriptableObject
     [SerializeField] float matchTargetTime;
     //x,y,z 축의 가중치. 1이면 매칭포지션을 그 축에 정확히 맞추는것
     [SerializeField] Vector3 matchPositionWeight = new Vector3(0, 1, 0);
+    [SerializeField] Vector3 matchPositionOffset = Vector3.zero;
     [SerializeField] float matchPositionRotateWeight = 0f;
 
 
@@ -44,10 +51,14 @@ public class ParkourAction : ScriptableObject
 
     [Header("Optional")]
     [SerializeField] float forwardMovement = 0f;
+
+    //애니메이션 뒤집는 중인지 체크.
+    //애니메이터 인스펙터에서 파라미터로 연결해줄것
+    public bool Mirror { get; set; }
     #endregion
 
     //기본 사용
-    public bool CheckIfPossible(ParkourAbleObstacleHitData hitdata, Transform playerTransform)
+    public virtual bool CheckIfPossible(ParkourAbleObstacleHitData hitdata, Transform playerTransform)
     {
         float height = hitdata.heighHit.point.y - playerTransform.position.y;
 
@@ -69,13 +80,16 @@ public class ParkourAction : ScriptableObject
     }
 
     //싱글톤, 상태머신과 사용
-    public bool CheckIfPossible()
+    public virtual bool CheckIfPossible()
     {
+        temp_BodyPart = matchBodyPart;
+
         var player = GameManager.instance.player;
         var hitData = player.hitData;
 
         float height = player.heightToObstacle;
         float distance = player.distanceToObstacle;
+
 
         //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
         if (!string.IsNullOrEmpty(obstacleTag) && hitData.forwardHit.transform.tag != obstacleTag)
@@ -99,10 +113,11 @@ public class ParkourAction : ScriptableObject
     public float PostActionDelay => postActionDelay;
     public float RotateMultiflier => rotateMultiflier;
     public bool EnableTargetMatching => enableTargetMatching;
-    public AvatarTarget MatchBodyPart => matchBodyPart;
+    public AvatarTarget MatchBodyPart => temp_BodyPart;
     public float MatchStartTime => matchStartTime;
     public float MatchTargetTime => matchTargetTime;
     public Vector3 MatchPositionWeight => matchPositionWeight;
+    public Vector3 MatchPositionOffset => matchPositionOffset;
     public float MatchPositionRotateWeight => matchPositionRotateWeight;
     //Optional
     public float ForwardMovement => forwardMovement;

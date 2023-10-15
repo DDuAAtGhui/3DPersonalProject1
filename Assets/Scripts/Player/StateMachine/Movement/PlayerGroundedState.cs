@@ -18,7 +18,8 @@ public class PlayerGroundedState : PlayerStates
         base.Update();
         anim.applyRootMotion = false;
 
-        if (speed <= 0.1f && player._inputXZ == Vector2.zero)
+        //속도가 떨어지거나 입력없으면 Idle
+        if (speed <= 0.1f || player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.idleState);
 
         if (speed > 0.1f && speed <= 7f)
@@ -38,7 +39,7 @@ public class PlayerGroundedState : PlayerStates
             stateMachine.ChangeState(player.jumpState);
         }
 
-        //움직이다가 점프
+        //움직이다가 점프시 속도 유지
         if (player._inputJump && !player.isBusy && player._inputXZ != Vector2.zero)
             stateMachine.ChangeState(player.jumpState);
     }

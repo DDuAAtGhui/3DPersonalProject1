@@ -13,7 +13,7 @@ public class PlayeFallingState : PlayerAirborneState
     public override void Enter()
     {
         base.Enter();
-        anim.SetBool(player.animIDFreeFall, true);
+        anim.SetBool(gameManager.animIDFreeFall, true);
         StateTimer = player.CoyoteTime;
 
         //경사로에서 잘 붙어있을 수 있게 GroundedGravity를 크게 설정해놨기 때문에
@@ -41,7 +41,7 @@ public class PlayeFallingState : PlayerAirborneState
         //총 낙하 시간 반환
         player.totalFallingTime = fallingTimer;
         fallingTimer = 0;
-        anim.SetBool(player.animIDFreeFall, false);
+        anim.SetBool(gameManager.animIDFreeFall, false);
         base.Exit();
     }
 }

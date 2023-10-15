@@ -10,7 +10,7 @@ public class PlayerStates
     #region 멤버 연결용 변수선언
     protected CharacterController CC;
     protected Animator anim;
-
+    protected GameManager gameManager;
     #endregion
 
     #region 플레이어쪽 은닉화된 변수들
@@ -39,15 +39,17 @@ public class PlayerStates
 
     public virtual void Enter()
     {
-        if (player.Log_StateEnter)
+        #region 플레이어쪽 멤버 연결
+        CC = player.CC;
+        anim = player.anim;
+        gameManager = player.gameManager;
+        #endregion
+
+        if (gameManager.Log_StateEnter)
             Debug.Log("Enter : " + this.GetType().Name);
 
 
 
-        #region 플레이어쪽 멤버 연결
-        CC = player.CC;
-        anim = player.anim;
-        #endregion
 
         player.Can_MoveHorizontally = true;
         isAnimEnd = false;
@@ -55,13 +57,15 @@ public class PlayerStates
 
     public virtual void Update()
     {
-        if (player.Log_StateUpdate)
+        if (gameManager.Log_StateUpdate)
             Debug.Log("Update : " + this.GetType().Name);
 
-        if (player.Log_isAnimEnd)
+        if (gameManager.Log_isAnimEnd)
             Debug.Log("isAnimEnd : " + isAnimEnd);
 
         StateTimer -= Time.deltaTime;
+
+        player.isOnLedge = player.DetectingLedge(player.transform.forward, 1.5f);
 
         Move();
         ApplyGravity();
@@ -70,19 +74,19 @@ public class PlayerStates
 
     public virtual void FixedUpdate()
     {
-        if (player.Log_StateFixedUpdate)
+        if (gameManager.Log_StateFixedUpdate)
             Debug.Log("FixedUpdate : " + this.GetType().Name);
     }
 
     public virtual void LateUpdate()
     {
-        if (player.Log_StateLateUpdate)
+        if (gameManager.Log_StateLateUpdate)
             Debug.Log("LateUpdate : " + this.GetType().Name);
     }
 
     public virtual void Exit()
     {
-        if (player.Log_StateExit)
+        if (gameManager.Log_StateExit)
             Debug.Log("Exit : " + this.GetType().Name);
 
         StateTimer = 0;
@@ -91,24 +95,20 @@ public class PlayerStates
 
     public virtual void OnCollisionEnter(Collision collision)
     {
-        if (player.Log_StateOnCollisionEnter)
+        if (gameManager.Log_StateOnCollisionEnter)
             Debug.Log("Collision Enter Class : " + this.GetType().Name);
     }
 
     public virtual void OnCollisionStay(Collision collision)
     {
-        if (player.Log_StateOnCollisionStay)
+        if (gameManager.Log_StateOnCollisionStay)
             Debug.Log("Collision Stay Class : " + this.GetType().Name);
     }
-    //public virtual void OnAnimatorMove()
-    //{
-    //    Debug.Log("AA");
-    //}
-
     #region 메소드들
+    float targetSpeed;
     protected void Move()
     {
-        if (player.Log_PlayerSpeed)
+        if (gameManager.Log_PlayerSpeed)
             Debug.Log("Current Speed :" + speed);
 
         if (walkSpeed != player.moveSpeed / 2.0f)
@@ -123,7 +123,7 @@ public class PlayerStates
         else
             player.moveSpeed = player.temp_moveSpeed;
 
-        float targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+        targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
 
         //플레이어 horizon 벨로시티
         float currentHorizontalVelocity = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
@@ -182,34 +182,34 @@ public class PlayerStates
                  + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
 
 
-        anim.SetFloat(player.animIDSpeed, animationBlend);
-        anim.SetFloat(player.animIDMotionSpeed, inputMagnitude);
+        anim.SetFloat(gameManager.animIDSpeed, animationBlend);
+        anim.SetFloat(gameManager.animIDMotionSpeed, inputMagnitude);
     }
-    protected void Jump()
-    {
-        if (player.isGrounded)
-        {
-            anim.SetBool(player.animIDJump, false);
+    //protected void Jump()
+    //{
+    //    if (player.isGrounded)
+    //    {
+    //        anim.SetBool(gameManager.animIDJump, false);
 
-            if (player._inputJump && jumpTimeoutDelta <= 0.0f)
-            {
-                // 루트 높이 * -2f * 중력 = 원하는 높이까지 도달하는 벨로시티값
-                verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.Gravity);
-                anim.SetBool(player.animIDJump, true);
-            }
+    //        if (player._inputJump && jumpTimeoutDelta <= 0.0f)
+    //        {
+    //            // 루트 높이 * -2f * 중력 = 원하는 높이까지 도달하는 벨로시티값
+    //            verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.Gravity);
+    //            anim.SetBool(gameManager.animIDJump, true);
+    //        }
 
-            // 타이머가 0보다 크면 타이머 감소시킴
-            if (jumpTimeoutDelta >= 0f)
-            {
-                jumpTimeoutDelta -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            // 혹시 모르니 땅에 붙어있으면 초기화
-            player._inputJump = false;
-        }
-    }
+    //        // 타이머가 0보다 크면 타이머 감소시킴
+    //        if (jumpTimeoutDelta >= 0f)
+    //        {
+    //            jumpTimeoutDelta -= Time.deltaTime;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // 혹시 모르니 땅에 붙어있으면 초기화
+    //        player._inputJump = false;
+    //    }
+    //}
     protected void ApplyGravity()
     {
         if (!player.isControlable)
@@ -233,6 +233,7 @@ public class PlayerStates
             if (fallTimeoutDelta >= 0.0f)
                 fallTimeoutDelta -= Time.deltaTime;
         }
+
 
         if (verticalVelocity < terminalVelocity)
         {

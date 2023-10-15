@@ -19,6 +19,7 @@ MonoBehaviour:
   maxDistance: 1
   obstacleTag: Obstacle_Standable
   rotateToObstacle: 1
+  postActionDelay: 0
   rotateMultiflier: 100
   enableTargetMatching: 1
   matchBodyPart: 3
@@ -26,3 +27,4 @@ MonoBehaviour:
   matchTargetTime: 0.9
   matchPositionWeight: {x: 0, y: 1, z: 0}
   matchPositionRotateWeight: 0
+  forwardMovement: 0
