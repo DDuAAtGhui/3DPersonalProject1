@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_JumpUp;
     [HideInInspector] public int animIDParkour_CrouchToClimbUp;
     [HideInInspector] public int animIDParkour_JumpOver_Roll;
+    [HideInInspector] public int animIDParkour_StandJumpingDown;
     void animParameterToHash()
     {
         animIDSpeed = Animator.StringToHash("Speed");
@@ -94,6 +95,7 @@ public class GameManager : MonoBehaviour
         animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
         animIDParkour_CrouchToClimbUp = Animator.StringToHash("Parkour_CrouchToClimbUp");
         animIDParkour_JumpOver_Roll = Animator.StringToHash("Parkour_JumpOver_Roll");
+        animIDParkour_StandJumpingDown = Animator.StringToHash("Parkour_StandJumpingDown");
     }
     #endregion
     #region DEBUG_OPTION
@@ -108,6 +110,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("플레이어 접촉중 클래스 이름 표시")] public bool Log_StateOnCollisionStay = true;
     [Tooltip("플레이어 현재 스피드 표시")] public bool Log_PlayerSpeed = true;
     [Tooltip("플레이어의 벨로시티")] public bool Log_PlayerCurrentVelocity = true;
+    [Tooltip("플레이어의 y축 속도 보존값")] public bool Log_PlayerVerticalVelocity = true;
     [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리와 높이 표시")] public bool Log_RayInfo_Obstacle_DistanceAndHeight = true;
     [Tooltip("forwardHit 레이캐스트에 감지된 오브젝트의 로컬 좌표계 기준 forwardHit.point 좌표계")] public bool Log_Local_ForwardHitPoint = true;
@@ -117,6 +120,8 @@ public class GameManager : MonoBehaviour
     [Tooltip("파쿠르 스크립터블 오브젝트 에셋 참 거짓 상태 정보")] public bool Log_ParkourPossibleState = true;
     [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
     [Tooltip("파쿠르 매치 포지션 지점 가시화. 오프셋 설정시 파쿠르 할 때 오프셋 만큼 이동함")] public bool Visible_MatchPosition = true;
+    [Tooltip("모서리 체크 레이캐스트 가시화")] public bool Visible_LedgeRay = true;
+
     #endregion
 
 }

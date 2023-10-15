@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.ShaderKeywordFilter;
@@ -17,6 +18,7 @@ public class ParkourAction : ScriptableObject
     [SerializeField] float minDistance;
     [SerializeField] float maxDistance;
     [SerializeField] string obstacleTag;
+
     #endregion
     #region 파쿠르 시 장애물 방향으로 회전
     [Header("Rotate To Obstacle")]
@@ -51,6 +53,8 @@ public class ParkourAction : ScriptableObject
 
     [Header("Optional")]
     [SerializeField] float forwardMovement = 0f;
+    [SerializeField] bool usingLedgeAngle = false;
+    [SerializeField] float ledgeAngleLimit = 50f;
 
     //애니메이션 뒤집는 중인지 체크.
     //애니메이터 인스펙터에서 파라미터로 연결해줄것
@@ -79,9 +83,12 @@ public class ParkourAction : ScriptableObject
         return true;
     }
 
+    public bool excutable;
     //싱글톤, 상태머신과 사용
     public virtual bool CheckIfPossible()
     {
+        excutable = false;
+
         temp_BodyPart = matchBodyPart;
 
         var player = GameManager.instance.player;
@@ -91,13 +98,28 @@ public class ParkourAction : ScriptableObject
         float distance = player.distanceToObstacle;
 
 
-        //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
-        if (!string.IsNullOrEmpty(obstacleTag) && hitData.forwardHit.transform.tag != obstacleTag)
-            return false;
 
-        //거리와 높이 체크
-        if (!hitData.heightHitFound || height < minHeight || height > maxHeight || distance < minDistance || distance > maxDistance)
+        //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
+        if (hitData.forwardHitFound && !string.IsNullOrEmpty(obstacleTag) && hitData.forwardHit.transform.tag != obstacleTag)
+        {
+            Debug.Log(animName + " 장애물 태그 or 앞에 오브젝트 존재하지않음으로 통과 실패");
             return false;
+        }
+
+        //거리와 높이 체크(입력했을때만)
+        if (minHeight != 0 && maxHeight != 0 && minDistance != 0 && maxDistance != 0)
+            if (!hitData.heightHitFound || height < minHeight || height > maxHeight || distance < minDistance || distance > maxDistance)
+            {
+                Debug.Log(animName + " 높이 or 거리 통과 실패");
+                return false;
+            }
+
+        //각도 제한 있을 때 특정 각도 이하면 false 반환
+        if (usingLedgeAngle && player.LedgeData.angle > ledgeAngleLimit)
+        {
+            Debug.Log(animName + " 각도 제한으로 통과 실패");
+            return false;
+        }
 
         if (rotateToObstacle)
             TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
@@ -105,6 +127,8 @@ public class ParkourAction : ScriptableObject
         if (enableTargetMatching)
             MatchPosition = hitData.heighHit.point;
 
+        Debug.Log(animName + "통과");
+        excutable = true;
         return true;
     }
 

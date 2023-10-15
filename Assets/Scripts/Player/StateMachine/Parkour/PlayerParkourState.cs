@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
+
 public class PlayerParkourState : PlayerStates
 {
     protected ParkourAction parkourAction;
@@ -24,6 +25,9 @@ public class PlayerParkourState : PlayerStates
 
         parkourAction = player.parkourActions[player.currentParkourActionIndex];
         anim.SetBool("mirrorAction", parkourAction.Mirror);
+
+        //GroundGraivty가 클 때 파쿠르 동작 진입시 급강하 방지
+        verticalVelocity = 0;
     }
     public override void Update()
     {
@@ -46,6 +50,8 @@ public class PlayerParkourState : PlayerStates
             stateMachine.ChangeState(player.idleState);
 
 
+        if (parkourToFallState)
+            fallingTimer += Time.deltaTime;
     }
     public override void Exit()
     {

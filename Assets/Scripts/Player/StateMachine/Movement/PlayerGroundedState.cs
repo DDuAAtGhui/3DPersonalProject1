@@ -30,7 +30,10 @@ public class PlayerGroundedState : PlayerStates
 
         // PlayerFallingAnimation : 애매한 높이에서 떨어질 때 애니메이션 이상하게 나오는거 수정
         if (!player.isGrounded && verticalVelocity <= 0f && !player.isBusy && player.PlayFallingAnimation)
+        {
+            groundToFallState = true;
             stateMachine.ChangeState(player.fallingState);
+        }
 
         //제자리 점프시 Ground체크가 살짝 되기때문에 그때 유지된 Veloicty값에 영향받아 움직이는거 방지
         if (player._inputJump && !player.isBusy && player._inputXZ == Vector2.zero)

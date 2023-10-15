@@ -8,4 +8,9 @@ public class AnimationHandler : MonoBehaviour
     {
         GameManager.instance.player.isAnimEnd();
     }
+
+    void PlayerRecoverControl()
+    {
+        GameManager.instance.player.SetControllable(true);
+    }
 }

@@ -52,11 +52,12 @@ public class CustomVaultAction : ParkourAction
 
     public override bool CheckIfPossible()
     {
-        if (!base.CheckIfPossible())
-            return false;
 
         var player = GameManager.instance.player;
         var hitData = player.hitData;
+
+        if (!base.CheckIfPossible() || !hitData.forwardHitFound)
+            return false;
 
         // hitdata.forwardHit오브젝트의 Transform기준으로
         // hitdata.forwardHit.point의 position을 Local좌표계로 변환

@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -10,8 +11,7 @@ public class Player : Entity
 {
     [HideInInspector] public bool isBusy { get; private set; }
     #region components
-    [Header("Player")]
-    public GameManager gameManager;
+    // [Header("Player")]
     [HideInInspector] public CharacterController CC;
     [HideInInspector] public PlayerInputSystem playerInput;
     [HideInInspector] public Animator anim;
@@ -35,12 +35,15 @@ public class Player : Entity
     [HideInInspector] public int currentParkourActionIndex;
     [HideInInspector] int parkourActionIndex = 0;
 
+    [HideInInspector] public LedgeData LedgeData { get; set; }
+
+
     [Header("Move Info")]
     [SerializeField] public float moveSpeed = 3f;
     [HideInInspector] public float temp_moveSpeed;
     [SerializeField] public float RotatonSmoothTime = 0.12f;
     [SerializeField] public float SpeedChangeRate = 10.0f;
-    [HideInInspector] public bool Can_MoveHorizontally = true;
+    [SerializeField] public bool Can_MoveHorizontally = true;
     [HideInInspector] public bool Can_Rotate = true;
     [HideInInspector] public bool horizontalStop;
 
@@ -95,6 +98,7 @@ public class Player : Entity
     public PlayerJumpUpState jumpUpState { get; private set; }
     public PlayerCrouchToClimbUpState crouchToClimbUpState { get; private set; }
     public PlayerJumpOver_RollState jumpOver_RollState { get; private set; }
+    public PlayerStandJumpingDownState standjumpingDownState { get; private set; }
     private void Awake()
     {
 
@@ -111,6 +115,7 @@ public class Player : Entity
         jumpUpState = new PlayerJumpUpState(this, stateMachine);
         crouchToClimbUpState = new PlayerCrouchToClimbUpState(this, stateMachine);
         jumpOver_RollState = new PlayerJumpOver_RollState(this, stateMachine);
+        standjumpingDownState = new PlayerStandJumpingDownState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -260,8 +265,13 @@ public class Player : Entity
 
             if (gameManager.Visible_MatchPosition)
                 gameManager.TargetMatchOffsetStandard.SetActive(true);
+
             gameManager.TargetMatchOffsetStandard.transform.position = heightHitPointSnapShot;
 
+            //TargetMatchOffsetStandard의 Forward 방향을 플레이어가 파쿠르 하는 방향과 일치시키기
+            //이래야 offset할 때 플레이어 위치 변해도 일정한 결과값 도출
+            gameManager.TargetMatchOffsetStandard.transform.rotation =
+                Quaternion.LookRotation(-hitData.forwardHit.normal);
 
         }
 
@@ -279,10 +289,24 @@ public class Player : Entity
     {
         parkourActionIndex = 0;
 
+        PlayerStates[] temp_parkourStates = new PlayerStates[1];
+
+        Dictionary<PlayerStates, bool> statesDic = new Dictionary<PlayerStates, bool>();
+
         parkourActions.ForEach(action =>
         {
             if (gameManager.Log_ParkourPossibleState)
                 Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
+
+            Debug.Log("actionList : " + action);
+
+
+            for (int i = 0; i < parkourStates.Length; i++)
+            {
+                if (!statesDic.ContainsKey(parkourStates[i]))
+                    statesDic.Add(parkourStates[i], false);
+            }
+
 
             //인덱스 초과 예외처리
             //State를 여러개 갖고있고, 여러개 변수를 넣을때 인덱스로 따로 구분 안해주면 ture 걸릴때 무조건 첫번째로 파라미터에 넣은 액션이 나오기떄문에
@@ -290,16 +314,23 @@ public class Player : Entity
             if (parkourActionIndex < parkourStates.Length && action.CheckIfPossible())
             {
                 currentParkourActionIndex = parkourActionIndex;
+
+                statesDic[parkourStates[parkourActionIndex]] = action.excutable;
+
+                temp_parkourStates = new PlayerStates[statesDic.Count];
+
+                for (int a = 0; a < temp_parkourStates.Length; a++)
+                {
+                    temp_parkourStates[a] = parkourStates[parkourActionIndex];
+                }
+
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
                 {
-                    //부호는 테스트 하면서 확인
-                    gameManager.TargetMatchOffsetStandard.transform.localPosition =
-new Vector3(gameManager.TargetMatchOffsetStandard.transform.localPosition.x + action.MatchPositionOffset.x
-, gameManager.TargetMatchOffsetStandard.transform.localPosition.y + action.MatchPositionOffset.y
-, gameManager.TargetMatchOffsetStandard.transform.localPosition.z + -Mathf.Sign(LocalFowardHitPoint.z) * action.MatchPositionOffset.z);
-
-                    gameManager.TargetMatchOffsetStandard.transform.rotation = transform.rotation;
+                    //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
+                    //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
+                    gameManager.TargetMatchOffsetStandard.transform.localPosition +=
+                    Quaternion.LookRotation(gameManager.TargetMatchOffsetStandard.transform.forward) * action.MatchPositionOffset;
 
                     StartCoroutine(PerformMatchTargetCor(action));
 
@@ -316,10 +347,26 @@ new Vector3(gameManager.TargetMatchOffsetStandard.transform.localPosition.x + ac
                     }
                     #endregion
                 }
-                stateMachine.ChangeState(parkourStates[parkourActionIndex]);
+                Debug.Log("실행된 액션 : " + action);
+
+                if (statesDic[parkourStates[parkourActionIndex]])
+                {
+                    stateMachine.ChangeState(parkourStates[parkourActionIndex]);
+                }
             }
             parkourActionIndex++;
         });
+        foreach (var item in statesDic)
+        {
+            Debug.Log("리스트 내용물 : " + item.Key + "     리스트 값 :" + item.Value);
+
+        }
+
+        foreach (var item in temp_parkourStates)
+        {
+            Debug.Log(item);
+        }
+        statesDic.Clear();
     }
 
 
@@ -381,6 +428,7 @@ new Vector3(gameManager.TargetMatchOffsetStandard.transform.localPosition.x + ac
     public void isHorizontalStop(bool horizontalStop) => this.horizontalStop = horizontalStop;
     public void SetControllable(bool isControlable)
     {
+        //애니메이션핸들러에도 on 할 수 있는 메소드 만들어놨음
         //파쿠르할때 콜라이더 걸려서 안올라가는거 방지
         this.isControlable = isControlable;
         CC.enabled = isControlable;

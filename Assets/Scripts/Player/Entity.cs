@@ -6,6 +6,7 @@ public class Entity : MonoBehaviour
 {
     #region Infos
     [Header("Entity")]
+    public GameManager gameManager;
     [Header("Collision Info")]
     [SerializeField] public bool isGrounded = false;
     [SerializeField] public float GroundedOffset = -0.14f; //거친 표면 체크에 유용
@@ -47,8 +48,10 @@ public class Entity : MonoBehaviour
     }
 
     //모서리 감지
-    public bool DetectingLedge(Vector3 moveDir, float heightStandard = 0.75f)
+    public bool DetectingLedge(Vector3 moveDir, out LedgeData ledgeData, float heightStandard = 0.75f)
     {
+        ledgeData = new LedgeData();
+
         if (moveDir == Vector3.zero)
             return false;
 
@@ -57,14 +60,38 @@ public class Entity : MonoBehaviour
 
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, ledgeRayLength, Obstacle))
         {
-            Debug.DrawRay(origin, Vector3.down * ledgeRayLength, Color.green);
 
-            float height = transform.position.y - hit.point.y;
+            var surfaceRayOrigin = transform.position + transform.forward * 1.8f + Vector3.down * 0.1f;
 
-            //heightStandard 보다 높이가 크면 이동시켜도 안떨어지게
-            if (height >= heightStandard)
+            if (gameManager.Visible_LedgeRay)
             {
-                return true;
+                Debug.DrawRay(origin, Vector3.down * ledgeRayLength, Color.green);
+
+                Debug.DrawRay(transform.position, transform.forward * 1.8f, Color.red);
+                Debug.DrawRay(transform.position + transform.forward * 1.8f, Vector3.down * 0.1f, Color.red);
+                Debug.DrawRay(surfaceRayOrigin, -transform.forward * 1.8f, Color.red);
+            }
+
+            if (Physics.Raycast(surfaceRayOrigin, -transform.forward, out RaycastHit surfaceHit, 1.8f, Obstacle))
+            {
+                float height = transform.position.y - hit.point.y;
+
+                //heightStandard 보다 높은곳이면 모서리 파쿠르 나올수있는 판정
+                if (height >= heightStandard)
+                {
+                    //플레이어의 앞 방향과, 플레이어가 서있는 장애물의 normal 각도 
+                    ledgeData.angle = Vector3.Angle(transform.forward, surfaceHit.normal);
+                    ledgeData.height = height;
+                    ledgeData.surfaceHit = surfaceHit;
+
+                    if (gameManager.Visible_LedgeRay)
+                    {
+                        Debug.DrawRay(surfaceHit.point, surfaceHit.normal * 5f, Color.blue);
+                        Debug.Log("player - ledge angle : " + ledgeData.angle);
+                    }
+
+                    return true;
+                }
             }
         }
         return false;

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerAirborneState : PlayerStates
 {
-    protected float fallingTimer = 0f;
     public PlayerAirborneState(Player player, PlayerStateMachine stateMachine)
         : base(player, stateMachine)
     {
