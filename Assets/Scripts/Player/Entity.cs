@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -58,32 +59,32 @@ public class Entity : MonoBehaviour
 
         //플레이어 포지션 기준으로 플레이어 움직이는 방향으로 origin 포인트 설정
         var origin = transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
-        var origin_Left = Vector3.left * ledgeCheckPlayerLRFootOffset + transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
-        var origin_Right = Vector3.right * ledgeCheckPlayerLRFootOffset + transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
 
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, ledgeRayLength, Obstacle))
+        if (PhysicsUtil.ThreeRayCasts(origin, Vector3.down, ledgeCheckPlayerLRFootOffset,
+            transform, out List<RaycastHit> hits, ledgeRayLength, Obstacle, gameManager.Visible_LedgeRay))
         {
 
-            var surfaceRayOrigin = transform.position + transform.forward * 1.8f + Vector3.down * 0.1f;
+            //리스트에서 height => 이하 조건(Where 기능)을 만족하는 요소들 반환
+            //즉, 현재 높이가 heightStandard 큰 요소들을 반환함.
+            //LINQ 함수들은 기본적으로 IEnumerable 타입으로 값을 반환함.
+            //List로 사용할것이니 .ToList()로 변환시켜줌
+            var validHits = hits.Where(y => transform.position.y - y.point.y > heightStandard).ToList();
 
-            if (gameManager.Visible_LedgeRay)
+            if (validHits.Count > 0)
             {
-                Debug.DrawRay(origin, Vector3.down * ledgeRayLength, Color.green);
-                Debug.DrawRay(origin_Left, Vector3.down * ledgeRayLength, Color.green);
-                Debug.DrawRay(origin_Right, Vector3.down * ledgeRayLength, Color.green);
+                //첫번째로 Ledge감지한 레이캐스트 바닥에 point 좌표 생김
+                var surfaceRayOrigin = validHits[0].point;
+                //y축좌표 플레이어보다 조금 아래로가게 수정
+                surfaceRayOrigin.y = transform.position.y - 0.2f;
 
-                Debug.DrawRay(transform.position, transform.forward * 1.8f, Color.red);
-                Debug.DrawRay(transform.position + transform.forward * 1.8f, Vector3.down * 0.1f, Color.red);
-                Debug.DrawRay(surfaceRayOrigin, -transform.forward * 1.8f, Color.red);
-            }
+                if (gameManager.Visible_LedgeRay)
+                    Debug.DrawLine(surfaceRayOrigin, transform.position, Color.cyan);
 
-            if (Physics.Raycast(surfaceRayOrigin, -transform.forward, out RaycastHit surfaceHit, 1.8f, Obstacle))
-            {
-                float height = transform.position.y - hit.point.y;
-
-                //heightStandard 보다 높은곳이면 모서리 파쿠르 나올수있는 판정
-                if (height >= heightStandard)
+                //surfaceRayOrigin가 transform.position을 바라보는 방향
+                if (Physics.Raycast(surfaceRayOrigin, transform.position - surfaceRayOrigin, out RaycastHit surfaceHit, 1.8f, Obstacle))
                 {
+                    float height = transform.position.y - validHits[0].point.y;
+
                     //플레이어의 앞 방향과, 플레이어가 서있는 장애물의 normal 각도 
                     ledgeData.angle = Vector3.Angle(transform.forward, surfaceHit.normal);
                     ledgeData.height = height;
@@ -96,6 +97,7 @@ public class Entity : MonoBehaviour
                     }
 
                     return true;
+
                 }
             }
         }

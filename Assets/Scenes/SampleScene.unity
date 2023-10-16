@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7508,6 +7508,7 @@ MonoBehaviour:
     m_Bits: 0
   ledgeRayLength: 10
   ledgeCheckOriginOffset: 0.5
+  ledgeCheckPlayerLRFootOffset: 0.34
   ledgeCheckUpOffset: 1
   isOnLedge: 0
   CC: {fileID: 0}
@@ -18351,8 +18352,9 @@ MonoBehaviour:
   Obstacle:
     serializedVersion: 2
     m_Bits: 11534336
-  ledgeRayLength: 10
-  ledgeCheckOriginOffset: 0.5
+  ledgeRayLength: 100
+  ledgeCheckOriginOffset: 0.34
+  ledgeCheckPlayerLRFootOffset: 0.34
   ledgeCheckUpOffset: 1
   isOnLedge: 0
   CC: {fileID: 0}
@@ -23010,6 +23012,7 @@ MonoBehaviour:
     m_Bits: 0
   ledgeRayLength: 10
   ledgeCheckOriginOffset: 0.5
+  ledgeCheckPlayerLRFootOffset: 0.34
   ledgeCheckUpOffset: 1
   isOnLedge: 0
   CC: {fileID: 0}

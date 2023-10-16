@@ -23,7 +23,7 @@ public class PlayerStandJumpingDownState : PlayerParkourState
         player.Can_MoveHorizontally = false;
 
         if (isAnimEnd)
-            stateMachine.ChangeState(player.landingState);
+            stateMachine.ChangeState(player.idleState);
 
 
 

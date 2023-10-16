@@ -251,7 +251,7 @@ public class PlayerStates
             // 수직 벨로시티 무한히 감소하는 것 방지
             // 파쿠르 중일때 velocity값 크게 유지되는거 방지(내려오는 파쿠르일때 급강하 방지)
             // 점프중일때 장애물 체크해서 급강하 하는거 방지
-            if (verticalVelocity < 0.0f && !player.inParkourAction && !anim.GetBool(gameManager.animIDJump))
+            if (verticalVelocity < 0.0f && !player.inParkourAction && GetType().Name == "PlayerJumpState")
                 verticalVelocity = player.groundedGravity;
         }
         else
