@@ -75,6 +75,7 @@ public class PlayerStates
         player.LedgeData = ledgeData;
 
         Move();
+        LedgeMovement();
         ApplyGravity();
         whenLostControl();
     }
@@ -180,7 +181,7 @@ public class PlayerStates
 
         targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
-        if (player.isGrounded && player.Can_MoveHorizontally)
+        if (player.isGrounded && player.Can_MoveHorizontally && !LedgeMovement())
         {
             //  Debug.Log("타겟 디렉션 적용중");
             CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
@@ -198,6 +199,19 @@ public class PlayerStates
 
         anim.SetFloat(gameManager.animIDSpeed, animationBlend);
         anim.SetFloat(gameManager.animIDMotionSpeed, inputMagnitude);
+    }
+
+    //모서리에서의 움직임
+    protected bool LedgeMovement()
+    {
+        float angle = player.LedgeData.angle;
+
+        if (player.isOnLedge && angle < 90)
+        {
+            CC.Move(Vector3.zero);
+            return true;
+        }
+        return false;
     }
     //protected void Jump()
     //{

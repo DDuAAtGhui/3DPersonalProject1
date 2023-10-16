@@ -38,13 +38,18 @@ public class PlayerGroundedState : PlayerStates
         //제자리 점프시 Ground체크가 살짝 되기때문에 그때 유지된 Veloicty값에 영향받아 움직이는거 방지
         if (player._inputJump && !player.isBusy && player._inputXZ == Vector2.zero)
         {
-            player.isHorizontalStop(true);
+            player.horizontalStop = true;
             stateMachine.ChangeState(player.jumpState);
         }
 
         //움직이다가 점프시 속도 유지
         if (player._inputJump && !player.isBusy && player._inputXZ != Vector2.zero)
             stateMachine.ChangeState(player.jumpState);
+
+        ////각도 제한등의 파쿠르 액션 조건은 ParkourAction에 있으니 기본적인 bool값만 체크해주기가 가능
+        ///모서리에서 움직이면 내려가는 애니메이션 사용할거면 사용
+        //if (player._inputXZ != Vector2.zero && player.isOnLedge && !player.hitData.forwardHitFound)
+        //    player.PerformParkourState(player.standjumpingDownState);
     }
     public override void FixedUpdate()
     {
@@ -58,7 +63,7 @@ public class PlayerGroundedState : PlayerStates
     public override void Exit()
     {
         base.Exit();
-        player.isHorizontalStop(false);
+        player.horizontalStop = false;
     }
     public override void OnCollisionEnter(Collision collision)
     {

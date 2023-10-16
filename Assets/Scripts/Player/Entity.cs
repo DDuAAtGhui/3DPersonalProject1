@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour
     [Header("Ledge Check Info")]
     [SerializeField] public float ledgeRayLength = 10f;
     [SerializeField] public float ledgeCheckOriginOffset = 0.5f;
+    [SerializeField] public float ledgeCheckPlayerLRFootOffset = 0.34f;
     [SerializeField] public float ledgeCheckUpOffset = 1f;
     [HideInInspector] public bool isOnLedge = false;
     #endregion
@@ -57,6 +58,8 @@ public class Entity : MonoBehaviour
 
         //플레이어 포지션 기준으로 플레이어 움직이는 방향으로 origin 포인트 설정
         var origin = transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
+        var origin_Left = Vector3.left * ledgeCheckPlayerLRFootOffset + transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
+        var origin_Right = Vector3.right * ledgeCheckPlayerLRFootOffset + transform.position + moveDir * ledgeCheckOriginOffset + Vector3.up * ledgeCheckUpOffset;
 
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, ledgeRayLength, Obstacle))
         {
@@ -66,6 +69,8 @@ public class Entity : MonoBehaviour
             if (gameManager.Visible_LedgeRay)
             {
                 Debug.DrawRay(origin, Vector3.down * ledgeRayLength, Color.green);
+                Debug.DrawRay(origin_Left, Vector3.down * ledgeRayLength, Color.green);
+                Debug.DrawRay(origin_Right, Vector3.down * ledgeRayLength, Color.green);
 
                 Debug.DrawRay(transform.position, transform.forward * 1.8f, Color.red);
                 Debug.DrawRay(transform.position + transform.forward * 1.8f, Vector3.down * 0.1f, Color.red);

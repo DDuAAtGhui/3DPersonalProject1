@@ -19,6 +19,12 @@ public class ParkourAction : ScriptableObject
     [SerializeField] float maxDistance;
     [SerializeField] string obstacleTag;
 
+    [Header("Optional")]
+    [SerializeField] float forwardMovement = 0f;
+    [SerializeField] bool usingLedgeAngle = false;
+    [SerializeField] float ledgeAngleLimit = 50f;
+    [SerializeField] bool usingObstacleTag = true;
+
     #endregion
     #region 파쿠르 시 장애물 방향으로 회전
     [Header("Rotate To Obstacle")]
@@ -51,10 +57,6 @@ public class ParkourAction : ScriptableObject
     //매칭이 일어날 좌표
     public Vector3 MatchPosition { get; set; }
 
-    [Header("Optional")]
-    [SerializeField] float forwardMovement = 0f;
-    [SerializeField] bool usingLedgeAngle = false;
-    [SerializeField] float ledgeAngleLimit = 50f;
 
     //애니메이션 뒤집는 중인지 체크.
     //애니메이터 인스펙터에서 파라미터로 연결해줄것
@@ -83,11 +85,9 @@ public class ParkourAction : ScriptableObject
         return true;
     }
 
-    public bool excutable;
     //싱글톤, 상태머신과 사용
     public virtual bool CheckIfPossible()
     {
-        excutable = false;
 
         temp_BodyPart = matchBodyPart;
 
@@ -100,35 +100,63 @@ public class ParkourAction : ScriptableObject
 
 
         //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
-        if (hitData.forwardHitFound && !string.IsNullOrEmpty(obstacleTag) && hitData.forwardHit.transform.tag != obstacleTag)
+        if (hitData.forwardHitFound && hitData.forwardHit.transform.tag != obstacleTag)
         {
-            Debug.Log(animName + " 장애물 태그 or 앞에 오브젝트 존재하지않음으로 통과 실패");
+            if (GameManager.instance.Log_ParkourActionSuccessInfo)
+                Debug.Log(animName + " 장애물 태그 or 앞에 오브젝트 존재하지않음으로 통과 실패");
             return false;
         }
+
+        if (usingObstacleTag && string.IsNullOrEmpty(obstacleTag))
+        {
+            if (GameManager.instance.Log_ParkourActionSuccessInfo)
+                Debug.Log(animName + "obstacleTag필드 비어있음으로 통과 실패");
+            return false;
+        }
+
 
         //거리와 높이 체크(입력했을때만)
         if (minHeight != 0 && maxHeight != 0 && minDistance != 0 && maxDistance != 0)
             if (!hitData.heightHitFound || height < minHeight || height > maxHeight || distance < minDistance || distance > maxDistance)
             {
-                Debug.Log(animName + " 높이 or 거리 통과 실패");
+                if (GameManager.instance.Log_ParkourActionSuccessInfo)
+                    Debug.Log(animName + " 높이 or 거리 통과 실패");
                 return false;
             }
 
+        //모서리에서(= 앞에 장애물이 없고 플레이어 앞이 땅일때)
         //각도 제한 있을 때 특정 각도 이하면 false 반환
-        if (usingLedgeAngle && player.LedgeData.angle > ledgeAngleLimit)
+        if (usingLedgeAngle)
         {
-            Debug.Log(animName + " 각도 제한으로 통과 실패");
-            return false;
+            if (player.LedgeData.angle > ledgeAngleLimit)
+            {
+                if (GameManager.instance.Log_ParkourActionSuccessInfo)
+                    Debug.Log(animName + " 각도 제한으로 통과 실패");
+
+                return false;
+            }
+
+            if (player.hitData.forwardHitFound)
+            {
+                if (GameManager.instance.Log_ParkourActionSuccessInfo)
+                    Debug.Log(animName + " 앞에 장애물 감지되어 모서리가 아님");
+
+                return false;
+            }
         }
 
         if (rotateToObstacle)
+        {
+            Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * 5f, Color.yellow);
             TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
+        }
 
         if (enableTargetMatching)
             MatchPosition = hitData.heighHit.point;
 
-        Debug.Log(animName + "통과");
-        excutable = true;
+        if (GameManager.instance.Log_ParkourActionSuccessInfo)
+            Debug.Log(animName + "통과");
+
         return true;
     }
 

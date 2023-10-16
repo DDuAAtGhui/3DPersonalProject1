@@ -18,7 +18,10 @@ MonoBehaviour:
   minDistance: 0.3
   maxDistance: 1
   obstacleTag: Obstacle_Fence
-  noNeedForwardHit: 0
+  forwardMovement: 2
+  usingLedgeAngle: 0
+  ledgeAngleLimit: 50
+  usingObstacleTag: 1
   rotateToObstacle: 1
   postActionDelay: 0
   rotateMultiflier: 150
@@ -29,6 +32,3 @@ MonoBehaviour:
   matchPositionWeight: {x: 0, y: 1, z: 1}
   matchPositionOffset: {x: 0, y: 0, z: 0.2}
   matchPositionRotateWeight: 0
-  forwardMovement: 2
-  usingLedgeAngle: 0
-  ledgeAngleLimit: 50

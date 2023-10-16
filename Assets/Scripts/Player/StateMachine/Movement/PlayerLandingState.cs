@@ -25,7 +25,7 @@ public class PlayerLandingState : PlayerStates
 
         else if (player.totalFallingTime >= 0.5f && player._inputXZ == Vector2.zero)
         {
-            player.isHorizontalStop(true);
+            player.horizontalStop = true;
             player.Can_MoveHorizontally = false;
             player.Can_Rotate = false;
             anim.SetBool(gameManager.animIDLanding_Hard, true);
@@ -52,7 +52,7 @@ public class PlayerLandingState : PlayerStates
         //제자리 점프시 Ground체크가 살짝 되기때문에 그때 유지된 Veloicty값에 영향받아 움직이는거 방지
         if (player._inputJump && !player.isBusy && player._inputXZ == Vector2.zero)
         {
-            player.isHorizontalStop(true) ;
+            player.horizontalStop = true;
             stateMachine.ChangeState(player.jumpState);
         }
 
@@ -64,7 +64,7 @@ public class PlayerLandingState : PlayerStates
     public override void Exit()
     {
         player._inputWalk = false;
-        player.isHorizontalStop(true);
+        player.horizontalStop = true;
         player.Can_MoveHorizontally = true;
         player.Can_Rotate = true;
         roll = false;

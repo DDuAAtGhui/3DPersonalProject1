@@ -23,7 +23,7 @@ public class PlayerIdleState : PlayerGroundedState
             player.PerformParkourState(player.stepUpState, player.jumpUpState, player.crouchToClimbUpState,
                 player.jumpOver_RollState);
 
-        if (player._inputJump && player.isOnLedge)
+        if (player._inputJump && player.isOnLedge && !player.hitData.forwardHitFound)
             player.PerformParkourState(player.standjumpingDownState);
     }
     public override void Exit()

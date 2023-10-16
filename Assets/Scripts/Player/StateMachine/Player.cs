@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -283,46 +284,29 @@ public class Player : Entity
         }
         return hitData;
     }
-
-    //상태머신 활용형
     public void PerformParkourState(params PlayerStates[] parkourStates)
     {
         parkourActionIndex = 0;
 
-        PlayerStates[] temp_parkourStates = new PlayerStates[1];
-
-        Dictionary<PlayerStates, bool> statesDic = new Dictionary<PlayerStates, bool>();
+        int successActionIndex = 0;
+        List<ParkourAction> temp_parkourActions = new List<ParkourAction>();
 
         parkourActions.ForEach(action =>
         {
             if (gameManager.Log_ParkourPossibleState)
                 Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
 
-            Debug.Log("actionList : " + action);
+            if (action.CheckIfPossible())
+                temp_parkourActions.Add(action);
 
-
-            for (int i = 0; i < parkourStates.Length; i++)
-            {
-                if (!statesDic.ContainsKey(parkourStates[i]))
-                    statesDic.Add(parkourStates[i], false);
-            }
-
+            // Debug.Log("actionList : " + action + " excutable : " + action.excutable);
 
             //인덱스 초과 예외처리
             //State를 여러개 갖고있고, 여러개 변수를 넣을때 인덱스로 따로 구분 안해주면 ture 걸릴때 무조건 첫번째로 파라미터에 넣은 액션이 나오기떄문에
             //params로 무한히 받고 배열 인덱스로 따로 관리해줌
-            if (parkourActionIndex < parkourStates.Length && action.CheckIfPossible())
+            if (parkourActionIndex < parkourActions.Count && action.CheckIfPossible())
             {
                 currentParkourActionIndex = parkourActionIndex;
-
-                statesDic[parkourStates[parkourActionIndex]] = action.excutable;
-
-                temp_parkourStates = new PlayerStates[statesDic.Count];
-
-                for (int a = 0; a < temp_parkourStates.Length; a++)
-                {
-                    temp_parkourStates[a] = parkourStates[parkourActionIndex];
-                }
 
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
@@ -347,28 +331,17 @@ public class Player : Entity
                     }
                     #endregion
                 }
-                Debug.Log("실행된 액션 : " + action);
+                //  Debug.Log("실행된 액션 : " + action + " excutable : " + action.excutable);
+                
+                stateMachine.ChangeState(LevenShteinStringSimilarity.FindMostSimilarState
+                    (action.ToString(), parkourStates, out float matchingPercentage));
 
-                if (statesDic[parkourStates[parkourActionIndex]])
-                {
-                    stateMachine.ChangeState(parkourStates[parkourActionIndex]);
-                }
+                successActionIndex++;
             }
             parkourActionIndex++;
         });
-        foreach (var item in statesDic)
-        {
-            Debug.Log("리스트 내용물 : " + item.Key + "     리스트 값 :" + item.Value);
-
-        }
-
-        foreach (var item in temp_parkourStates)
-        {
-            Debug.Log(item);
-        }
-        statesDic.Clear();
+        temp_parkourActions.Clear();
     }
-
 
     //Stop 반드시 걸어줄것. 현재 ParkourStates에서 Stop 걸어줌
     IEnumerator PerformMatchTargetCor(ParkourAction action)
@@ -425,7 +398,6 @@ public class Player : Entity
             Debug.Log("플레이어가 여유로운 상태");
         isBusy = false;
     }
-    public void isHorizontalStop(bool horizontalStop) => this.horizontalStop = horizontalStop;
     public void SetControllable(bool isControlable)
     {
         //애니메이션핸들러에도 on 할 수 있는 메소드 만들어놨음
@@ -513,3 +485,56 @@ public class Player : Entity
     }
     #endregion
 }
+
+#region 임시보관용
+//public void PerformParkourState(params PlayerStates[] parkourStates)
+//{
+//    parkourActionIndex = 0;
+
+//    List<ParkourAction> temp_parkourActions = new List<ParkourAction>();
+
+//    parkourActions.ForEach(action =>
+//    {
+//        if (gameManager.Log_ParkourPossibleState)
+//            Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
+
+//        // Debug.Log("actionList : " + action + " excutable : " + action.excutable);
+
+//        //인덱스 초과 예외처리
+//        //State를 여러개 갖고있고, 여러개 변수를 넣을때 인덱스로 따로 구분 안해주면 ture 걸릴때 무조건 첫번째로 파라미터에 넣은 액션이 나오기떄문에
+//        //params로 무한히 받고 배열 인덱스로 따로 관리해줌
+//        if (parkourActionIndex < parkourStates.Length && action.CheckIfPossible())
+//        {
+//            currentParkourActionIndex = parkourActionIndex;
+
+//            //타겟매칭 활성화 하면 실행
+//            if (action.EnableTargetMatching)
+//            {
+//                //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
+//                //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
+//                gameManager.TargetMatchOffsetStandard.transform.localPosition +=
+//                Quaternion.LookRotation(gameManager.TargetMatchOffsetStandard.transform.forward) * action.MatchPositionOffset;
+
+//                StartCoroutine(PerformMatchTargetCor(action));
+
+//                #region 디버그
+//                if (gameManager.Log_TargetMatch)
+//                {
+//                    Debug.Log($"==================\n" +
+//                     $"MatchTarget Info\n" +
+//                     $"anim.targetPosition : {anim.targetPosition} \n " +
+//                     $"action.MatchPosition : {action.MatchPosition} \n " +
+//                     $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
+//                     $"action.MatchStartTime : {action.MatchStartTime}\n" +
+//                     $"action.MatchTargetTime : {action.MatchTargetTime}");
+//                }
+//                #endregion
+//            }
+
+//          //  Debug.Log("실행된 액션 : " + action + " excutable : " + action.excutable);
+//            stateMachine.ChangeState(parkourStates[parkourActionIndex]);
+//        }
+//        parkourActionIndex++;
+//    });
+//}
+#endregion
