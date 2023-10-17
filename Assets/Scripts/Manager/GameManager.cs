@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
         CursorContorl();
         animParameterToHash();
         CalculateDigitalInputToAnalog();
+
     }
 
     void CursorContorl()
@@ -75,6 +77,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDLanding_Small;
     [HideInInspector] public int animIDLanding_Hard;
     [HideInInspector] public int animIDGrounded;
+    [HideInInspector] public int animIDLanding;
     [HideInInspector] public int animIDParkouring;
     [HideInInspector] public int animIDParkour_StepUp;
     [HideInInspector] public int animIDParkour_JumpUp;
@@ -91,6 +94,7 @@ public class GameManager : MonoBehaviour
         animIDLanding_Roll = Animator.StringToHash("Landing_Roll");
         animIDLanding_Hard = Animator.StringToHash("Landing_Hard");
         animIDGrounded = Animator.StringToHash("Grounded");
+        animIDLanding = Animator.StringToHash("isLanding");
         animIDParkouring = Animator.StringToHash("Parkouring"); //파쿠르 중일땐 기본 애니메이션에서 탈출하는 용도로 사용
         animIDParkour_StepUp = Animator.StringToHash("Parkour_StepUp");
         animIDParkour_JumpUp = Animator.StringToHash("Parkour_JumpUp");
@@ -112,8 +116,11 @@ public class GameManager : MonoBehaviour
     [Tooltip("플레이어 현재 스피드 표시")] public bool Log_PlayerSpeed = true;
     [Tooltip("플레이어의 벨로시티")] public bool Log_PlayerCurrentVelocity = true;
     [Tooltip("플레이어의 y축 속도 보존값")] public bool Log_PlayerVerticalVelocity = true;
+    [Tooltip("플레이어의 전체 낙하 시간")] public bool Log_PlayerTotalFallingTime = true;
     [Tooltip("플레이어가 현재 바쁜지 표시")] public bool Log_isBusy = true;
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물과 플레이어간의 거리와 높이 표시")] public bool Log_RayInfo_Obstacle_DistanceAndHeight = true;
+    [Tooltip("플레이어가 서있는 모서리 높이 표시")] public bool Log_LedgeHeight = true;
+    [Tooltip("모서리의 normal기준으로 플레이어의 이동방향 각도 표시")] public bool Log_moveDirAngle_toLedget = true;
     [Tooltip("forwardHit 레이캐스트에 감지된 오브젝트의 로컬 좌표계 기준 forwardHit.point 좌표계")] public bool Log_Local_ForwardHitPoint = true;
     [Tooltip("파쿠르 타겟매칭 정보 표시")] public bool Log_TargetMatch = true;
     [Tooltip("플레이어 앞에 있는 장애물의 두께 표시")] public bool Log_ObstacleThickness = true;

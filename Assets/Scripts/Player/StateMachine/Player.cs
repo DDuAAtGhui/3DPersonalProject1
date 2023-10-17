@@ -67,6 +67,8 @@ public class Player : Entity
     [Tooltip("fall스테이트 진입까지 걸리는시간 (계단에 유용)")]
     [SerializeField] public float FallTimeout = 0.15f;
     [Tooltip("공중 상태 진입 했을 때 점프 입력 할 수 있는 유예시간")][SerializeField] public float CoyoteTime = 0.1f;
+    [Tooltip("착지 모션 변화 낙하시간 기준")][SerializeField] public float landingMotionTimerStandard = 1f;
+    //  [Tooltip("착지 모션 변화 벨로시티 기준")][SerializeField] public float landingMotionVelocityStandard = -10f;
 
     [Header("Camera Info")]
     [SerializeField] public CinemachineFreeLook VCamera;
@@ -161,10 +163,10 @@ public class Player : Entity
         stateMachine.currentState.Update();
         CameraControl();
         GroundCheck();
-
-        #region 디버그 로그
         if (!inParkourAction)
             ParkourAbleObstacleCheck();
+
+        #region 디버그 로그
 
         if (gameManager.Log_PlayerCurrentVelocity)
             Debug.Log("Velocity : " + CC.velocity);
@@ -179,6 +181,12 @@ public class Player : Entity
         if (gameManager.Log_Local_ForwardHitPoint && hitData.forwardHitFound)
             Debug.Log("Local Foward HitPoint : "
                 + LocalFowardHitPoint);
+
+        if (gameManager.Log_LedgeHeight)
+            Debug.Log("모서리 높이 : " + LedgeData.height);
+
+        if (gameManager.Log_PlayerTotalFallingTime && totalFallingTime != 0)
+            Debug.Log("전체 낙하 시간 : " + totalFallingTime);
         #endregion
 
     }
@@ -224,6 +232,7 @@ public class Player : Entity
 
     }
 
+    [HideInInspector] public bool isLanding = false;
     void GroundCheck()
     {
         Vector3 spherePosition = new Vector3(transform.position.x,
@@ -233,7 +242,8 @@ public class Player : Entity
 
         PlayFallingAnimation = !Physics.Raycast(transform.position, Vector3.down, CanPlayFallingAnimationDistance, CanPlayFallingAimationLayer);
 
-        anim.SetBool(gameManager.animIDGrounded, isGrounded);
+        if (!isLanding)
+            anim.SetBool(gameManager.animIDGrounded, isGrounded);
     }
 
     [HideInInspector] Vector3 heightHitPointSnapShot; //가장 최근의 장애물 높이 기억 (초기화X)
@@ -332,7 +342,7 @@ public class Player : Entity
                     #endregion
                 }
                 //  Debug.Log("실행된 액션 : " + action + " excutable : " + action.excutable);
-                
+
                 stateMachine.ChangeState(LevenShteinStringSimilarity.FindMostSimilarState
                     (action.ToString(), parkourStates, out float matchingPercentage));
 
@@ -447,42 +457,6 @@ public class Player : Entity
 
 
     #region 연습용
-    IEnumerator DoParkourAction(ParkourAction action)
-    {
-        inParkourAction = true;
-        anim.applyRootMotion = true;
-        SetControllable(false);
-
-        anim.SetBool("mirrorAction", action.Mirror);
-        anim.CrossFade(action.AniName, 0.2f);
-        yield return null;
-
-        var animState = anim.GetNextAnimatorStateInfo(0);
-
-        if (!animState.IsName(action.AniName))
-            Debug.LogError("The parkour animation is wrong!");
-
-        float timer = 0f;
-        while (timer <= animState.length)
-        {
-            timer += Time.deltaTime;
-
-            // 파쿠르동안 오브젝트 방향으로 회전하기
-            if (action.RotateToObstacle)
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.TargetRotation, action.RotateMultiflier * Time.deltaTime);
-
-            if (action.EnableTargetMatching)
-                MatchTarget(action);
-
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(action.PostActionDelay);
-
-        anim.applyRootMotion = false;
-        SetControllable(true);
-        inParkourAction = false;
-    }
     #endregion
 }
 

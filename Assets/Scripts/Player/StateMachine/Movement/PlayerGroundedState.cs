@@ -48,8 +48,8 @@ public class PlayerGroundedState : PlayerStates
 
         ////각도 제한등의 파쿠르 액션 조건은 ParkourAction에 있으니 기본적인 bool값만 체크해주기가 가능
         ///모서리에서 움직이면 내려가는 애니메이션 사용할거면 사용
-        //if (player._inputXZ != Vector2.zero && player.isOnLedge && !player.hitData.forwardHitFound)
-        //    player.PerformParkourState(player.standjumpingDownState);
+        if (shouldJumpDown)
+            player.PerformParkourState(player.standjumpingDownState);
     }
     public override void FixedUpdate()
     {

@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerStates
 {
@@ -33,6 +34,7 @@ public class PlayerStates
     protected bool groundToFallState; //코요테 타임용 변수
     protected bool parkourToFallState; //낙하시간 녹화 필요한 파쿠르용 변수
     protected float fallingTimer = 0f;
+    protected float moveDirAngle_toLedge;
     #endregion
     public PlayerStates(Player player, PlayerStateMachine stateMachine)
     {
@@ -54,6 +56,7 @@ public class PlayerStates
 
 
 
+
         player.Can_MoveHorizontally = true;
         isAnimEnd = false;
     }
@@ -69,15 +72,25 @@ public class PlayerStates
         if (gameManager.Log_PlayerVerticalVelocity)
             Debug.Log("VerticalVelocity : " + verticalVelocity);
 
+        moveDirAngle_toLedge = Vector3.Angle(targetDirection, player.LedgeData.surfaceHit.normal);
+        if (gameManager.Log_moveDirAngle_toLedget)
+            Debug.Log("모서리의 normal기준으로 플레이어의 이동방향 각도 : " + moveDirAngle_toLedge);
+
         StateTimer -= Time.deltaTime;
 
-        player.isOnLedge = player.DetectingLedge(player.transform.forward, out LedgeData ledgeData, 1.5f);
+        player.isOnLedge = player.DetectingLedge(player.transform.forward, out LedgeData ledgeData,
+            player.ledgeCheckHeightStandard_Top, player.ledgeCheckHeightStandard_Bottom);
         player.LedgeData = ledgeData;
+
+
 
         Move();
         LedgeMovement();
         ApplyGravity();
         whenLostControl();
+
+        player.DetectingClimbableLedge(player.transform.forward, out RaycastHit hit);
+
     }
 
     public virtual void FixedUpdate()
@@ -90,6 +103,7 @@ public class PlayerStates
     {
         if (gameManager.Log_StateLateUpdate)
             Debug.Log("LateUpdate : " + this.GetType().Name);
+
     }
 
     public virtual void Exit()
@@ -201,16 +215,39 @@ public class PlayerStates
         anim.SetFloat(gameManager.animIDMotionSpeed, inputMagnitude);
     }
 
-    //모서리에서의 움직임
-    protected bool LedgeMovement()
+    //모서리에서의 움직임감지
+    protected bool shouldJumpDown = false;
+    float ledgeTimer = 0f; //모서리 탈출방향으로 입력하는 시간
+    protected bool LedgeMovement(float shouldJumpDownHeightLimit = 2f)
     {
         float angle = player.LedgeData.angle;
+        float height = player.LedgeData.height;
+        float moveDirAngle_toLedge = this.moveDirAngle_toLedge;
+        // 플레이어가 입력받아서 움직여야 하는 방향
+        if (player.isOnLedge && player._inputXZ != Vector2.zero &&
+            moveDirAngle_toLedge < 90 && height <= shouldJumpDownHeightLimit)
+        {
+            ledgeTimer += Time.deltaTime;
+            if (ledgeTimer >= 0.3f)
+            {
+                ledgeTimer = 0f;
+                shouldJumpDown = true;
+            }
+        }
 
+        else if (player.isOnLedge || moveDirAngle_toLedge >= 90)
+        {
+            ledgeTimer = 0f;
+            shouldJumpDown = false;
+        }
+
+        //플레이어의 forward 방향
         if (player.isOnLedge && angle < 90)
         {
             CC.Move(Vector3.zero);
             return true;
         }
+        shouldJumpDown = false;
         return false;
     }
     //protected void Jump()
@@ -243,6 +280,7 @@ public class PlayerStates
         if (!player.isControlable)
             return;
 
+
         if (player.isGrounded)
         {
             // 낙하 타이머 초기화
@@ -251,9 +289,15 @@ public class PlayerStates
             // 수직 벨로시티 무한히 감소하는 것 방지
             // 파쿠르 중일때 velocity값 크게 유지되는거 방지(내려오는 파쿠르일때 급강하 방지)
             // 점프중일때 장애물 체크해서 급강하 하는거 방지
-            if (verticalVelocity < 0.0f && !player.inParkourAction && GetType().Name == "PlayerJumpState")
-                verticalVelocity = player.groundedGravity;
+            if (verticalVelocity < 0.0f && GetType().Name != "PlayerJumpState")
+            {
+                if (!player.inParkourAction)
+                    verticalVelocity = player.groundedGravity;
+            }
+
         }
+
+
         else
         {
             // 타이머 초기화
@@ -266,6 +310,13 @@ public class PlayerStates
 
         if (verticalVelocity < terminalVelocity)
             verticalVelocity += player.Gravity * player.mass * Time.deltaTime;
+
+
+        if (CC.velocity.y < -0.5f)
+            player.mass = 3.5f * 1.5f;
+
+        else
+            player.mass = 3.5f;
 
     }
     protected void whenLostControl()

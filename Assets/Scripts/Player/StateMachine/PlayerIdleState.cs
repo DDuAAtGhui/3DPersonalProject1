@@ -12,8 +12,12 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
+
         //idle일때 벨로시티 초기화
-        CC.Move(Vector3.zero);
+        if(!parkourToFallState) 
+             CC.Move(Vector3.zero);
+
+
     }
     public override void Update()
     {

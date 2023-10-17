@@ -15,7 +15,11 @@ public class PlayerLandingState : PlayerStates
     {
         base.Enter();
 
-        if (player.totalFallingTime >= 0.5f && player._inputXZ != Vector2.zero)
+        //착지상태에서는 ground체크 안하려고 변수 생성
+        //Locomotion이 기본전환상태라 이거 안하면 착지모션 안나옴
+        anim.SetBool(gameManager.animIDLanding, true);
+
+        if (player.totalFallingTime >= player.landingMotionTimerStandard && player._inputXZ != Vector2.zero)
         {
             player.Can_MoveHorizontally = false;
             player.Can_Rotate = false;
@@ -23,7 +27,7 @@ public class PlayerLandingState : PlayerStates
             roll = true;
         }
 
-        else if (player.totalFallingTime >= 0.5f && player._inputXZ == Vector2.zero)
+        else if (player.totalFallingTime >= player.landingMotionTimerStandard && player._inputXZ == Vector2.zero)
         {
             player.horizontalStop = true;
             player.Can_MoveHorizontally = false;
@@ -33,11 +37,38 @@ public class PlayerLandingState : PlayerStates
         }
 
 
-        else if (player.totalFallingTime < 0.5f)
+        else if (player.totalFallingTime < player.landingMotionTimerStandard)
         {
             anim.SetBool(gameManager.animIDLanding_Small, true);
             small = true;
         }
+
+        //if (verticalVelocity <= player.landingMotionVelocityStandard && player._inputXZ != Vector2.zero)
+        //{
+        //    player.Can_MoveHorizontally = false;
+        //    player.Can_Rotate = false;
+        //    anim.SetBool(gameManager.animIDLanding_Roll, true);
+        //    roll = true;
+        //}
+
+        //else if (verticalVelocity <= player.landingMotionVelocityStandard && player._inputXZ == Vector2.zero)
+        //{
+        //    player.horizontalStop = true;
+        //    player.Can_MoveHorizontally = false;
+        //    player.Can_Rotate = false;
+        //    anim.SetBool(gameManager.animIDLanding_Hard, true);
+        //    hard = true;
+        //}
+
+
+        //else if (verticalVelocity > player.landingMotionVelocityStandard)
+        //{
+        //    anim.SetBool(gameManager.animIDLanding_Small, true);
+        //    small = true;
+        //}
+
+        Debug.Log("착지 낙하시간 판정 : " + player.totalFallingTime);
+      //  Debug.Log("착지 벨로시티 판정 : " + CC.velocity.y);
     }
     public override void Update()
     {
@@ -67,12 +98,14 @@ public class PlayerLandingState : PlayerStates
         player.horizontalStop = true;
         player.Can_MoveHorizontally = true;
         player.Can_Rotate = true;
+        player.totalFallingTime = 0f;
         roll = false;
         hard = false;
         small = false;
         anim.SetBool(gameManager.animIDLanding_Roll, false);
         anim.SetBool(gameManager.animIDLanding_Hard, false);
         anim.SetBool(gameManager.animIDLanding_Small, false);
+        anim.SetBool(gameManager.animIDLanding, false);
         base.Exit();
     }
 }
