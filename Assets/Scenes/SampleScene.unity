@@ -572,7 +572,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121253711}
-  m_LocalRotation: {x: 0.52271616, y: -0.00000003024001, z: 0.00000001854172, w: 0.8525068}
+  m_LocalRotation: {x: 0.52271616, y: 0.00000003024, z: -0.000000018541714, w: 0.8525068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4855,22 +4855,22 @@ PrefabInstance:
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8370817
+      value: 0.8370816
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.54707795
+      value: 0.547078
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000059837404
+      value: 0.00000007057484
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00000003910697
+      value: -0.000000046124462
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
@@ -13077,7 +13077,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221937996}
-  m_LocalRotation: {x: 0.54707795, y: 0.0000000014119964, z: -9.228194e-10, w: 0.83708173}
+  m_LocalRotation: {x: 0.54707795, y: 0.0000000014120047, z: -9.228236e-10, w: 0.83708173}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13870,7 +13870,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284841108}
-  m_LocalRotation: {x: 0.5470779, y: -0.00000005438901, z: 0.00000003554614, w: 0.83708173}
+  m_LocalRotation: {x: 0.54707795, y: 0.0000000014120047, z: -9.228236e-10, w: 0.83708173}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21196,6 +21196,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
         type: 3}
+      propertyPath: Log_PlayerSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
+        type: 3}
       propertyPath: Log_StateUpdate
       value: 0
       objectReference: {fileID: 0}
@@ -21243,6 +21248,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Log_ParkourActionSuccessInfo
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
+        type: 3}
+      propertyPath: Log_RayInfo_Obstacle_DistanceAndHeight
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
