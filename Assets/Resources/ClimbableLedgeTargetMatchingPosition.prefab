@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7150696775311352441}
   m_Layer: 0
-  m_Name: TargetMatchOffsetStandard
+  m_Name: ClimbableLedgeTargetMatchingPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5ed7030dd2ba78a4cbedbc63fae79fe0, type: 2}
+  - {fileID: 2100000, guid: e5c866de3dcad374aac63c167f7ddb60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

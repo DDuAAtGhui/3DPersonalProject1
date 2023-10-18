@@ -51,7 +51,10 @@ public class PlayerStates
         #endregion
 
         if (gameManager.Log_StateEnter)
+        {
             Debug.Log("Enter : " + this.GetType().Name);
+            Debug.Log("상태 진입시 parkourToFallState : " + parkourToFallState);
+        }
 
 
 
@@ -72,7 +75,7 @@ public class PlayerStates
         if (gameManager.Log_PlayerVerticalVelocity)
             Debug.Log("VerticalVelocity : " + verticalVelocity);
 
-        moveDirAngle_toLedge = Vector3.Angle(targetDirection, player.LedgeData.surfaceHit.normal);
+        moveDirAngle_toLedge = Vector3.Angle(targetDirection, player.LedgeData.LedgeHit.normal);
         if (gameManager.Log_moveDirAngle_toLedget)
             Debug.Log("모서리의 normal기준으로 플레이어의 이동방향 각도 : " + moveDirAngle_toLedge);
 
@@ -84,12 +87,13 @@ public class PlayerStates
 
 
 
+
+
         Move();
         LedgeMovement();
         ApplyGravity();
         whenLostControl();
 
-        player.DetectingClimbableLedge(player.transform.forward, out RaycastHit hit);
 
     }
 
@@ -250,6 +254,7 @@ public class PlayerStates
         shouldJumpDown = false;
         return false;
     }
+
     //protected void Jump()
     //{
     //    if (player.isGrounded)

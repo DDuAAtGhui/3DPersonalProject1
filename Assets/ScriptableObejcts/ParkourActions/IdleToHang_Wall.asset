@@ -10,28 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 765fa762c8d5d73418b257dbea8f76d4, type: 3}
-  m_Name: StandJumpingDown
+  m_Name: IdleToHang_Wall
   m_EditorClassIdentifier: 
-  animName: StandJumpingDown
+  animName: IdleToHang_Wall
   minHeight: 0
   maxHeight: 0
   minDistance: 0
   maxDistance: 0
   obstacleTag: 
-  rotateToObstacle: 0
+  rotateToObstacle: 1
   postActionDelay: 0
   rotateMultiflier: 150
-  enableTargetMatching: 0
-  matchBodyPart: 0
-  matchStartTime: 0
-  matchTargetTime: 0
-  matchPositionWeight: {x: 0, y: 1, z: 0}
+  enableTargetMatching: 1
+  matchBodyPart: 5
+  matchStartTime: 0.34
+  matchTargetTime: 0.7
+  matchPositionWeight: {x: 1, y: 1, z: 1}
   matchPositionOffset: {x: 0, y: 0, z: 0}
   matchPositionRotateWeight: 0
-  isHangingAction: 0
+  isHangingAction: 1
   forwardMovement: 0
-  usingLedgeAngle: 1
-  ledgeAngleLimit: 35
+  usingLedgeAngle: 0
+  ledgeAngleLimit: 50
   usingObstacleTag: 0
-  useCustomTargetMatchingPosition: 0
-  customTargetMatcingPositionOfObject: {fileID: 0}
+  useCustomTargetMatchingPosition: 1
+  customTargetMatcingPositionOfObject: {fileID: 417669300081207530, guid: 7a5fe6008a4df3d4fa8c0fe23283f357,
+    type: 3}

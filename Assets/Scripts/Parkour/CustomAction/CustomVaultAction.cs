@@ -55,14 +55,24 @@ public class CustomVaultAction : ParkourAction
 
         var player = GameManager.instance.player;
         var hitData = player.hitData;
+        var hangableData = player.hangableData;
 
+
+        Vector3 LocalhitPoint;
         if (!base.CheckIfPossible() || !hitData.forwardHitFound)
             return false;
 
         // hitdata.forwardHit오브젝트의 Transform기준으로
         // hitdata.forwardHit.point의 position을 Local좌표계로 변환
-        var LocalhitPoint = hitData.forwardHit.transform.
-            InverseTransformPoint(hitData.forwardHit.point);
+        if (!isHangingAction)
+            LocalhitPoint = hitData.forwardHit.transform.
+               InverseTransformPoint(hitData.forwardHit.point);
+
+        else
+        {
+            LocalhitPoint = hangableData.HangableHit.transform
+                .InverseTransformDirection(hangableData.HangableHit.point);
+        }
 
         // 오브젝트의 중심이 0이므로 X가 0보다 작으면 왼쪽
         // Z가 0보다 작은곳에 레이캐스트가 충돌했으면 거긴 물체의 뒤쪽임

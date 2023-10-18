@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,20 +30,40 @@ public class Entity : MonoBehaviour
     [HideInInspector] public bool isOnLedge = false;
 
     [Header("Climb Check Info")]
-    [SerializeField] public float climbableLedgeRayLength = 3f;
-    [SerializeField] public int climbableRayEA = 15;
-    [SerializeField] public Vector3 climbRayInterval = new Vector3(0, 0.18f, 0);
-    [SerializeField] public Vector3 climbRayOffset = new Vector3(0, 1.8f, 0);
-    [SerializeField] public LayerMask climbalbeLayer;
+    [SerializeField] public float hangableLedgeRayLength = 3f;
+    [SerializeField] public int hangableRayEA = 15;
+    [SerializeField] public Vector3 hangableRayInterval = new Vector3(0, 0.18f, 0);
+    [SerializeField] public Vector3 hangableRayOffset = new Vector3(0, 1.8f, 0);
+    [Tooltip("오브젝트 아래 모서리부터 이 수치만큼의 y축으로 오프셋적용해 아래로 레이캐스트 발사")][SerializeField] float hangableLedgeThickness = 0.4f;
+    [SerializeField] public LayerMask hangableLayer;
+    [HideInInspector] public bool isHangable = false;
+    [HideInInspector] public HangableData hangableData { get; set; }
+
     #endregion
     public virtual void Start()
     {
-
     }
 
     public virtual void Update()
     {
+        try
+        {
+            isHangable = DetectingHangableLedge(transform.forward
+    , out HangableData hangableLedgeHit, hangableLedgeThickness);
 
+            hangableData = hangableLedgeHit;
+
+            if (gameManager.Visible_MatchPosition)
+                gameManager.CustomTargetMatchingPosition.SetActive(true);
+
+            else
+                gameManager.CustomTargetMatchingPosition.SetActive(false);
+        }
+
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 
     public virtual void FixedUpdate()
@@ -99,7 +120,7 @@ public class Entity : MonoBehaviour
                     //플레이어의 앞 방향과, 플레이어가 서있는 장애물의 normal 각도 
                     ledgeData.angle = Vector3.Angle(transform.forward, surfaceHit.normal);
                     ledgeData.height = height;
-                    ledgeData.surfaceHit = surfaceHit;
+                    ledgeData.LedgeHit = surfaceHit;
 
                     if (gameManager.Visible_LedgeRay)
                     {
@@ -116,31 +137,52 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// 플레이어의 앞에 매달릴 수 있는 오브젝트 있는지 체크
+    /// 플레이어의 앞에 매달릴 수 있는 오브젝트 있는지 체크.
     /// 
     /// </summary>
     /// <param name="dir">플레이어의 앞 방향</param>
-    /// <param name="climbableLedgeHit"></param>
+    /// <param name="hangableLedgeHit">클라이밍 하는 오브젝트의 위쪽 모서리</param>
     /// <returns></returns>
-    public bool DetectingClimbableLedge(Vector3 dir, out RaycastHit climbableLedgeHit)
+    [SerializeField] Vector3 HangablePositionSnapshot;
+    public bool DetectingHangableLedge(Vector3 dir, out HangableData hangableLedgeHit, float hangableLedgeThickness = 0.4f)
     {
-        climbableLedgeHit = new RaycastHit();
+        hangableLedgeHit = new HangableData();
 
         if (dir == Vector3.zero)
             return false;
 
-        var origin = transform.position + climbRayOffset;
+        var origin = transform.position + hangableRayOffset;
 
-        var interval = climbRayInterval;
+        var interval = hangableRayInterval;
 
-        for (int i = 0; i < climbableRayEA; i++)
+        for (int i = 0; i < hangableRayEA; i++)
         {
-            Debug.DrawRay(origin + interval * i, dir * climbableLedgeRayLength);
-            if (Physics.Raycast(origin + interval * i, dir, out RaycastHit hit, climbableLedgeRayLength, climbalbeLayer))
+            Debug.DrawRay(origin + interval * i, dir * hangableLedgeRayLength);
+
+            hangableLedgeHit.hitFound = Physics.Raycast(origin + interval * i, dir, out RaycastHit hit, hangableLedgeRayLength, hangableLayer);
+
+            if (hangableLedgeHit.hitFound)
             {
-                climbableLedgeHit = hit;
+                var upper_origin = hit.point + Vector3.up * hangableLedgeThickness;
+
+                Physics.Raycast(upper_origin, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);
+                Debug.DrawRay(upper_origin, Vector3.down * hangableLedgeThickness * 2f, Color.red);
+
+                hangableLedgeHit.HangableHit = topHit;
+                hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
+
+                //for (int j = 0; j < 5; j++)
+                //{
+                //    Physics.Raycast(upper_origin + 0.01f * dir * j, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);
+                //    Debug.DrawRay(upper_origin + 0.01f * dir * j, Vector3.down * hangableLedgeThickness * 2f, Color.red);
+
+                //    hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
+                //    hangableLedgeHit.HangableHit = topHit;
+                //}
+
                 return true;
             }
+
         }
         return false;
     }

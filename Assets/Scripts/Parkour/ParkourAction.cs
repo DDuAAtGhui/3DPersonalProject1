@@ -8,6 +8,8 @@ using UnityEngine.PlayerLoop;
 //스크립터블 오브젝트같은건 게임중에 값 변하고 게임 꺼져도 초기화 안되니까
 //중간중간 변해야 하는값 같은거 있으면 임시 변수 만들어서 그거 활용해야함
 [CreateAssetMenu(menuName = "Parkour System/New parkour action")]
+
+//거리 높이등의 제한조건 필요하거나 타겟매칭이 필요한 액션들 조건설정
 public class ParkourAction : ScriptableObject
 {
     #region 파쿠르 할 장애물 정보와 애니메이션 이름
@@ -19,11 +21,6 @@ public class ParkourAction : ScriptableObject
     [SerializeField] float maxDistance;
     [SerializeField] string obstacleTag;
 
-    [Header("Optional")]
-    [SerializeField] float forwardMovement = 0f;
-    [SerializeField] bool usingLedgeAngle = false;
-    [SerializeField] float ledgeAngleLimit = 50f;
-    [SerializeField] bool usingObstacleTag = true;
 
     #endregion
     #region 파쿠르 시 장애물 방향으로 회전
@@ -41,6 +38,7 @@ public class ParkourAction : ScriptableObject
     [SerializeField] bool enableTargetMatching = true;
     [SerializeField] protected AvatarTarget matchBodyPart; //원본 바디파트
     protected AvatarTarget temp_BodyPart; //데이터 오염 방지
+
 
 
     //애니메이션 클립에서 캐릭터가 땅으로부터 떨어지는 시간(퍼센트)
@@ -61,6 +59,18 @@ public class ParkourAction : ScriptableObject
     //애니메이션 뒤집는 중인지 체크.
     //애니메이터 인스펙터에서 파라미터로 연결해줄것
     public bool Mirror { get; set; }
+    [Tooltip("어떤 종류의 액션인지 설정")]
+    [Header("액션 종류")]
+    [SerializeField] protected bool isHangingAction;
+
+    [Space(10)]
+    [Header("Optional")]
+    [SerializeField] float forwardMovement = 0f;
+    [SerializeField] bool usingLedgeAngle = false;
+    [SerializeField] float ledgeAngleLimit = 50f;
+    [SerializeField] bool usingObstacleTag = true;
+    [Tooltip("현재 기본 타겟매칭 포지션 : 플레이어 앞 장애물의 맨 위쪽 모서리")][SerializeField] bool useCustomTargetMatchingPosition;
+    [Tooltip("이 오브젝트의 포지션으로 타겟매칭됨")][SerializeField] public GameObject customTargetMatcingPositionOfObject;
     #endregion
 
     //기본 사용
@@ -90,6 +100,7 @@ public class ParkourAction : ScriptableObject
     {
 
         temp_BodyPart = matchBodyPart;
+        //Resources 폴더에 프리팹 넣고 불러온다음에 위치 변경시키면서 쓰기
 
         var player = GameManager.instance.player;
         var hitData = player.hitData;
@@ -97,10 +108,9 @@ public class ParkourAction : ScriptableObject
         float height = player.heightToObstacle;
         float distance = player.distanceToObstacle;
 
-
-
         //비어있지 않거나 설정된 태그에 맞을때 아니면 false 반환
-        if (hitData.forwardHitFound && hitData.forwardHit.transform.tag != obstacleTag)
+        if (hitData.forwardHitFound && hitData.forwardHit.transform.tag != obstacleTag
+        && !string.IsNullOrEmpty(obstacleTag))
         {
             if (GameManager.instance.Log_ParkourActionSuccessInfo)
                 Debug.Log(animName + " 장애물 태그 or 앞에 오브젝트 존재하지않음으로 통과 실패");
@@ -110,9 +120,10 @@ public class ParkourAction : ScriptableObject
         if (usingObstacleTag && string.IsNullOrEmpty(obstacleTag))
         {
             if (GameManager.instance.Log_ParkourActionSuccessInfo)
-                Debug.Log(animName + "obstacleTag필드 비어있음으로 통과 실패");
+                Debug.Log(animName + " obstacleTag필드 비어있음으로 통과 실패");
             return false;
         }
+
 
 
         //거리와 높이 체크(입력했을때만)
@@ -136,7 +147,7 @@ public class ParkourAction : ScriptableObject
                 return false;
             }
 
-            if (player.hitData.forwardHitFound)
+            if (hitData.forwardHitFound)
             {
                 if (GameManager.instance.Log_ParkourActionSuccessInfo)
                     Debug.Log(animName + " 앞에 장애물 감지되어 모서리가 아님");
@@ -145,17 +156,20 @@ public class ParkourAction : ScriptableObject
             }
         }
 
+        if (isHangingAction && !player.hangableData.hitFound)
+            return false;
+
         if (rotateToObstacle)
         {
             Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * 5f, Color.yellow);
             TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
         }
 
-        if (enableTargetMatching)
-            MatchPosition = hitData.heighHit.point;
+        //if (enableTargetMatching && !useCustomTargetMatchingPosition)
+        //    MatchPosition = hitData.heighHit.point;
 
         if (GameManager.instance.Log_ParkourActionSuccessInfo)
-            Debug.Log(animName + "통과");
+            Debug.Log(animName + " 통과");
 
         return true;
     }
@@ -173,4 +187,7 @@ public class ParkourAction : ScriptableObject
     public float MatchPositionRotateWeight => matchPositionRotateWeight;
     //Optional
     public float ForwardMovement => forwardMovement;
+    public bool UseCustomTargetMatchingPosition => useCustomTargetMatchingPosition;
+
+
 }

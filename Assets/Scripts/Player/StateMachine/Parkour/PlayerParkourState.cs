@@ -61,8 +61,6 @@ public class PlayerParkourState : PlayerStates
         player.SetControllable(true);
         anim.SetBool(gameManager.animIDParkouring, false);
 
-        //Å¸°Ù ¸ÅÄª Á¾·á
-        player.StopAllCoroutines();
-        gameManager.TargetMatchOffsetStandard.SetActive(false);
+        gameManager.StandardTargetMatchingPosition.SetActive(false);
     }
 }

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct LedgeData
+public struct HangableData
 {
     public float height;
-    public float angle;
-    public RaycastHit LedgeHit;
+    public bool hitFound;
+    public RaycastHit HangableHit;
 }

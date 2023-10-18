@@ -10,9 +10,6 @@ public class GameManager : MonoBehaviour
     #region 관리 멤버
     public Player player;
 
-    //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
-    //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
-    [HideInInspector] public GameObject TargetMatchOffsetStandard;
 
     // GetAxis스타일 쓰고싶으면 사용
     [Header("Optional - GetAxisStyle")]
@@ -34,9 +31,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        TargetMatchOffsetStandard = Resources.Load("TargetMatchOffsetStandard") as GameObject;
-        TargetMatchOffsetStandard = Instantiate(TargetMatchOffsetStandard, transform.position, Quaternion.identity);
-        TargetMatchOffsetStandard.SetActive(false);
+        LoadResources();
+    }
+
+    //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
+    //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
+    [HideInInspector] public GameObject StandardTargetMatchingPosition;
+    [HideInInspector] public GameObject CustomTargetMatchingPosition;
+    private void LoadResources()
+    {
+        StandardTargetMatchingPosition = Resources.Load("StandardTargetMatchingPosition") as GameObject;
+        StandardTargetMatchingPosition = Instantiate(StandardTargetMatchingPosition, transform.position, Quaternion.identity);
+        StandardTargetMatchingPosition.SetActive(false);
+
+        CustomTargetMatchingPosition = Resources.Load("ClimbableLedgeTargetMatchingPosition") as GameObject;
+        CustomTargetMatchingPosition = Instantiate(CustomTargetMatchingPosition, transform.position, Quaternion.identity);
+        CustomTargetMatchingPosition.SetActive(false);
     }
 
     private void Update()
@@ -84,6 +94,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_CrouchToClimbUp;
     [HideInInspector] public int animIDParkour_JumpOver_Roll;
     [HideInInspector] public int animIDParkour_StandJumpingDown;
+    [HideInInspector] public int animIDParkour_HangingIdle;
+    [HideInInspector] public int animIDParkour_IdleToHang;
+    [HideInInspector] public int animIDParkour_JumpFromHangingWall;
     void animParameterToHash()
     {
         animIDSpeed = Animator.StringToHash("Speed");
@@ -101,6 +114,9 @@ public class GameManager : MonoBehaviour
         animIDParkour_CrouchToClimbUp = Animator.StringToHash("Parkour_CrouchToClimbUp");
         animIDParkour_JumpOver_Roll = Animator.StringToHash("Parkour_JumpOver_Roll");
         animIDParkour_StandJumpingDown = Animator.StringToHash("Parkour_StandJumpingDown");
+        animIDParkour_HangingIdle = Animator.StringToHash("Parkour_HangingIdle");
+        animIDParkour_IdleToHang = Animator.StringToHash("Parkour_IdleToHang");
+        animIDParkour_JumpFromHangingWall = Animator.StringToHash("Parkour_JumpFromHangingWall");
     }
     #endregion
     #region DEBUG_OPTION

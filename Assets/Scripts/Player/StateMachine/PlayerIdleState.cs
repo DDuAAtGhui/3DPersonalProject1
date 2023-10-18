@@ -14,21 +14,24 @@ public class PlayerIdleState : PlayerGroundedState
         base.Enter();
 
         //idle일때 벨로시티 초기화
-        if(!parkourToFallState) 
-             CC.Move(Vector3.zero);
-
+        if (!parkourToFallState)
+            CC.Move(Vector3.zero);
 
     }
     public override void Update()
     {
         base.Update();
 
-        if (player._inputJump && player.hitData.forwardHitFound)
+        //매달리는게 우선되게
+        if (player._inputJump && !player.isHangable && player.hitData.forwardHitFound)
             player.PerformParkourState(player.stepUpState, player.jumpUpState, player.crouchToClimbUpState,
-                player.jumpOver_RollState);
+            player.jumpOver_RollState);
 
-        if (player._inputJump && player.isOnLedge && !player.hitData.forwardHitFound)
+        if (player._inputJump && !player.isHangable && player.isOnLedge && !player.hitData.forwardHitFound)
             player.PerformParkourState(player.standjumpingDownState);
+
+        if (player._inputJump && player.isHangable)
+            player.PerformParkourState(player.idleToHangWallState);
     }
     public override void Exit()
     {

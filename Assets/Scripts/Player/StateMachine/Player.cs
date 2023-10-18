@@ -102,6 +102,9 @@ public class Player : Entity
     public PlayerCrouchToClimbUpState crouchToClimbUpState { get; private set; }
     public PlayerJumpOver_RollState jumpOver_RollState { get; private set; }
     public PlayerStandJumpingDownState standjumpingDownState { get; private set; }
+    public PlayerHangingIdleWallState hangingIdleWallState { get; private set; }
+    public PlayerIdleToHangWallState idleToHangWallState { get; private set; }
+    public PlayerJumpFromHangingWallState jumpFromHangingWallState { get; private set; }
     private void Awake()
     {
 
@@ -119,6 +122,9 @@ public class Player : Entity
         crouchToClimbUpState = new PlayerCrouchToClimbUpState(this, stateMachine);
         jumpOver_RollState = new PlayerJumpOver_RollState(this, stateMachine);
         standjumpingDownState = new PlayerStandJumpingDownState(this, stateMachine);
+        hangingIdleWallState = new PlayerHangingIdleWallState(this, stateMachine);
+        idleToHangWallState = new PlayerIdleToHangWallState(this, stateMachine);
+        jumpFromHangingWallState = new PlayerJumpFromHangingWallState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -275,13 +281,17 @@ public class Player : Entity
 
 
             if (gameManager.Visible_MatchPosition)
-                gameManager.TargetMatchOffsetStandard.SetActive(true);
+                gameManager.StandardTargetMatchingPosition.SetActive(true);
 
-            gameManager.TargetMatchOffsetStandard.transform.position = heightHitPointSnapShot;
+            gameManager.StandardTargetMatchingPosition.transform.position = heightHitPointSnapShot;
+
+            gameManager.CustomTargetMatchingPosition.transform.position
+             = hangableData.HangableHit.point;
+
 
             //TargetMatchOffsetStandard의 Forward 방향을 플레이어가 파쿠르 하는 방향과 일치시키기
             //이래야 offset할 때 플레이어 위치 변해도 일정한 결과값 도출
-            gameManager.TargetMatchOffsetStandard.transform.rotation =
+            gameManager.StandardTargetMatchingPosition.transform.rotation =
                 Quaternion.LookRotation(-hitData.forwardHit.normal);
 
         }
@@ -290,15 +300,13 @@ public class Player : Entity
         {
             distanceToObstacle = 0;
             heightToObstacle = 0;
-            gameManager.TargetMatchOffsetStandard.SetActive(false);
+            gameManager.StandardTargetMatchingPosition.SetActive(false);
         }
         return hitData;
     }
     public void PerformParkourState(params PlayerStates[] parkourStates)
     {
         parkourActionIndex = 0;
-
-        int successActionIndex = 0;
         List<ParkourAction> temp_parkourActions = new List<ParkourAction>();
 
         parkourActions.ForEach(action =>
@@ -323,8 +331,11 @@ public class Player : Entity
                 {
                     //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
                     //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
-                    gameManager.TargetMatchOffsetStandard.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.TargetMatchOffsetStandard.transform.forward) * action.MatchPositionOffset;
+                    gameManager.StandardTargetMatchingPosition.transform.localPosition +=
+                    Quaternion.LookRotation(gameManager.StandardTargetMatchingPosition.transform.forward) * action.MatchPositionOffset;
+
+                    gameManager.CustomTargetMatchingPosition.transform.localPosition +=
+                    Quaternion.LookRotation(gameManager.StandardTargetMatchingPosition.transform.forward) * action.MatchPositionOffset;
 
                     StartCoroutine(PerformMatchTargetCor(action));
 
@@ -338,6 +349,8 @@ public class Player : Entity
                          $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
                          $"action.MatchStartTime : {action.MatchStartTime}\n" +
                          $"action.MatchTargetTime : {action.MatchTargetTime}");
+
+                        Debug.Log(action.ToString());
                     }
                     #endregion
                 }
@@ -345,15 +358,12 @@ public class Player : Entity
 
                 stateMachine.ChangeState(LevenShteinStringSimilarity.FindMostSimilarState
                     (action.ToString(), parkourStates, out float matchingPercentage));
-
-                successActionIndex++;
             }
             parkourActionIndex++;
         });
         temp_parkourActions.Clear();
     }
 
-    //Stop 반드시 걸어줄것. 현재 ParkourStates에서 Stop 걸어줌
     IEnumerator PerformMatchTargetCor(ParkourAction action)
     {
         float timer = 0f;
@@ -384,10 +394,20 @@ public class Player : Entity
             return;
         }
 
-        //TargetMatchOffsetStandard 이게 heightHit스냅샷을 가지고 있고 오프셋까지 적용되는 좌표계임
-        anim.MatchTarget(gameManager.TargetMatchOffsetStandard.transform.position, transform.rotation, action.MatchBodyPart,
-        new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
-        action.MatchStartTime, action.MatchTargetTime);
+        if (!action.UseCustomTargetMatchingPosition)
+            anim.MatchTarget(gameManager.StandardTargetMatchingPosition.transform.position, transform.rotation, action.MatchBodyPart,
+            new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
+            action.MatchStartTime, action.MatchTargetTime);
+
+        else
+            anim.MatchTarget(gameManager.CustomTargetMatchingPosition.transform.position, transform.rotation, action.MatchBodyPart,
+            new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
+            action.MatchStartTime, action.MatchTargetTime);
+
+        //for (int i = 0; i < 30; i++)
+        //{
+        //    Debug.Log("타겟 매칭 실행중");
+        //}
     }
 
     public void ResetMatchTarget()
