@@ -26,6 +26,7 @@ public class PlayerHangingState : PlayerParkourState
     {
         base.Update();
 
+
         //구 크기 커가지고 키 입력할때만 보이게했음
         if (gameManager.Visible_MatchPosition && player._inputXZ != Vector2.zero)
             HangableObject.SetActive(true);
@@ -71,7 +72,7 @@ public class PlayerHangingState : PlayerParkourState
     public override void Exit()
     {
         base.Exit();
-       // gameManager.CustomTargetMatchingObject = gameManager.StoredObjectForSwitching;
+        // gameManager.CustomTargetMatchingObject = gameManager.StoredObjectForSwitching;
 
     }
 }

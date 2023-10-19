@@ -161,8 +161,11 @@ public class ParkourAction : ScriptableObject
 
         if (rotateToObstacle)
         {
-            Debug.DrawRay(hitData.forwardHit.point, -hitData.forwardHit.normal * 5f, Color.yellow);
-            TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
+            if (!isHangingAction)
+                TargetRotation = Quaternion.LookRotation(-hitData.forwardHit.normal);
+
+            else
+                TargetRotation = Quaternion.LookRotation(-player.hangableLedgeFrontHit.normal);
         }
 
         //if (enableTargetMatching && !useCustomTargetMatchingPosition)

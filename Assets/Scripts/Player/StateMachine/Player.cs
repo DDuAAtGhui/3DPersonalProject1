@@ -287,7 +287,8 @@ public class Player : Entity
             if (gameManager.Visible_MatchPosition)
                 gameManager.StandardTargetMatchingObject.SetActive(true);
 
-            gameManager.StandardTargetMatchingObject.transform.position = heightHitPointSnapShot;
+            gameManager.StandardTargetMatchingObject.transform.position
+                = heightHitPointSnapShot;
 
             gameManager.CustomTargetMatchingObject.transform.position
              = hangableData.HangableHit.point;
@@ -297,6 +298,9 @@ public class Player : Entity
             //이래야 offset할 때 플레이어 위치 변해도 일정한 결과값 도출
             gameManager.StandardTargetMatchingObject.transform.rotation =
                 Quaternion.LookRotation(-hitData.forwardHit.normal);
+
+            gameManager.CustomTargetMatchingObject.transform.rotation =
+                Quaternion.LookRotation(-hangableLedgeFrontHit.normal);
 
         }
 
@@ -339,7 +343,7 @@ public class Player : Entity
                     Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
 
                     gameManager.CustomTargetMatchingObject.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
+                    Quaternion.LookRotation(gameManager.CustomTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
 
                     StartCoroutine(PerformMatchTargetCor(action));
 
@@ -359,6 +363,10 @@ public class Player : Entity
                     #endregion
                 }
                 //  Debug.Log("실행된 액션 : " + action + " excutable : " + action.excutable);
+
+                //if (action.RotateToObstacle)
+                //    transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                //        action.TargetRotation, Time.deltaTime * action.RotateMultiflier);
 
                 stateMachine.ChangeState(LevenShteinStringSimilarity.FindMostSimilarState
                     (action.ToString(), parkourStates, out float matchingPercentage));

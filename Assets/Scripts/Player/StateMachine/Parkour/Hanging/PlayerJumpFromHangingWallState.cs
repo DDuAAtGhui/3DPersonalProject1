@@ -22,8 +22,11 @@ public class PlayerJumpFromHangingWallState : PlayerHangingState
         if (isAnimEnd)
             stateMachine.ChangeState(player.fallingState);
 
-        if (player.isGrounded)
-            stateMachine.ChangeState(player.landingState);
+        //if (player.isGrounded)
+        //{
+        //    stateMachine.ChangeState(player.landingState);
+        //}
+
     }
     public override void Exit()
     {

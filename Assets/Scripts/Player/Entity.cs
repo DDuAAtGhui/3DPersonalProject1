@@ -155,6 +155,7 @@ public class Entity : MonoBehaviour
     /// <param name="hangableLedgeHit">클라이밍 하는 오브젝트의 위쪽 모서리</param>
     /// <returns></returns>
     [SerializeField] Vector3 HangablePositionSnapshot;
+    [HideInInspector] public RaycastHit hangableLedgeFrontHit;
     public bool DetectingHangableLedge(Vector3 dir, out HangableData hangableLedgeHit, float hangableLedgeThickness = 0.4f)
     {
         hangableLedgeHit = new HangableData();
@@ -176,12 +177,24 @@ public class Entity : MonoBehaviour
             {
                 var upper_origin = hit.point + Vector3.up * hangableLedgeThickness;
 
-                Physics.Raycast(upper_origin, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);
+                var topHitFound = Physics.Raycast(upper_origin, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);
                 Debug.DrawRay(upper_origin, Vector3.down * hangableLedgeThickness * 2f, Color.red);
 
                 hangableLedgeHit.HangableHit = topHit;
 
                 hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
+
+                if (topHitFound)
+                {
+                    Debug.DrawRay(topHit.point, Vector3.back * 0.3f, Color.yellow);
+                    Debug.DrawRay(topHit.point + Vector3.back * 0.3f, Vector3.down * 0.1f, Color.yellow);
+                    Debug.DrawRay(topHit.point + Vector3.back * 0.3f + Vector3.down * 0.1f, Vector3.forward * 0.3f, Color.yellow);
+
+                    Physics.Raycast(topHit.point + Vector3.back * 0.3f + Vector3.down * 0.1f, Vector3.forward, out RaycastHit frontHit, 0.3f, hangableLayer);
+
+                    Debug.DrawRay(frontHit.point, -frontHit.normal * 3f, Color.yellow);
+                    hangableLedgeFrontHit = frontHit;
+                }
 
                 //for (int j = 0; j < 5; j++)
                 //{
