@@ -20,8 +20,8 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         if (player._inputJump && player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.jumpFromHangingWallState);
 
-        if (player._inputJump && player._inputXZ != Vector2.zero)
-            stateMachine.ChangeState(player.bracedHangHopState);
+        if (player._inputJump && player._inputXZ != Vector2.zero && neighbour.direction.y == 1)
+            player.PerformParkourState(player.PlayerBracedHangHopUpState);
     }
     public override void Exit()
     {

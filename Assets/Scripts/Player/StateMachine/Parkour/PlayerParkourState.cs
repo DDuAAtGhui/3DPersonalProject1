@@ -26,6 +26,8 @@ public class PlayerParkourState : PlayerStates
         parkourAction = player.parkourActions[player.currentParkourActionIndex];
         anim.SetBool("mirrorAction", parkourAction.Mirror);
 
+     //   gameManager.CustomTargetMatchingObject = gameManager.StoredObjectForSwitching;
+
         //GroundGraivty가 클 때 파쿠르 동작 진입시 급강하 방지
         verticalVelocity = 0;
     }
@@ -62,6 +64,6 @@ public class PlayerParkourState : PlayerStates
         player.SetControllable(true);
         anim.SetBool(gameManager.animIDParkouring, false);
 
-        gameManager.StandardTargetMatchingPosition.SetActive(false);
+        gameManager.StandardTargetMatchingObject.SetActive(false);
     }
 }

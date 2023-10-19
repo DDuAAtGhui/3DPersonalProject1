@@ -36,17 +36,27 @@ public class GameManager : MonoBehaviour
 
     //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
     //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
-    [HideInInspector] public GameObject StandardTargetMatchingPosition;
-    [HideInInspector] public GameObject CustomTargetMatchingPosition;
+    [HideInInspector] public GameObject StandardTargetMatchingObject;
+    [HideInInspector] public GameObject CustomTargetMatchingObject;
+    [HideInInspector] public GameObject HangableObject;
+
+    //타겟매칭 설정할 오브젝트 교환용으로 바꾸기전에 예전 오브젝트 보관용
+    [HideInInspector] public GameObject StoredObjectForSwitching;
     private void LoadResources()
     {
-        StandardTargetMatchingPosition = Resources.Load("StandardTargetMatchingPosition") as GameObject;
-        StandardTargetMatchingPosition = Instantiate(StandardTargetMatchingPosition, transform.position, Quaternion.identity);
-        StandardTargetMatchingPosition.SetActive(false);
+        StandardTargetMatchingObject = Resources.Load("StandardTargetMatchingPosition") as GameObject;
+        StandardTargetMatchingObject = Instantiate(StandardTargetMatchingObject, transform.position, Quaternion.identity);
+        StandardTargetMatchingObject.SetActive(false);
 
-        CustomTargetMatchingPosition = Resources.Load("ClimbableLedgeTargetMatchingPosition") as GameObject;
-        CustomTargetMatchingPosition = Instantiate(CustomTargetMatchingPosition, transform.position, Quaternion.identity);
-        CustomTargetMatchingPosition.SetActive(false);
+        CustomTargetMatchingObject = Resources.Load("ClimbableLedgeTargetMatchingPosition") as GameObject;
+        CustomTargetMatchingObject = Instantiate(CustomTargetMatchingObject, transform.position, Quaternion.identity);
+        CustomTargetMatchingObject.SetActive(false);
+
+        HangableObject = Resources.Load("HangableObject") as GameObject;
+        HangableObject = Instantiate(HangableObject, transform.position, Quaternion.identity);
+        HangableObject.SetActive(false);
+
+        StoredObjectForSwitching = CustomTargetMatchingObject;
     }
 
     private void Update()

@@ -105,7 +105,7 @@ public class Player : Entity
     public PlayerHangingIdleWallState hangingIdleWallState { get; private set; }
     public PlayerIdleToHangWallState idleToHangWallState { get; private set; }
     public PlayerJumpFromHangingWallState jumpFromHangingWallState { get; private set; }
-    public PlayerBracedHangHopState bracedHangHopState { get; private set; }
+    public PlayerBracedHangHopUpState PlayerBracedHangHopUpState { get; private set; }
     public PlayerBracedHangShimmyState bracedHangShimmyState { get; private set; }
     private void Awake()
     {
@@ -127,7 +127,7 @@ public class Player : Entity
         hangingIdleWallState = new PlayerHangingIdleWallState(this, stateMachine);
         idleToHangWallState = new PlayerIdleToHangWallState(this, stateMachine);
         jumpFromHangingWallState = new PlayerJumpFromHangingWallState(this, stateMachine);
-        bracedHangHopState = new PlayerBracedHangHopState(this, stateMachine);
+        PlayerBracedHangHopUpState = new PlayerBracedHangHopUpState(this, stateMachine);
         bracedHangShimmyState = new PlayerBracedHangShimmyState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
@@ -285,17 +285,17 @@ public class Player : Entity
 
 
             if (gameManager.Visible_MatchPosition)
-                gameManager.StandardTargetMatchingPosition.SetActive(true);
+                gameManager.StandardTargetMatchingObject.SetActive(true);
 
-            gameManager.StandardTargetMatchingPosition.transform.position = heightHitPointSnapShot;
+            gameManager.StandardTargetMatchingObject.transform.position = heightHitPointSnapShot;
 
-            gameManager.CustomTargetMatchingPosition.transform.position
+            gameManager.CustomTargetMatchingObject.transform.position
              = hangableData.HangableHit.point;
 
 
             //TargetMatchOffsetStandard의 Forward 방향을 플레이어가 파쿠르 하는 방향과 일치시키기
             //이래야 offset할 때 플레이어 위치 변해도 일정한 결과값 도출
-            gameManager.StandardTargetMatchingPosition.transform.rotation =
+            gameManager.StandardTargetMatchingObject.transform.rotation =
                 Quaternion.LookRotation(-hitData.forwardHit.normal);
 
         }
@@ -304,7 +304,7 @@ public class Player : Entity
         {
             distanceToObstacle = 0;
             heightToObstacle = 0;
-            gameManager.StandardTargetMatchingPosition.SetActive(false);
+            gameManager.StandardTargetMatchingObject.SetActive(false);
         }
         return hitData;
     }
@@ -335,11 +335,11 @@ public class Player : Entity
                 {
                     //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
                     //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
-                    gameManager.StandardTargetMatchingPosition.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.StandardTargetMatchingPosition.transform.forward) * action.MatchPositionOffset;
+                    gameManager.StandardTargetMatchingObject.transform.localPosition +=
+                    Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
 
-                    gameManager.CustomTargetMatchingPosition.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.StandardTargetMatchingPosition.transform.forward) * action.MatchPositionOffset;
+                    gameManager.CustomTargetMatchingObject.transform.localPosition +=
+                    Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
 
                     StartCoroutine(PerformMatchTargetCor(action));
 
@@ -399,12 +399,12 @@ public class Player : Entity
         }
 
         if (!action.UseCustomTargetMatchingPosition)
-            anim.MatchTarget(gameManager.StandardTargetMatchingPosition.transform.position, transform.rotation, action.MatchBodyPart,
+            anim.MatchTarget(gameManager.StandardTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
             action.MatchStartTime, action.MatchTargetTime);
 
         else
-            anim.MatchTarget(gameManager.CustomTargetMatchingPosition.transform.position, transform.rotation, action.MatchBodyPart,
+            anim.MatchTarget(gameManager.CustomTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
             action.MatchStartTime, action.MatchTargetTime);
 

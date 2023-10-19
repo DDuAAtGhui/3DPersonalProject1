@@ -41,7 +41,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public HangableData hangableData { get; set; }
 
     //°ü¸®¸â¹ö
-    [HideInInspector] public ClimbPoint currentPoint;
+    [HideInInspector] public ClimbPoint climbPoint;
 
 
     #endregion
@@ -53,19 +53,22 @@ public class Entity : MonoBehaviour
     {
         try
         {
-            isHangable = DetectingHangableLedge(transform.forward
-    , out HangableData hangableLedgeHit, hangableLedgeThickness);
+            if (!gameManager.player.inParkourAction)
+            {
+                isHangable = DetectingHangableLedge(transform.forward
+        , out HangableData hangableLedgeHit, hangableLedgeThickness);
 
-            hangableData = hangableLedgeHit;
+                hangableData = hangableLedgeHit;
+            }
 
             if (gameManager.Visible_MatchPosition)
             {
-                gameManager.CustomTargetMatchingPosition.SetActive(true);
+                gameManager.CustomTargetMatchingObject.SetActive(true);
                 Debug.Log("Hangable Ledge Height : " + hangableData.height);
             }
 
             else
-                gameManager.CustomTargetMatchingPosition.SetActive(false);
+                gameManager.CustomTargetMatchingObject.SetActive(false);
         }
 
         catch (Exception e)
@@ -178,9 +181,8 @@ public class Entity : MonoBehaviour
 
                 hangableLedgeHit.HangableHit = topHit;
 
-                currentPoint = topHit.transform?.GetComponent<ClimbPoint>();
-
                 hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
+
                 //for (int j = 0; j < 5; j++)
                 //{
                 //    Physics.Raycast(upper_origin + 0.01f * dir * j, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);

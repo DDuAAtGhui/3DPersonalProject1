@@ -21,6 +21,7 @@ public class ClimbPoint : MonoBehaviour
         {
             //자기 자신 클래스 등록.
             //dir => 언제나 dir의 반대방향으로 등록
+            //(한쪽에서 하나 등록된거면 반대쪽에서도 자동 등록되야하니 방향도 반대임)
             neighbour.climbpoint?.CreateConnection(this, -neighbour.direction,
                 neighbour.connectionType, neighbour.isTwoWay);
 
@@ -40,6 +41,7 @@ public class ClimbPoint : MonoBehaviour
             connectionType = connectionType,
             isTwoWay = isTwoway
         };
+
         neighbours.Add(neighbour);
     }
 
@@ -64,22 +66,24 @@ public class ClimbPoint : MonoBehaviour
         if (neighbour == null && neighbourDir.x != 0)
             neighbour = neighbours.FirstOrDefault(n => n.direction.x == neighbourDir.x);
 
+
+        Debug.Log("GetNeighbour : " + neighbour);
         return neighbour;
     }
 
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(transform.parent.position, transform.parent.forward * 2f, Color.blue);
+        Debug.DrawRay(transform.position, transform.forward * 2f, Color.blue);
         foreach (var neighbour in neighbours)
         {
             if (neighbour.climbpoint != null)
             {
-                //Debug.DrawLine(transform.position, neighbour.climbpoint.transform.position,
-                //    neighbour.isTwoWay ? Color.blue : Color.gray);
-
-                //피벗 뒤틀려서 빈 부모 만들고 거기에서 나오게 설정
-                Debug.DrawLine(transform.parent.position, neighbour.climbpoint.transform.parent.position,
+                Debug.DrawLine(transform.position, neighbour.climbpoint.transform.position,
                     neighbour.isTwoWay ? Color.green : Color.red);
+
+                ////피벗 뒤틀려서 빈 부모 만들고 거기에서 나오게 설정
+                //Debug.DrawLine(transform.parent.position, neighbour.climbpoint.transform.parent.position,
+                //    neighbour.isTwoWay ? Color.green : Color.red);
 
             }
         }
