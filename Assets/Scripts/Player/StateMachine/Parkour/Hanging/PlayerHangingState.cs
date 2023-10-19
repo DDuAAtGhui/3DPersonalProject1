@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerHangingState : PlayerParkourState
 {
     protected Neighbour neighbour;
-    protected GameObject HangableObject;
+    protected GameObject HangableNetworkSphereObject;
     protected Bounds neighbourBounds;
     public PlayerHangingState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -15,10 +15,11 @@ public class PlayerHangingState : PlayerParkourState
     public override void Enter()
     {
         base.Enter();
-        HangableObject = gameManager.HangableObject;
+        HangableNetworkSphereObject = gameManager.HangableNetworkSphereObject;
 
         player.climbPoint = player.hangableData.HangableHit.transform.gameObject?.GetComponent<ClimbPoint>();
         neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
+
 
     }
 
@@ -29,10 +30,10 @@ public class PlayerHangingState : PlayerParkourState
 
         //구 크기 커가지고 키 입력할때만 보이게했음
         if (gameManager.Visible_MatchPosition && player._inputXZ != Vector2.zero)
-            HangableObject.SetActive(true);
+            HangableNetworkSphereObject.SetActive(true);
 
         else
-            HangableObject.SetActive(false);
+            HangableNetworkSphereObject.SetActive(false);
 
         player.climbPoint = player.hangableData.HangableHit.transform.gameObject?.GetComponent<ClimbPoint>();
         neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
@@ -61,7 +62,7 @@ public class PlayerHangingState : PlayerParkourState
             }
             Debug.Log(neighbour.direction);
 
-            HangableObject.transform.position = neighbour.climbpoint.transform.transform.position;
+            HangableNetworkSphereObject.transform.position = neighbour.climbpoint.transform.transform.position;
         }
 
         if (isAnimEnd)

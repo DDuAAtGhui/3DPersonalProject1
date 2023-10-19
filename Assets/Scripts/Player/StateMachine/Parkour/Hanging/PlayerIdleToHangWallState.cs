@@ -17,6 +17,9 @@ public class PlayerIdleToHangWallState : PlayerParkourState
     {
         base.Update();
 
+        //뭔가 개 쓰레기같은 버그로 이거 없으면 모서리로 점프할때 장애물 바라보는거 적용안됨
+        player.transform.rotation = Quaternion.Euler(0, 0, 0);
+
         if (isAnimEnd)
             stateMachine.ChangeState(player.hangingIdleWallState);
     }

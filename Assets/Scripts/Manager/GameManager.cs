@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
     [HideInInspector] public GameObject StandardTargetMatchingObject;
     [HideInInspector] public GameObject CustomTargetMatchingObject;
-    [HideInInspector] public GameObject HangableObject;
+    [HideInInspector] public GameObject HangableNetworkSphereObject;
 
     //타겟매칭 설정할 오브젝트 교환용으로 바꾸기전에 예전 오브젝트 보관용
     [HideInInspector] public GameObject StoredObjectForSwitching;
@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
         CustomTargetMatchingObject = Instantiate(CustomTargetMatchingObject, transform.position, Quaternion.identity);
         CustomTargetMatchingObject.SetActive(false);
 
-        HangableObject = Resources.Load("HangableObject") as GameObject;
-        HangableObject = Instantiate(HangableObject, transform.position, Quaternion.identity);
-        HangableObject.SetActive(false);
+        HangableNetworkSphereObject = Resources.Load("HangableObject") as GameObject;
+        HangableNetworkSphereObject = Instantiate(HangableNetworkSphereObject, transform.position, Quaternion.identity);
+        HangableNetworkSphereObject.SetActive(false);
 
         StoredObjectForSwitching = CustomTargetMatchingObject;
     }

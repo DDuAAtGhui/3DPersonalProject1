@@ -106,6 +106,7 @@ public class Player : Entity
     public PlayerIdleToHangWallState idleToHangWallState { get; private set; }
     public PlayerJumpFromHangingWallState jumpFromHangingWallState { get; private set; }
     public PlayerBracedHangHopUpState PlayerBracedHangHopUpState { get; private set; }
+    public PlayerBracedHangHopDownState PlayerBracedHangHopDownState { get; private set; }
     public PlayerBracedHangShimmyState bracedHangShimmyState { get; private set; }
     private void Awake()
     {
@@ -128,6 +129,7 @@ public class Player : Entity
         idleToHangWallState = new PlayerIdleToHangWallState(this, stateMachine);
         jumpFromHangingWallState = new PlayerJumpFromHangingWallState(this, stateMachine);
         PlayerBracedHangHopUpState = new PlayerBracedHangHopUpState(this, stateMachine);
+        PlayerBracedHangHopDownState = new PlayerBracedHangHopDownState(this, stateMachine);
         bracedHangShimmyState = new PlayerBracedHangShimmyState(this, stateMachine);
         #region ÄÄÆ÷³ÍÆ®
         CC = GetComponentInChildren<CharacterController>();
@@ -299,8 +301,8 @@ public class Player : Entity
             gameManager.StandardTargetMatchingObject.transform.rotation =
                 Quaternion.LookRotation(-hitData.forwardHit.normal);
 
-            gameManager.CustomTargetMatchingObject.transform.rotation =
-                Quaternion.LookRotation(-hangableLedgeFrontHit.normal);
+            //gameManager.CustomTargetMatchingObject.transform.rotation =
+            //    Quaternion.LookRotation(-hangableLedgeFrontHit.normal);
 
         }
 
