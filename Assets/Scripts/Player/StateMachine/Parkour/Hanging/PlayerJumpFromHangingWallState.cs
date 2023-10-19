@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerJumpFromHangingWallState : PlayerParkourState
+public class PlayerJumpFromHangingWallState : PlayerHangingState
 {
     public PlayerJumpFromHangingWallState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {

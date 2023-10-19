@@ -105,6 +105,8 @@ public class Player : Entity
     public PlayerHangingIdleWallState hangingIdleWallState { get; private set; }
     public PlayerIdleToHangWallState idleToHangWallState { get; private set; }
     public PlayerJumpFromHangingWallState jumpFromHangingWallState { get; private set; }
+    public PlayerBracedHangHopState bracedHangHopState { get; private set; }
+    public PlayerBracedHangShimmyState bracedHangShimmyState { get; private set; }
     private void Awake()
     {
 
@@ -125,6 +127,8 @@ public class Player : Entity
         hangingIdleWallState = new PlayerHangingIdleWallState(this, stateMachine);
         idleToHangWallState = new PlayerIdleToHangWallState(this, stateMachine);
         jumpFromHangingWallState = new PlayerJumpFromHangingWallState(this, stateMachine);
+        bracedHangHopState = new PlayerBracedHangHopState(this, stateMachine);
+        bracedHangShimmyState = new PlayerBracedHangShimmyState(this, stateMachine);
         #region ÄÄÆ÷³ÍÆ®
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();

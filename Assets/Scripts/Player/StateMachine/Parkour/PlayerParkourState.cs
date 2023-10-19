@@ -52,6 +52,7 @@ public class PlayerParkourState : PlayerStates
 
         if (parkourToFallState)
             fallingTimer += Time.deltaTime;
+
     }
     public override void Exit()
     {

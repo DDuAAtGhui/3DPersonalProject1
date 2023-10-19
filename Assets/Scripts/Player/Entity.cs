@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+
     #region Infos
     [Header("Entity")]
     public GameManager gameManager;
@@ -39,6 +40,10 @@ public class Entity : MonoBehaviour
     [HideInInspector] public bool isHangable = false;
     [HideInInspector] public HangableData hangableData { get; set; }
 
+    //°ü¸®¸â¹ö
+    [HideInInspector] public ClimbPoint currentPoint;
+
+
     #endregion
     public virtual void Start()
     {
@@ -54,7 +59,10 @@ public class Entity : MonoBehaviour
             hangableData = hangableLedgeHit;
 
             if (gameManager.Visible_MatchPosition)
+            {
                 gameManager.CustomTargetMatchingPosition.SetActive(true);
+                Debug.Log("Hangable Ledge Height : " + hangableData.height);
+            }
 
             else
                 gameManager.CustomTargetMatchingPosition.SetActive(false);
@@ -169,8 +177,10 @@ public class Entity : MonoBehaviour
                 Debug.DrawRay(upper_origin, Vector3.down * hangableLedgeThickness * 2f, Color.red);
 
                 hangableLedgeHit.HangableHit = topHit;
-                hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
 
+                currentPoint = topHit.transform?.GetComponent<ClimbPoint>();
+
+                hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
                 //for (int j = 0; j < 5; j++)
                 //{
                 //    Physics.Raycast(upper_origin + 0.01f * dir * j, Vector3.down, out RaycastHit topHit, hangableLedgeThickness * 2f, hangableLayer);

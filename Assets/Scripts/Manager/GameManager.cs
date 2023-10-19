@@ -97,6 +97,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_HangingIdle;
     [HideInInspector] public int animIDParkour_IdleToHang;
     [HideInInspector] public int animIDParkour_JumpFromHangingWall;
+    [HideInInspector] public int animIDParkour_BracedHangHopUp;
+    [HideInInspector] public int animIDParkour_BracedHangHopRight;
+    [HideInInspector] public int animIDParkour_BracedHangShimmy;
+
     void animParameterToHash()
     {
         animIDSpeed = Animator.StringToHash("Speed");
@@ -117,6 +121,9 @@ public class GameManager : MonoBehaviour
         animIDParkour_HangingIdle = Animator.StringToHash("Parkour_HangingIdle");
         animIDParkour_IdleToHang = Animator.StringToHash("Parkour_IdleToHang");
         animIDParkour_JumpFromHangingWall = Animator.StringToHash("Parkour_JumpFromHangingWall");
+        animIDParkour_BracedHangHopUp = Animator.StringToHash("Parkour_BracedHangHopUp");
+        animIDParkour_BracedHangHopRight = Animator.StringToHash("Parkour_BracedHangHopRight");
+        animIDParkour_BracedHangShimmy = Animator.StringToHash("Parkour_BracedHangShimmy");
     }
     #endregion
     #region DEBUG_OPTION

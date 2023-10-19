@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHangingIdleWallState : PlayerParkourState
+public class PlayerHangingIdleWallState : PlayerHangingState
 {
     public PlayerHangingIdleWallState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -17,8 +17,11 @@ public class PlayerHangingIdleWallState : PlayerParkourState
     {
         base.Update();
 
-        if (player._inputJump)
+        if (player._inputJump && player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.jumpFromHangingWallState);
+
+        if (player._inputJump && player._inputXZ != Vector2.zero)
+            stateMachine.ChangeState(player.bracedHangHopState);
     }
     public override void Exit()
     {
