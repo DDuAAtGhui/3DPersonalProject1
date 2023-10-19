@@ -21,6 +21,8 @@ public class PlayerHangingState : PlayerParkourState
 
         neighbour = player.currentPoint.GetNeighbour(player._inputXZ);
 
+        Debug.Log(neighbour);
+
         if (neighbour != null)
         {
             if (neighbour.connectionType == ConnectionType.Jump)
