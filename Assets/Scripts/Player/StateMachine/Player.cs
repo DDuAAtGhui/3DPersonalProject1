@@ -175,6 +175,7 @@ public class Player : Entity
         stateMachine.currentState.Update();
         CameraControl();
         GroundCheck();
+
         if (!inParkourAction)
             ParkourAbleObstacleCheck();
 
@@ -222,6 +223,15 @@ public class Player : Entity
     public void OnCollisionStay(Collision collision)
     {
         stateMachine.currentState.OnCollisionStay(collision);
+    }
+
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+        if (stateMachine != null && stateMachine.currentState != null)
+        {
+            stateMachine.currentState.OnDrawGizmos();
+        }
     }
     #endregion
 
@@ -314,18 +324,24 @@ public class Player : Entity
         }
         return hitData;
     }
-    public void PerformParkourState(params PlayerStates[] parkourStates)
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="TargetMathcingTF">타겟 매칭 포지션 임의로 지정가능(사용 안할시 Vector3.zero)</param>
+    /// <param name="parkourStates"></param>
+    public PlayerStates bestMatchStates;
+    public void PerformParkourState(Vector3 TargetMathcingPosition = default(Vector3), params PlayerStates[] parkourStates)
     {
         parkourActionIndex = 0;
-        List<ParkourAction> temp_parkourActions = new List<ParkourAction>();
+
+        var tempPercentage = float.MinValue;
 
         parkourActions.ForEach(action =>
         {
             if (gameManager.Log_ParkourPossibleState)
                 Debug.Log($"Num {parkourActionIndex} : " + action.CheckIfPossible());
 
-            if (action.CheckIfPossible())
-                temp_parkourActions.Add(action);
 
             // Debug.Log("actionList : " + action + " excutable : " + action.excutable);
 
@@ -334,7 +350,7 @@ public class Player : Entity
             //params로 무한히 받고 배열 인덱스로 따로 관리해줌
             if (parkourActionIndex < parkourActions.Count && action.CheckIfPossible())
             {
-                currentParkourActionIndex = parkourActionIndex;
+
 
                 //타겟매칭 활성화 하면 실행
                 if (action.EnableTargetMatching)
@@ -347,7 +363,7 @@ public class Player : Entity
                     gameManager.CustomTargetMatchingObject.transform.localPosition +=
                     Quaternion.LookRotation(gameManager.CustomTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
 
-                    StartCoroutine(PerformMatchTargetCor(action));
+                    StartCoroutine(PerformMatchTargetCor(action, TargetMathcingPosition));
 
                     #region 디버그
                     if (gameManager.Log_TargetMatch)
@@ -355,7 +371,6 @@ public class Player : Entity
                         Debug.Log($"==================\n" +
                          $"MatchTarget Info\n" +
                          $"anim.targetPosition : {anim.targetPosition} \n " +
-                         $"action.MatchPosition : {action.MatchPosition} \n " +
                          $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
                          $"action.MatchStartTime : {action.MatchStartTime}\n" +
                          $"action.MatchTargetTime : {action.MatchTargetTime}");
@@ -364,21 +379,26 @@ public class Player : Entity
                     }
                     #endregion
                 }
-                //  Debug.Log("실행된 액션 : " + action + " excutable : " + action.excutable);
 
-                //if (action.RotateToObstacle)
-                //    transform.rotation = Quaternion.RotateTowards(transform.rotation,
-                //        action.TargetRotation, Time.deltaTime * action.RotateMultiflier);
+                bestMatchStates = LevenShteinStringSimilarity.FindMostSimilarState
+                    (action.ToString(), parkourStates, out float matchingPercentage);
 
-                stateMachine.ChangeState(LevenShteinStringSimilarity.FindMostSimilarState
-                    (action.ToString(), parkourStates, out float matchingPercentage));
+                if (matchingPercentage > tempPercentage)
+                    tempPercentage = matchingPercentage;
+
+                if (tempPercentage == matchingPercentage)
+                {
+                    currentParkourActionIndex = parkourActions.IndexOf(action);
+                    Debug.Log("액션 : " + currentParkourActionIndex);
+                    stateMachine.ChangeState(bestMatchStates);
+                }
+
             }
             parkourActionIndex++;
         });
-        temp_parkourActions.Clear();
     }
 
-    IEnumerator PerformMatchTargetCor(ParkourAction action)
+    IEnumerator PerformMatchTargetCor(ParkourAction action, Vector3 TargetMathcingPosition = default(Vector3))
     {
         float timer = 0f;
 
@@ -391,11 +411,11 @@ public class Player : Entity
             //MatchTarget보다 반드시 위에
             yield return null;
 
-            MatchTarget(action);
+            MatchTarget(action, TargetMathcingPosition);
         }
     }
 
-    public void MatchTarget(ParkourAction action)
+    public void MatchTarget(ParkourAction action, Vector3 TargetMathcingPosition = default(Vector3))
     {
         //Debug.Log("anim.isMatchingTarget : " + anim.isMatchingTarget);
         //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
@@ -408,20 +428,25 @@ public class Player : Entity
             return;
         }
 
-        if (!action.UseCustomTargetMatchingPosition)
-            anim.MatchTarget(gameManager.StandardTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
-            new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
-            action.MatchStartTime, action.MatchTargetTime);
+        if (TargetMathcingPosition == Vector3.zero)
+        {
+            if (!action.UseCustomTargetMatchingPosition)
+                anim.MatchTarget(gameManager.StandardTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
+                new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
+                action.MatchStartTime, action.MatchTargetTime);
+
+            else
+                anim.MatchTarget(gameManager.CustomTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
+                new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
+                action.MatchStartTime, action.MatchTargetTime);
+        }
 
         else
-            anim.MatchTarget(gameManager.CustomTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
+        {
+            anim.MatchTarget(TargetMathcingPosition, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
             action.MatchStartTime, action.MatchTargetTime);
-
-        //for (int i = 0; i < 30; i++)
-        //{
-        //    Debug.Log("타겟 매칭 실행중");
-        //}
+        }
     }
 
     public void ResetMatchTarget()
@@ -471,13 +496,6 @@ public class Player : Entity
     void onCurosrVisible(InputAction.CallbackContext context)
     {
         _inputCurosrVisible = context.ReadValueAsButton();
-    }
-
-    private void OnDrawGizmos()
-    {
-        #region 장애물 탐색 레이캐스트
-        //Gizmos.DrawLine(transform.position + forwardRayOffset, transform.forward * forwardRayLength);
-        #endregion
     }
     #endregion
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9f6f035188b0d2a48a21f38bc5a40e9d
+guid: 2889d779831bed042ad9e879d8cb00db
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,7 +31,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Braced Hang Hop Down
+      takeName: mixamo.com
+      internalID: -203655887218126122
+      firstFrame: 0
+      lastFrame: 27
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -499,19 +528,19 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: FreeCharacter_01@Braced Hang Hop Up(Clone)
+    - name: FreeCharacter_01@Braced Hang Drop 1(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: 0.17074157, y: -0.050973352, z: -0.0058657797, w: 0.983979}
+      rotation: {x: 0.17074168, y: -0.05097201, z: -0.0058648568, w: 0.98397905}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001
-      parentName: FreeCharacter_01@Braced Hang Hop Up(Clone)
-      position: {x: 0.0041227154, y: 0.8878191, z: 0.034060977}
-      rotation: {x: -0.56712204, y: 0.6105717, z: 0.41885692, w: 0.3607405}
+      parentName: FreeCharacter_01@Braced Hang Drop 1(Clone)
+      position: {x: 0.0041223224, y: 1.8816265, z: 0.034059387}
+      rotation: {x: -0.56712234, y: 0.61057156, z: 0.41885573, w: 0.36074165}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Pelvis
       parentName: Bip001
-      position: {x: 0.3179868, y: -0.000000029802322, z: 0.23866722}
+      position: {x: 0.70590824, y: -0.010418475, z: -0.6762842}
       rotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
       scale: {x: 1, y: 1, z: 1}
     - name: Bip001 Spine

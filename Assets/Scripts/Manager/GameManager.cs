@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     public Player player;
 
 
+    [Header("Raycast Option")]
+    public float LedgeToLedgeFrontHitRayLength_forward = 2f;
+    public float LedgeToLedgeFrontHitRayLength_up = 0.5f;
+
     // GetAxis스타일 쓰고싶으면 사용
     [Header("Optional - GetAxisStyle")]
     public Vector2 GetAxisStyle_inputXZ;
@@ -108,6 +112,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_IdleToHang;
     [HideInInspector] public int animIDParkour_JumpFromHangingWall;
     [HideInInspector] public int animIDParkour_BracedHangHopUp;
+    [HideInInspector] public int animIDParkour_BracedHangHopDown;
     [HideInInspector] public int animIDParkour_BracedHangHopRight;
     [HideInInspector] public int animIDParkour_BracedHangShimmy;
 
@@ -133,6 +138,7 @@ public class GameManager : MonoBehaviour
         animIDParkour_JumpFromHangingWall = Animator.StringToHash("Parkour_JumpFromHangingWall");
         animIDParkour_BracedHangHopUp = Animator.StringToHash("Parkour_BracedHangHopUp");
         animIDParkour_BracedHangHopRight = Animator.StringToHash("Parkour_BracedHangHopRight");
+        animIDParkour_BracedHangHopDown = Animator.StringToHash("Parkour_BracedHangHopDown");
         animIDParkour_BracedHangShimmy = Animator.StringToHash("Parkour_BracedHangShimmy");
     }
     #endregion

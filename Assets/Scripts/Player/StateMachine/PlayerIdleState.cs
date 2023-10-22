@@ -24,14 +24,14 @@ public class PlayerIdleState : PlayerGroundedState
 
         //매달리는게 우선되게
         if (player._inputJump && !player.isHangable && player.hitData.forwardHitFound)
-            player.PerformParkourState(player.stepUpState, player.jumpUpState, player.crouchToClimbUpState,
+            player.PerformParkourState(Vector3.zero,player.stepUpState, player.jumpUpState, player.crouchToClimbUpState,
             player.jumpOver_RollState);
 
         if (player._inputJump && !player.isHangable && player.isOnLedge && !player.hitData.forwardHitFound)
-            player.PerformParkourState(player.standjumpingDownState);
+            player.PerformParkourState(Vector3.zero, player.standjumpingDownState);
 
         if (player._inputJump && player.isHangable)
-            player.PerformParkourState(player.idleToHangWallState);
+            player.PerformParkourState(Vector3.zero, player.idleToHangWallState);
     }
     public override void Exit()
     {

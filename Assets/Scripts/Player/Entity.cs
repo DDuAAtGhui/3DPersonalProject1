@@ -38,6 +38,7 @@ public class Entity : MonoBehaviour
     [Tooltip("오브젝트 아래 모서리부터 이 수치만큼의 y축으로 오프셋적용해 아래로 레이캐스트 발사")][SerializeField] float hangableLedgeThickness = 0.4f;
     [SerializeField] public LayerMask hangableLayer;
     [HideInInspector] public bool isHangable = false;
+    [HideInInspector] public bool isHanging = false;
     [HideInInspector] public HangableData hangableData { get; set; }
 
     //관리멤버
@@ -53,22 +54,26 @@ public class Entity : MonoBehaviour
     {
         try
         {
+
+            //Hanging 상태에서는 체크하지않게.
+            //땅에서 처음 매달리는 오브젝트 체크용임
             if (!gameManager.player.inParkourAction)
             {
                 isHangable = DetectingHangableLedge(transform.forward
-        , out HangableData hangableLedgeHit, hangableLedgeThickness);
+    , out HangableData hangableLedgeHit, hangableLedgeThickness);
 
                 hangableData = hangableLedgeHit;
-            }
 
-            if (gameManager.Visible_MatchPosition)
-            {
-                gameManager.CustomTargetMatchingObject.SetActive(true);
-                Debug.Log("Hangable Ledge Height : " + hangableData.height);
-            }
+                if (gameManager.Visible_MatchPosition)
+                {
+                    gameManager.CustomTargetMatchingObject.SetActive(true);
 
-            else
-                gameManager.CustomTargetMatchingObject.SetActive(false);
+                    Debug.Log("Hangable Ledge Height : " + hangableData.height);
+                }
+
+                else
+                    gameManager.CustomTargetMatchingObject.SetActive(false);
+            }
         }
 
         catch (Exception e)
@@ -82,7 +87,7 @@ public class Entity : MonoBehaviour
 
     }
 
-    private void OnDrawGizmos()
+    public virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedCheckRadius);
@@ -204,10 +209,8 @@ public class Entity : MonoBehaviour
                 //    hangableLedgeHit.height = topHit.transform.position.y - transform.position.y;
                 //    hangableLedgeHit.HangableHit = topHit;
                 //}
-
                 return true;
             }
-
         }
         return false;
     }

@@ -5,9 +5,7 @@ using UnityEngine;
 //매달린 상태에서 다른 Ledge 감지
 public class PlayerHangingState : PlayerParkourState
 {
-    protected Neighbour neighbour;
-    protected GameObject HangableNetworkSphereObject;
-    protected Bounds neighbourBounds;
+    protected RaycastHit LedgeToLedgeTopHit;
     public PlayerHangingState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -15,12 +13,9 @@ public class PlayerHangingState : PlayerParkourState
     public override void Enter()
     {
         base.Enter();
-        HangableNetworkSphereObject = gameManager.HangableNetworkSphereObject;
+        player.isHanging = true;
 
-        player.climbPoint = player.hangableData.HangableHit.transform.gameObject?.GetComponent<ClimbPoint>();
-        neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
-
-
+        Debug.Log(player.climbPoint);
     }
 
     public override void Update()
@@ -32,48 +27,27 @@ public class PlayerHangingState : PlayerParkourState
         if (gameManager.Visible_MatchPosition && player._inputXZ != Vector2.zero)
             HangableNetworkSphereObject.SetActive(true);
 
-        else
+        else if (gameManager.Visible_MatchPosition || player._inputXZ != Vector2.zero)
             HangableNetworkSphereObject.SetActive(false);
-
-        player.climbPoint = player.hangableData.HangableHit.transform.gameObject?.GetComponent<ClimbPoint>();
-        neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
-
-
-        if (neighbour != null)
-        {
-            neighbourBounds = player.climbPoint.GetComponent<Renderer>().bounds;
-            Debug.Log(neighbourBounds);
-            //   var neighbourBoundsForwardTopLedgePoint = neighbourBounds.
-
-            if (neighbour.connectionType == ConnectionType.Jump)
-            {
-                player.climbPoint = neighbour.climbpoint;
-
-                //if (neighbour.direction.y == 1)
-                //    anim.SetBool(gameManager.animIDParkour_BracedHangHopUp, true);
-
-                //if (neighbour.direction.x == 1)
-                //    anim.SetBool(gameManager.animIDParkour_BracedHangHopRight, true);
-            }
-
-            if (neighbour.connectionType == ConnectionType.Move)
-            {
-
-            }
-            Debug.Log(neighbour.direction);
-
-            HangableNetworkSphereObject.transform.position = neighbour.climbpoint.transform.transform.position;
-        }
 
         if (isAnimEnd)
             stateMachine.ChangeState(player.hangingIdleWallState);
+
 
 
     }
     public override void Exit()
     {
         base.Exit();
-        // gameManager.CustomTargetMatchingObject = gameManager.StoredObjectForSwitching;
 
+        player.isHanging = false;
+    }
+
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(LedgeToLedgeTopHit.point, 0.05f);
     }
 }

@@ -12,6 +12,12 @@ public class PlayerIdleToHangWallState : PlayerParkourState
     {
         base.Enter();
         anim.SetBool(gameManager.animIDParkour_IdleToHang, true);
+
+        player.climbPoint = player.hangableData.HangableHit.transform.GetComponent<ClimbPoint>();
+
+        climbPointAtEnter = player.climbPoint;
+
+        neighbour = player.climbPoint.GetNeighbour(Vector2.zero);
     }
     public override void Update()
     {

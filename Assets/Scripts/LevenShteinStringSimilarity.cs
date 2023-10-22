@@ -7,6 +7,13 @@ public class LevenShteinStringSimilarity : MonoBehaviour
 {
     #region Leven Shtein 문자열 유사성 비교 알고리즘
 
+    /// <summary>
+    /// 가장 이름이 비슷한 상태 반환
+    /// </summary>
+    /// <param name="targetStateName"></param>
+    /// <param name="playerStates"></param>
+    /// <param name="Percentage"></param>
+    /// <returns></returns>
     public static PlayerStates FindMostSimilarState(string targetStateName, PlayerStates[] playerStates, out float Percentage)
     {
         if (string.IsNullOrEmpty(targetStateName) || playerStates == null || playerStates.Length == 0)
@@ -35,6 +42,30 @@ public class LevenShteinStringSimilarity : MonoBehaviour
         return bestMatchState;
     }
 
+    public static string FindMostSimilarString(string targetString, string[] stringArray)
+    {
+        if (string.IsNullOrEmpty(targetString) || stringArray == null || stringArray.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        string bestMatchString = string.Empty;
+        float matchingPercentage = 0.00f;
+
+        foreach (string str in stringArray)
+        {
+            float similarity = CalculateSimilarity_string(targetString, str);
+
+            if (similarity > matchingPercentage)
+            {
+                matchingPercentage = similarity;
+                bestMatchString = str;
+            }
+        }
+
+        Debug.Log("bestMatchString : " + bestMatchString + "    " + matchingPercentage + "%");
+        return bestMatchString;
+    }
     public static float CalculateSimilarity_string(string A, string B)
     {
         //지정된 두 숫자중 더 큰 숫자 반환

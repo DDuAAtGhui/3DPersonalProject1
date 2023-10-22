@@ -218,7 +218,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32352
+  m_Name: pb_Mesh25654
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -383,7 +383,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32016
+  m_Name: pb_Mesh25318
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -834,7 +834,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32378
+  m_Name: pb_Mesh25680
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -1062,7 +1062,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32044
+  m_Name: pb_Mesh25346
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -1899,7 +1899,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32118
+  m_Name: pb_Mesh25420
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -3638,7 +3638,7 @@ PrefabInstance:
     - target: {fileID: 3965557908278828979, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 32.595
+      value: 32.587
       objectReference: {fileID: 0}
     - target: {fileID: 3965557908278828979, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
@@ -3688,22 +3688,22 @@ PrefabInstance:
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].isTwoWay
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].climbpoint
       value: 
-      objectReference: {fileID: 960935879}
+      objectReference: {fileID: 390147759}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].direction.x
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
@@ -3713,7 +3713,7 @@ PrefabInstance:
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge (3)
+      value: "\uC6B0\uC911\uB2E8"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3862,7 +3862,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31858
+  m_Name: pb_Mesh25156
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -4545,10 +4545,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
+      propertyPath: neighbours.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
+      propertyPath: neighbours.Array.data[0].isTwoWay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
+      propertyPath: neighbours.Array.data[0].climbpoint
+      value: 
+      objectReference: {fileID: 2122083409}
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge (1)
+      value: "\uC88C\uC0C1\uB2E8"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6116,6 +6131,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isHangable: 0
+  isHanging: 0
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
@@ -6163,7 +6179,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31888
+  m_Name: pb_Mesh25192
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6443,7 +6459,7 @@ PrefabInstance:
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge (5)
+      value: "\uC606"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7108,7 +7124,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31792
+  m_Name: pb_Mesh25090
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7581,7 +7597,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32100
+  m_Name: pb_Mesh25402
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8174,7 +8190,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31812
+  m_Name: pb_Mesh25110
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -9356,7 +9372,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31902
+  m_Name: pb_Mesh25206
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -10793,7 +10809,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221937996}
-  m_LocalRotation: {x: 0.54707795, y: -0.000000014403145, z: 0.000000009413231, w: 0.8370817}
+  m_LocalRotation: {x: 0.54707795, y: 0.000000014403146, z: -0.000000009413231, w: 0.8370817}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10877,8 +10893,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 960935878}
-  - {fileID: 613826134}
   - {fileID: 1284147615}
+  - {fileID: 613826134}
   - {fileID: 390147758}
   - {fileID: 1914988964}
   - {fileID: 684260352}
@@ -10993,13 +11009,13 @@ PrefabInstance:
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[1].isTwoWay
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].climbpoint
       value: 
-      objectReference: {fileID: 960935879}
+      objectReference: {fileID: 1284147616}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[1].climbpoint
@@ -11008,7 +11024,7 @@ PrefabInstance:
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].direction.x
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
@@ -11028,7 +11044,7 @@ PrefabInstance:
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge (2)
+      value: "\uC6B0\uD558\uB2E8"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11138,7 +11154,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh31964
+  m_Name: pb_Mesh25266
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11689,7 +11705,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32138
+  m_Name: pb_Mesh25440
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11854,7 +11870,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32080
+  m_Name: pb_Mesh25382
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -12019,7 +12035,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32226
+  m_Name: pb_Mesh25528
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -15265,6 +15281,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16777216
   isHangable: 0
+  isHanging: 0
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
@@ -15278,6 +15295,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee4e628f28cf8554ca3235ebe5945474, type: 2}
   - {fileID: 11400000, guid: f910d66b024342848b5fc49054d3e2a9, type: 2}
   - {fileID: 11400000, guid: abe0f9fcd3b5ec3468f5a8d2bbeb59dd, type: 2}
+  - {fileID: 11400000, guid: d5da1c8d99b5fda4aad25b63d39d3044, type: 2}
   forwardRayOffset: {x: 0, y: 0.22, z: 0}
   forwardRayLength: 20
   heightRayLength: 5
@@ -16052,7 +16070,7 @@ PrefabInstance:
         type: 3}
       propertyPath: neighbours.Array.data[0].climbpoint
       value: 
-      objectReference: {fileID: 1284147616}
+      objectReference: {fileID: 1914988966}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].direction.x
@@ -16061,12 +16079,12 @@ PrefabInstance:
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].direction.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge (4)
+      value: "\uC6B0\uC0C1\uB2E8"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16079,6 +16097,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1914988963}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1914988966 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914988963}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c87045a37777ea042b9c69c17e18abbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1921665127
 GameObject:
   m_ObjectHideFlags: 0
@@ -16635,7 +16665,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh32282
+  m_Name: pb_Mesh25584
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -17146,48 +17176,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
-      propertyPath: neighbours.Array.data[0].climbpoint
-      value: 
-      objectReference: {fileID: 960935879}
+      propertyPath: neighbours.Array.data[0].isTwoWay
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
-      propertyPath: neighbours.Array.data[1].climbpoint
+      propertyPath: neighbours.Array.data[1].isTwoWay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
+      propertyPath: neighbours.Array.data[2].isTwoWay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
+      propertyPath: neighbours.Array.data[0].climbpoint
       value: 
       objectReference: {fileID: 2122083409}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
+      propertyPath: neighbours.Array.data[1].climbpoint
+      value: 
+      objectReference: {fileID: 1284147616}
+    - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
+        type: 3}
       propertyPath: neighbours.Array.data[2].climbpoint
       value: 
-      objectReference: {fileID: 390147759}
+      objectReference: {fileID: 960935879}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[0].direction.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[1].direction.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[1].direction.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[2].direction.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5856243436216486285, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: neighbours.Array.data[2].direction.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9054931916406603342, guid: 735b72a335051d146ab9bbd2037691de,
         type: 3}
       propertyPath: m_Name
-      value: ClimbableLedge
+      value: "\uC88C\uD558\uB2E8"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17300,7 +17345,7 @@ PrefabInstance:
     - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
         type: 3}
       propertyPath: Log_TargetMatch
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
         type: 3}
@@ -17310,7 +17355,7 @@ PrefabInstance:
     - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
         type: 3}
       propertyPath: Visible_MatchPosition
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2960495610326045554, guid: 6b3fcaa7bbc78cf418bfbbc5dc4d3c5f,
         type: 3}
@@ -19202,6 +19247,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isHangable: 0
+  isHanging: 0
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}

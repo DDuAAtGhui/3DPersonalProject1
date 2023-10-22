@@ -11,14 +11,19 @@ public class PlayerBracedHangHopDownState : PlayerHangingState
     public override void Enter()
     {
         base.Enter();
+        anim.SetBool(gameManager.animIDParkour_BracedHangHopDown, true);
     }
     public override void Update()
     {
         base.Update();
+
+        if (player.isGrounded) { }
     }
     public override void Exit()
     {
         base.Exit();
+        anim.SetBool(gameManager.animIDParkour_BracedHangHopDown, false);
+
     }
 
 

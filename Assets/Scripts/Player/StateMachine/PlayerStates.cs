@@ -130,6 +130,13 @@ public class PlayerStates
         if (gameManager.Log_StateOnCollisionStay)
             Debug.Log("Collision Stay Class : " + this.GetType().Name);
     }
+
+    public virtual void OnDrawGizmos()
+    {
+
+    }
+
+
     #region 메소드들
     float targetSpeed;
     protected void Move()
