@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBracedHangHopUpState : PlayerHangingState
+public class PlayerBracedHangHopRightState : PlayerHangingState
 {
-    public PlayerBracedHangHopUpState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
+    public PlayerBracedHangHopRightState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void Enter()
     {
         base.Enter();
-        anim.SetBool(gameManager.animIDParkour_BracedHangHopUp, true);
+        anim.SetBool(gameManager.animIDParkour_BracedHangHopRight, true);
         ControllableLedgeAction = false;
 
         player.StartCoroutine("nowBusy", 0.7f);
     }
+
     public override void Update()
     {
         base.Update();
@@ -23,8 +24,8 @@ public class PlayerBracedHangHopUpState : PlayerHangingState
     public override void Exit()
     {
         base.Exit();
-        anim.SetBool(gameManager.animIDParkour_BracedHangHopUp, false);
-    }
+        anim.SetBool(gameManager.animIDParkour_BracedHangHopRight, false);
 
+    }
 
 }

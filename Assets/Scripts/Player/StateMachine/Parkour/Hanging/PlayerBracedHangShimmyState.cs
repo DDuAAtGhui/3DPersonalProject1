@@ -11,6 +11,7 @@ public class PlayerBracedHangShimmyState : PlayerHangingState
     public override void Enter()
     {
         base.Enter();
+        ControllableLedgeAction = true;
     }
     public override void Update()
     {

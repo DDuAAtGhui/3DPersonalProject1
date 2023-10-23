@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 765fa762c8d5d73418b257dbea8f76d4, type: 3}
-  m_Name: BracedHangHopUp
+  m_Name: BracedHangShimmyLeft
   m_EditorClassIdentifier: 
-  animName: Braced Hang Hop Up
+  animName: 
   minHeight: 0
   maxHeight: 0
   minDistance: 0
@@ -22,17 +22,16 @@ MonoBehaviour:
   postActionDelay: 0
   rotateMultiflier: 150
   enableTargetMatching: 1
-  matchBodyPart: 5
-  matchStartTime: 0.27
-  matchTargetTime: 0.46
-  matchPositionWeight: {x: 1, y: 1, z: 1}
-  matchPositionOffset: {x: 0, y: -0.02, z: 0}
+  matchBodyPart: 4
+  matchStartTime: 0.05
+  matchTargetTime: 0.3
+  matchPositionWeight: {x: 0, y: 1, z: 1}
+  matchPositionOffset: {x: 0, y: -0.08, z: 0}
   matchPositionRotateWeight: 0
   isHangingAction: 1
   forwardMovement: 0
   usingLedgeAngle: 0
   ledgeAngleLimit: 50
   usingObstacleTag: 0
-  useCustomTargetMatchingPosition: 1
-  customTargetMatcingPositionOfObject: {fileID: 417669300081207530, guid: d8dd414658826024683468690daf3b51,
-    type: 3}
+  useCustomTargetMatchingPosition: 0
+  customTargetMatcingPositionOfObject: {fileID: 0}

@@ -67,14 +67,14 @@ public class ClimbPoint : MonoBehaviour
             neighbour = neighbours.FirstOrDefault(n => n.direction.x == neighbourDir.x);
 
 
-        if (neighbour != null)
-        {
-            Debug.Log("Found Neighbor: " + neighbour.climbpoint.gameObject.name);
-        }
-        else
-        {
-            Debug.Log("Neighbor Not Found");
-        }
+        //if (neighbour != null)
+        //{
+        //    Debug.Log("Found Neighbor: " + neighbour.climbpoint.gameObject.name);
+        //}
+        //else
+        //{
+        //    Debug.Log("Neighbor Not Found");
+        //}
 
         return neighbour;
     }

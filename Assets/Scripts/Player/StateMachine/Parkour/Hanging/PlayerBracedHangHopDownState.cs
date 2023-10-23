@@ -12,6 +12,10 @@ public class PlayerBracedHangHopDownState : PlayerHangingState
     {
         base.Enter();
         anim.SetBool(gameManager.animIDParkour_BracedHangHopDown, true);
+        ControllableLedgeAction = false;
+
+        player.StartCoroutine("nowBusy", 0.7f);
+
     }
     public override void Update()
     {
@@ -23,8 +27,5 @@ public class PlayerBracedHangHopDownState : PlayerHangingState
     {
         base.Exit();
         anim.SetBool(gameManager.animIDParkour_BracedHangHopDown, false);
-
     }
-
-
 }

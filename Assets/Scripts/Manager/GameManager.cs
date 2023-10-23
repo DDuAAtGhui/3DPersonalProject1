@@ -114,8 +114,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_BracedHangHopUp;
     [HideInInspector] public int animIDParkour_BracedHangHopDown;
     [HideInInspector] public int animIDParkour_BracedHangHopRight;
-    [HideInInspector] public int animIDParkour_BracedHangShimmy;
-
+    [HideInInspector] public int animIDParkour_BracedHangHopLeft;
+    [HideInInspector] public int animIDParkour_BracedHangShimmyRight;
+    [HideInInspector] public int animIDParkour_BracedHangShimmyLeft;
+    
     void animParameterToHash()
     {
         animIDSpeed = Animator.StringToHash("Speed");
@@ -137,9 +139,11 @@ public class GameManager : MonoBehaviour
         animIDParkour_IdleToHang = Animator.StringToHash("Parkour_IdleToHang");
         animIDParkour_JumpFromHangingWall = Animator.StringToHash("Parkour_JumpFromHangingWall");
         animIDParkour_BracedHangHopUp = Animator.StringToHash("Parkour_BracedHangHopUp");
-        animIDParkour_BracedHangHopRight = Animator.StringToHash("Parkour_BracedHangHopRight");
         animIDParkour_BracedHangHopDown = Animator.StringToHash("Parkour_BracedHangHopDown");
-        animIDParkour_BracedHangShimmy = Animator.StringToHash("Parkour_BracedHangShimmy");
+        animIDParkour_BracedHangHopRight = Animator.StringToHash("Parkour_BracedHangHopRight");
+        animIDParkour_BracedHangHopLeft = Animator.StringToHash("Parkour_BracedHangHopLeft");
+        animIDParkour_BracedHangShimmyRight = Animator.StringToHash("Parkour_BracedHangShimmyRight");
+        animIDParkour_BracedHangShimmyLeft = Animator.StringToHash("Parkour_BracedHangShimmyLeft");
     }
     #endregion
     #region DEBUG_OPTION

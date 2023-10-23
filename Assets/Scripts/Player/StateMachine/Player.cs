@@ -105,9 +105,12 @@ public class Player : Entity
     public PlayerHangingIdleWallState hangingIdleWallState { get; private set; }
     public PlayerIdleToHangWallState idleToHangWallState { get; private set; }
     public PlayerJumpFromHangingWallState jumpFromHangingWallState { get; private set; }
-    public PlayerBracedHangHopUpState PlayerBracedHangHopUpState { get; private set; }
-    public PlayerBracedHangHopDownState PlayerBracedHangHopDownState { get; private set; }
-    public PlayerBracedHangShimmyState bracedHangShimmyState { get; private set; }
+    public PlayerBracedHangHopUpState bracedHangHopUpState { get; private set; }
+    public PlayerBracedHangHopDownState bracedHangHopDownState { get; private set; }
+    public PlayerBracedHangHopRightState bracedHangHopRightState { get; private set; }
+    public PlayerBracedHangHopLeftState bracedHangHopLeftState { get; private set; }
+    public PlayerBracedHangShimmyRightState bracedHangShimmyRightState { get; private set; }
+    public PlayerBracedHangShimmyLeftState bracedHangShimmyLeftState { get; private set; }
     private void Awake()
     {
 
@@ -128,9 +131,12 @@ public class Player : Entity
         hangingIdleWallState = new PlayerHangingIdleWallState(this, stateMachine);
         idleToHangWallState = new PlayerIdleToHangWallState(this, stateMachine);
         jumpFromHangingWallState = new PlayerJumpFromHangingWallState(this, stateMachine);
-        PlayerBracedHangHopUpState = new PlayerBracedHangHopUpState(this, stateMachine);
-        PlayerBracedHangHopDownState = new PlayerBracedHangHopDownState(this, stateMachine);
-        bracedHangShimmyState = new PlayerBracedHangShimmyState(this, stateMachine);
+        bracedHangHopUpState = new PlayerBracedHangHopUpState(this, stateMachine);
+        bracedHangHopDownState = new PlayerBracedHangHopDownState(this, stateMachine);
+        bracedHangHopRightState = new PlayerBracedHangHopRightState(this, stateMachine);
+        bracedHangHopLeftState = new PlayerBracedHangHopLeftState(this, stateMachine);
+        bracedHangShimmyRightState = new PlayerBracedHangShimmyRightState(this, stateMachine);
+        bracedHangShimmyLeftState = new PlayerBracedHangShimmyLeftState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -336,6 +342,7 @@ public class Player : Entity
         parkourActionIndex = 0;
 
         var tempPercentage = float.MinValue;
+        ParkourAction bestMatchAction = null;
 
         parkourActions.ForEach(action =>
         {
@@ -350,52 +357,54 @@ public class Player : Entity
             //params로 무한히 받고 배열 인덱스로 따로 관리해줌
             if (parkourActionIndex < parkourActions.Count && action.CheckIfPossible())
             {
-
-
-                //타겟매칭 활성화 하면 실행
-                if (action.EnableTargetMatching)
-                {
-                    //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
-                    //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
-                    gameManager.StandardTargetMatchingObject.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
-
-                    gameManager.CustomTargetMatchingObject.transform.localPosition +=
-                    Quaternion.LookRotation(gameManager.CustomTargetMatchingObject.transform.forward) * action.MatchPositionOffset;
-
-                    StartCoroutine(PerformMatchTargetCor(action, TargetMathcingPosition));
-
-                    #region 디버그
-                    if (gameManager.Log_TargetMatch)
-                    {
-                        Debug.Log($"==================\n" +
-                         $"MatchTarget Info\n" +
-                         $"anim.targetPosition : {anim.targetPosition} \n " +
-                         $"action.MatchBodyPart : {action.MatchBodyPart}\n" +
-                         $"action.MatchStartTime : {action.MatchStartTime}\n" +
-                         $"action.MatchTargetTime : {action.MatchTargetTime}");
-
-                        Debug.Log(action.ToString());
-                    }
-                    #endregion
-                }
-
                 bestMatchStates = LevenShteinStringSimilarity.FindMostSimilarState
                     (action.ToString(), parkourStates, out float matchingPercentage);
 
                 if (matchingPercentage > tempPercentage)
-                    tempPercentage = matchingPercentage;
-
-                if (tempPercentage == matchingPercentage)
                 {
-                    currentParkourActionIndex = parkourActions.IndexOf(action);
-                    Debug.Log("액션 : " + currentParkourActionIndex);
-                    stateMachine.ChangeState(bestMatchStates);
+                    tempPercentage = matchingPercentage;
+                    bestMatchAction = action;
                 }
-
             }
             parkourActionIndex++;
         });
+
+        if (bestMatchAction != null)
+        {
+            currentParkourActionIndex =
+                parkourActions.IndexOf(bestMatchAction);
+
+            Debug.Log("액션 : " + currentParkourActionIndex);
+
+            //타겟매칭 활성화 하면 실행
+            if (bestMatchAction.EnableTargetMatching)
+            {
+                //타겟매칭 기준 오브젝트를 항상 파쿠르 방향으로 바라보게하고
+                //그 방향의 Forward방향으로 타겟매칭 오프셋 적용
+                gameManager.StandardTargetMatchingObject.transform.localPosition +=
+                Quaternion.LookRotation(gameManager.StandardTargetMatchingObject.transform.forward) * bestMatchAction.MatchPositionOffset;
+
+                gameManager.CustomTargetMatchingObject.transform.localPosition +=
+                Quaternion.LookRotation(gameManager.CustomTargetMatchingObject.transform.forward) * bestMatchAction.MatchPositionOffset;
+
+                StartCoroutine(PerformMatchTargetCor(bestMatchAction, TargetMathcingPosition));
+            }
+
+
+            stateMachine.ChangeState(bestMatchStates);
+            #region 디버그
+            if (gameManager.Log_TargetMatch)
+            {
+                Debug.Log($"==================\n" +
+                 $"MatchTarget Info\n" +
+                 $"action name : {bestMatchAction.ToString()}\n" +
+                 $"anim.targetPosition : {anim.targetPosition} \n " +
+                 $"action.MatchBodyPart : {bestMatchAction.MatchBodyPart}\n" +
+                 $"action.MatchStartTime : {bestMatchAction.MatchStartTime}\n" +
+                 $"action.MatchTargetTime : {bestMatchAction.MatchTargetTime}");
+            }
+            #endregion
+        }
     }
 
     IEnumerator PerformMatchTargetCor(ParkourAction action, Vector3 TargetMathcingPosition = default(Vector3))
@@ -415,7 +424,7 @@ public class Player : Entity
         }
     }
 
-    public void MatchTarget(ParkourAction action, Vector3 TargetMathcingPosition = default(Vector3))
+    public void MatchTarget(ParkourAction action, Vector3 TargetMatchingPosition = default(Vector3))
     {
         //Debug.Log("anim.isMatchingTarget : " + anim.isMatchingTarget);
         //Debug.Log("heightHitPointSnapShot : " + heightHitPointSnapShot);
@@ -423,12 +432,13 @@ public class Player : Entity
         //이미 타겟 매칭중이면 쓸데없는 실행 X
         if (anim.isMatchingTarget)
         {
-            if (gameManager.Log_TargetMatch)
-                Debug.Log("타겟매칭 적용중");
+            //if (gameManager.Log_TargetMatch)
+            //    Debug.Log("타겟매칭 이미 적용중");
+
             return;
         }
 
-        if (TargetMathcingPosition == Vector3.zero)
+        if (TargetMatchingPosition == Vector3.zero)
         {
             if (!action.UseCustomTargetMatchingPosition)
                 anim.MatchTarget(gameManager.StandardTargetMatchingObject.transform.position, transform.rotation, action.MatchBodyPart,
@@ -443,7 +453,7 @@ public class Player : Entity
 
         else
         {
-            anim.MatchTarget(TargetMathcingPosition, transform.rotation, action.MatchBodyPart,
+            anim.MatchTarget(TargetMatchingPosition + action.MatchPositionOffset, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
             action.MatchStartTime, action.MatchTargetTime);
         }

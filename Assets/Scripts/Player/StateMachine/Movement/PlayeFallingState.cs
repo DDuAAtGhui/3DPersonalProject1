@@ -18,7 +18,7 @@ public class PlayeFallingState : PlayerAirborneState
         if (groundToFallState)
             StateTimer = player.CoyoteTime;
 
-        Debug.Log("Falling 진입 수직 벨로시티" + verticalVelocity);
+       // Debug.Log("Falling 진입 수직 벨로시티" + verticalVelocity);
 
         //경사로에서 잘 붙어있을 수 있게 GroundedGravity를 크게 설정해놨기 때문에
         //그 값을 유지한 채 추가로 가속도 붙지않게 0으로 초기화

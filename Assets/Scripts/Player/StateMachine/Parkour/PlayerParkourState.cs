@@ -18,6 +18,7 @@ public class PlayerParkourState : PlayerStates
     protected Vector3 matchTargetPosition;
 
     protected RaycastHit[] bodyPartHits;
+    protected GameObject lastBodyPartHitsObject;
     public PlayerParkourState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -76,10 +77,7 @@ public class PlayerParkourState : PlayerStates
 
         bodyPartHits = Physics.SphereCastAll(matchTargetPosition, 0.25f, Vector3.up, 0, player.hangableLayer);
 
-        foreach (var item in bodyPartHits)
-        {
-            Debug.Log("bodyPartHits : " + item.transform.name);
-        }
+ 
 
         if (parkourAction.RotateToObstacle)
             player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation,
