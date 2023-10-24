@@ -11,7 +11,7 @@ public class PlayerBracedHangShimmyRightState : PlayerBracedHangShimmyState
     public override void Enter()
     {
         base.Enter();
-        anim.SetBool(gameManager.animIDParkour_BracedHangShimmyRight,true);
+        anim.SetBool(gameManager.animIDParkour_BracedHangShimmyRight, true);
     }
     public override void Update()
     {

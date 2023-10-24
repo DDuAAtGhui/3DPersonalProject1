@@ -20,7 +20,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public float totalFallingTime = 0f;
 
     [SerializeField] public LayerMask Obstacle;
-    [Header("Ledge Check Info")]
+    [Tooltip("플레이어가 서있는 모서리 체크")][Header("Ledge Check Info")]
     [SerializeField] public float ledgeRayLength = 10f;
     [SerializeField] public float ledgeCheckOriginOffset = 0.5f;
     [SerializeField] public float ledgeCheckPlayerLRFootOffset = 0.34f;
@@ -39,6 +39,7 @@ public class Entity : MonoBehaviour
     [SerializeField] public LayerMask hangableLayer;
     [HideInInspector] public bool isHangable = false;
     [HideInInspector] public bool isHanging = false;
+    [Tooltip("신체 말단이 장애물 밖에있는지 판정에 사용할 레이캐스트 양극단 간격")][SerializeField] public Vector3 bodyPartRaySpace = new Vector3(0.1f, 0, 0);
     [HideInInspector] public HangableData hangableData { get; set; }
 
     //관리멤버

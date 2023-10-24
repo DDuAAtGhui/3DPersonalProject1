@@ -9,6 +9,8 @@ public class PlayerHangingState : PlayerParkourState
 {
     protected RaycastHit LedgeToLedgeTopHit;
     protected bool ControllableLedgeAction; //이 상태에서 키 입력하고 다른 모서리 액션으로 넘어가기 가능
+
+    protected bool isShimmy;
     public PlayerHangingState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -18,12 +20,15 @@ public class PlayerHangingState : PlayerParkourState
         base.Enter();
         player.isHanging = true;
 
-        StateTimer = 0.4f;
+        StateTimer = 0.2f;
     }
 
     public override void Update()
     {
         base.Update();
+
+        if (player.climbPoint != null)
+            Debug.Log($"{GetType().Name}'s climbPoint : " + player.climbPoint);
 
         //구 크기 커가지고 키 입력할때만 보이게했음
         if (gameManager.Visible_MatchPosition && player._inputXZ != Vector2.zero)
@@ -36,7 +41,9 @@ public class PlayerHangingState : PlayerParkourState
             stateMachine.ChangeState(player.hangingIdleWallState);
 
 
+        RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
 
+        this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
     }
     public override void Exit()
     {
@@ -51,5 +58,18 @@ public class PlayerHangingState : PlayerParkourState
 
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(LedgeToLedgeTopHit.point, 0.05f);
+    }
+
+    protected RaycastHit LedgeToLedgeCheck()
+    {
+        Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+        player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
+        out RaycastHit LedgeToLedgeFrontHit, player.hangableLayer);
+
+        Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
+        Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
+        out RaycastHit LedgeToLedgeTopHit, player.hangableLayer);
+
+        return LedgeToLedgeTopHit;
     }
 }

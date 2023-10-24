@@ -19,6 +19,11 @@ public class PlayerParkourState : PlayerStates
 
     protected RaycastHit[] bodyPartHits;
     protected GameObject lastBodyPartHitsObject;
+
+
+    //신체 말단부위가 허공직전인지 판정
+    protected bool bodypartXpositiveHitFound;
+    protected bool bodypartXnegativeHitFound;
     public PlayerParkourState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -77,8 +82,6 @@ public class PlayerParkourState : PlayerStates
 
         bodyPartHits = Physics.SphereCastAll(matchTargetPosition, 0.25f, Vector3.up, 0, player.hangableLayer);
 
- 
-
         if (parkourAction.RotateToObstacle)
             player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation,
                 parkourAction.TargetRotation, Time.deltaTime * parkourAction.RotateMultiflier);
@@ -89,6 +92,13 @@ public class PlayerParkourState : PlayerStates
 
         if (parkourToFallState)
             fallingTimer += Time.deltaTime;
+
+
+        bodypartXpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRaySpace, player.transform.forward,
+            out RaycastHit bodypartXpositionHit, 3f);
+
+        bodypartXnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRaySpace, player.transform.forward,
+            out RaycastHit bodypartXnegativeHit, 3f);
 
 
     }
@@ -110,5 +120,10 @@ public class PlayerParkourState : PlayerStates
         Gizmos.color = Color.red;
 
         Gizmos.DrawSphere(matchTargetPosition, 0.25f);
+
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawRay(matchTargetPosition + player.bodyPartRaySpace, player.transform.forward * 3f);
+        Gizmos.DrawRay(matchTargetPosition - player.bodyPartRaySpace, player.transform.forward * 3f);
     }
 }

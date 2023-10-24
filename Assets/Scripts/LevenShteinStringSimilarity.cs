@@ -38,6 +38,7 @@ public class LevenShteinStringSimilarity : MonoBehaviour
         }
 
         Debug.Log("bestMatchState : " + bestMatchState + "    " + matchingPercentage + "%");
+
         Percentage = matchingPercentage;
         return bestMatchState;
     }

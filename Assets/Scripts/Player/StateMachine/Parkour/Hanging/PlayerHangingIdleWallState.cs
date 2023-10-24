@@ -23,11 +23,11 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         base.Update();
 
         //레이캐스트 오브젝트 이름 디버그
-        for (int i = 0; i < bodyPartHits.Count(); i++)
-        {
-            Debug.Log("bodyPartHits : " + bodyPartHits[i].transform.gameObject.name);
+        //for (int i = 0; i < bodyPartHits.Count(); i++)
+        //{
+        //    Debug.Log("bodyPartHits : " + bodyPartHits[i].transform.gameObject.name);
 
-        }
+        //}
 
         #region 모서리액션
         //타겟매칭 이뤄지는 신체부위의 오브젝트
@@ -44,10 +44,10 @@ public class PlayerHangingIdleWallState : PlayerHangingState
                 player.climbPoint = neighbour.climbpoint;
 
 
-                //뛸 예정지의 레이캐스트
-                RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
+                ////뛸 예정지의 레이캐스트
+                //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
 
-                this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
+                //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
 
                 //연타하면 고장나는 버그있어서 막아둠
                 if (player._inputJump && StateTimer <= 0f)
@@ -70,16 +70,16 @@ public class PlayerHangingIdleWallState : PlayerHangingState
             {
                 player.climbPoint = neighbour.climbpoint;
 
-                //뛸 예정지의 레이캐스트
-                RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
+                ////뛸 예정지의 레이캐스트
+                //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
 
-                this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
+                //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
 
-
-                if (neighbour.direction.x == 1)
+                
+                if (neighbour.direction.x == 1 && bodypartXpositiveHitFound)
                     player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangShimmyRightState);
 
-                if (neighbour.direction.x == -1)
+                if (neighbour.direction.x == -1 && bodypartXnegativeHitFound)
                     player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangShimmyLeftState);
             }
         }
@@ -97,16 +97,16 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         anim.SetBool(gameManager.animIDParkour_HangingIdle, false);
     }
 
-    protected RaycastHit LedgeToLedgeCheck()
-    {
-        Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
-        player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
-        out RaycastHit LedgeToLedgeFrontHit, player.hangableLayer);
+    //protected RaycastHit LedgeToLedgeCheck()
+    //{
+    //    Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+    //    player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
+    //    out RaycastHit LedgeToLedgeFrontHit, player.hangableLayer);
 
-        Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
-        Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
-        out RaycastHit LedgeToLedgeTopHit, player.hangableLayer);
+    //    Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
+    //    Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
+    //    out RaycastHit LedgeToLedgeTopHit, player.hangableLayer);
 
-        return LedgeToLedgeTopHit;
-    }
+    //    return LedgeToLedgeTopHit;
+    //}
 }
