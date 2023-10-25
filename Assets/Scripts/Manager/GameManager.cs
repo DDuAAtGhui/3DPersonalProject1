@@ -170,6 +170,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("ParkourAble에 등록된 레이어를 가진 플레이어의 장애물 탐지범위 안에 들어온 장애물의 이름을 표시")] public bool Log_WhatisRayHitObstacle = true;
     [Tooltip("파쿠르 스크립터블 오브젝트 에셋 참 거짓 상태 정보")] public bool Log_ParkourPossibleState = true;
     [Tooltip("파쿠르 액션 실패 원인 표시와 실행된 액션 표시")] public bool Log_ParkourActionSuccessInfo = true;
+    [Tooltip("매달려있는 파쿠르의 환경정보")] public bool Log_HangingInfo = true;
     [Tooltip("애니메이션 종료 혹은 애니메이션 중 컨트롤 회복 플래그")] public bool Log_isAnimEnd = true;
     [Tooltip("파쿠르 매치 포지션 지점 가시화. 오프셋 설정시 파쿠르 할 때 오프셋 만큼 이동함")] public bool Visible_MatchPosition = true;
     [Tooltip("모서리 체크 레이캐스트 가시화")] public bool Visible_LedgeRay = true;

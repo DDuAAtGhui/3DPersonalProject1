@@ -75,7 +75,8 @@ public class PlayerHangingIdleWallState : PlayerHangingState
 
                 //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
 
-                
+                Debug.Log("current LedgeToLedgeTopHit pos : " + this.LedgeToLedgeTopHit.point);
+
                 if (neighbour.direction.x == 1 && bodypartXpositiveHitFound)
                     player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangShimmyRightState);
 
@@ -85,7 +86,7 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         }
         #endregion
 
-
+        
         //가만히 붙어서 점프누르면 밖으로 튕겨나가기
         if (player._inputJump && player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.jumpFromHangingWallState);
@@ -96,17 +97,4 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         base.Exit();
         anim.SetBool(gameManager.animIDParkour_HangingIdle, false);
     }
-
-    //protected RaycastHit LedgeToLedgeCheck()
-    //{
-    //    Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
-    //    player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
-    //    out RaycastHit LedgeToLedgeFrontHit, player.hangableLayer);
-
-    //    Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
-    //    Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
-    //    out RaycastHit LedgeToLedgeTopHit, player.hangableLayer);
-
-    //    return LedgeToLedgeTopHit;
-    //}
 }

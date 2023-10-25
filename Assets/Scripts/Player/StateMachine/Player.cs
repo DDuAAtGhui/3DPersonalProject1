@@ -456,6 +456,8 @@ public class Player : Entity
             anim.MatchTarget(TargetMatchingPosition + action.MatchPositionOffset, transform.rotation, action.MatchBodyPart,
             new MatchTargetWeightMask(action.MatchPositionWeight, action.MatchPositionRotateWeight),
             action.MatchStartTime, action.MatchTargetTime);
+
+            Debug.Log("Å¸°Ù¸ÅÄª ÀÏ¾î³¯¶§ Å¸°Ù¸ÅÄª Æ÷Áö¼Ç : " + TargetMatchingPosition);
         }
     }
 

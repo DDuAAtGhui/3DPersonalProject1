@@ -27,8 +27,6 @@ public class PlayerHangingState : PlayerParkourState
     {
         base.Update();
 
-        if (player.climbPoint != null)
-            Debug.Log($"{GetType().Name}'s climbPoint : " + player.climbPoint);
 
         //구 크기 커가지고 키 입력할때만 보이게했음
         if (gameManager.Visible_MatchPosition && player._inputXZ != Vector2.zero)
@@ -44,6 +42,13 @@ public class PlayerHangingState : PlayerParkourState
         RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
 
         this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
+
+
+        if (player.climbPoint != null && gameManager.Log_HangingInfo)
+        {
+            Debug.Log($"{GetType().Name}'s climbPoint : " + player.climbPoint);
+            Debug.Log($"{GetType().Name}'s LedgeToLedgeTopHit pos : " + LedgeToLedgeTopHit.point);
+        }
     }
     public override void Exit()
     {
