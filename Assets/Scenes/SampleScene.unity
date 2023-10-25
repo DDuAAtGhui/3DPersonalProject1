@@ -737,7 +737,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121253711}
-  m_LocalRotation: {x: 0.52271616, y: -0.00000003024, z: 0.000000018541714, w: 0.8525068}
+  m_LocalRotation: {x: 0.52271616, y: -0.00000003024001, z: 0.00000001854172, w: 0.8525068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1592,7 +1592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   neighbours:
-  - climbpoint: {fileID: 715598997}
+  - climbpoint: {fileID: 622124088}
     direction: {x: 1, y: 0}
     connectionType: 1
     isTwoWay: 1
@@ -4485,17 +4485,17 @@ PrefabInstance:
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.547078
+      value: 0.54707795
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000036007865
+      value: 0.00000002880629
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000023533081
+      value: -0.000000018826462
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f,
         type: 3}
@@ -6969,7 +6969,8 @@ MonoBehaviour:
     m_Bits: 0
   isHangable: 0
   isHanging: 0
-  bodyPartRaySpace: {x: 0.1, y: 0, z: 0}
+  bodyPartRayX_Space: {x: 0.1, y: 0, z: 0}
+  bodyPartRayY_Space: {x: 0, y: 0.1, z: 0}
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
@@ -7059,7 +7060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   neighbours:
-  - climbpoint: {fileID: 668263832}
+  - climbpoint: {fileID: 881955337}
     direction: {x: 1, y: 0}
     connectionType: 1
     isTwoWay: 1
@@ -7384,129 +7385,6 @@ Transform:
   m_Father: {fileID: 356917428}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &715598995
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 715598996}
-  - component: {fileID: 715599000}
-  - component: {fileID: 715598999}
-  - component: {fileID: 715598998}
-  - component: {fileID: 715598997}
-  m_Layer: 24
-  m_Name: ClimbPoint (13)
-  m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &715598996
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715598995}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 40.18, y: 13.702, z: -17.266}
-  m_LocalScale: {x: 0.34882545, y: 0.30633363, z: 0.1482}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1226041163}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &715598997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715598995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c87045a37777ea042b9c69c17e18abbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  neighbours:
-  - climbpoint: {fileID: 622124088}
-    direction: {x: 1, y: 0}
-    connectionType: 1
-    isTwoWay: 1
---- !u!65 &715598998
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715598995}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.99999994, y: 0.9999999, z: 0.9999999}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &715598999
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715598995}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &715599000
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715598995}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &721512886
 GameObject:
   m_ObjectHideFlags: 0
@@ -12695,7 +12573,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221937996}
-  m_LocalRotation: {x: 0.54707795, y: 0.0000000072015727, z: -0.000000004706615, w: 0.83708173}
+  m_LocalRotation: {x: 0.54707795, y: 0.000000014403146, z: -0.000000009413231, w: 0.8370817}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12805,7 +12683,6 @@ Transform:
   - {fileID: 1054352932}
   - {fileID: 377849383}
   - {fileID: 303989355}
-  - {fileID: 715598996}
   - {fileID: 622124087}
   - {fileID: 668263831}
   - {fileID: 881955336}
@@ -13005,7 +12882,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284841108}
-  m_LocalRotation: {x: 0.54707795, y: -0.0000000072015727, z: 0.000000004706615, w: 0.83708173}
+  m_LocalRotation: {x: 0.54707795, y: 0.000000014403146, z: -0.000000009413231, w: 0.8370817}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17317,7 +17194,8 @@ MonoBehaviour:
     m_Bits: 16777216
   isHangable: 0
   isHanging: 0
-  bodyPartRaySpace: {x: 0.25, y: 0, z: 0}
+  bodyPartRayX_Space: {x: 0.25, y: 0, z: 0}
+  bodyPartRayY_Space: {x: 0, y: 0.3, z: 0}
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
@@ -17336,6 +17214,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cdd71d3f759f26247a5b729b962a38bd, type: 2}
   - {fileID: 11400000, guid: 06e1076880961b0408d67e06b70d7d07, type: 2}
   - {fileID: 11400000, guid: f96b743880d1c7e488d7eb4ed37e8bae, type: 2}
+  - {fileID: 11400000, guid: 63886f9df74f673438ad93033997f1f3, type: 2}
   forwardRayOffset: {x: 0, y: 0.22, z: 0}
   forwardRayLength: 20
   heightRayLength: 5
@@ -22564,7 +22443,8 @@ MonoBehaviour:
     m_Bits: 0
   isHangable: 0
   isHanging: 0
-  bodyPartRaySpace: {x: 0.1, y: 0, z: 0}
+  bodyPartRayX_Space: {x: 0.1, y: 0, z: 0}
+  bodyPartRayY_Space: {x: 0, y: 0.1, z: 0}
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}

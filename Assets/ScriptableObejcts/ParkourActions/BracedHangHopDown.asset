@@ -20,7 +20,7 @@ MonoBehaviour:
   obstacleTag: 
   rotateToObstacle: 1
   postActionDelay: 0
-  rotateMultiflier: 150
+  rotateMultiflier: 0
   enableTargetMatching: 1
   matchBodyPart: 5
   matchStartTime: 0.31

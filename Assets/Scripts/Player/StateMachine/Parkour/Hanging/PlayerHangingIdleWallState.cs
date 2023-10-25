@@ -59,10 +59,15 @@ public class PlayerHangingIdleWallState : PlayerHangingState
                         player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopDownState);
 
                     if (neighbour.direction.x == 1)
+                    {
+                        matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.LeftHand).position;
                         player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopRightState);
-
+                    }
                     if (neighbour.direction.x == -1)
+                    {
+                        matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.RightHand).position;
                         player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopLeftState);
+                    }
                 }
             }
 
@@ -86,10 +91,13 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         }
         #endregion
 
-        
+
         //가만히 붙어서 점프누르면 밖으로 튕겨나가기
         if (player._inputJump && player._inputXZ == Vector2.zero)
             stateMachine.ChangeState(player.jumpFromHangingWallState);
+
+        if (!bodypartYpositiveHitFound && player._inputXZ.y == 1 && player._inputJump)
+            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangToCrouchState);
     }
 
     public override void Exit()

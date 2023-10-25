@@ -24,6 +24,8 @@ public class PlayerParkourState : PlayerStates
     //신체 말단부위가 허공직전인지 판정
     protected bool bodypartXpositiveHitFound;
     protected bool bodypartXnegativeHitFound;
+    protected bool bodypartYpositiveHitFound;
+    protected bool bodypartYnegativeHitFound;
     public PlayerParkourState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -94,11 +96,17 @@ public class PlayerParkourState : PlayerStates
             fallingTimer += Time.deltaTime;
 
 
-        bodypartXpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRaySpace, player.transform.forward,
-            out RaycastHit bodypartXpositionHit, 3f);
+        bodypartXpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRayX_Space, player.transform.forward,
+            out RaycastHit bodypartXpositiveHit, 3f);
 
-        bodypartXnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRaySpace, player.transform.forward,
+        bodypartXnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRayX_Space, player.transform.forward,
             out RaycastHit bodypartXnegativeHit, 3f);
+
+        bodypartYpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRayY_Space, player.transform.forward,
+            out RaycastHit bodypartYpositiveHit, 3f);
+
+        bodypartYnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRayY_Space, player.transform.forward,
+            out RaycastHit bodypartYnegativeHit, 3f);
 
 
     }
@@ -123,7 +131,9 @@ public class PlayerParkourState : PlayerStates
 
         Gizmos.color = Color.red;
 
-        Gizmos.DrawRay(matchTargetPosition + player.bodyPartRaySpace, player.transform.forward * 3f);
-        Gizmos.DrawRay(matchTargetPosition - player.bodyPartRaySpace, player.transform.forward * 3f);
+        Gizmos.DrawRay(matchTargetPosition + player.bodyPartRayX_Space, player.transform.forward * 3f);
+        Gizmos.DrawRay(matchTargetPosition - player.bodyPartRayX_Space, player.transform.forward * 3f);
+        Gizmos.DrawRay(matchTargetPosition + player.bodyPartRayY_Space, player.transform.forward * 3f);
+        Gizmos.DrawRay(matchTargetPosition - player.bodyPartRayY_Space, player.transform.forward * 3f);
     }
 }

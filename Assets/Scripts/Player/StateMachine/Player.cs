@@ -111,6 +111,7 @@ public class Player : Entity
     public PlayerBracedHangHopLeftState bracedHangHopLeftState { get; private set; }
     public PlayerBracedHangShimmyRightState bracedHangShimmyRightState { get; private set; }
     public PlayerBracedHangShimmyLeftState bracedHangShimmyLeftState { get; private set; }
+    public PlayerBracedHangToCrouchState bracedHangToCrouchState { get; private set; }
     private void Awake()
     {
 
@@ -137,6 +138,7 @@ public class Player : Entity
         bracedHangHopLeftState = new PlayerBracedHangHopLeftState(this, stateMachine);
         bracedHangShimmyRightState = new PlayerBracedHangShimmyRightState(this, stateMachine);
         bracedHangShimmyLeftState = new PlayerBracedHangShimmyLeftState(this, stateMachine);
+        bracedHangToCrouchState = new PlayerBracedHangToCrouchState(this, stateMachine);
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
@@ -316,9 +318,6 @@ public class Player : Entity
             //이래야 offset할 때 플레이어 위치 변해도 일정한 결과값 도출
             gameManager.StandardTargetMatchingObject.transform.rotation =
                 Quaternion.LookRotation(-hitData.forwardHit.normal);
-
-            //gameManager.CustomTargetMatchingObject.transform.rotation =
-            //    Quaternion.LookRotation(-hangableLedgeFrontHit.normal);
 
         }
 

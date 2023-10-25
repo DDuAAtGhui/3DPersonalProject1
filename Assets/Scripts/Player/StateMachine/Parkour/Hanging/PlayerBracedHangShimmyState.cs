@@ -23,6 +23,7 @@ public class PlayerBracedHangShimmyState : PlayerHangingState
         if (bodyPartHits.Count() > 0)
             player.climbPoint = bodyPartHits[0].transform.GetComponent<ClimbPoint>();
 
+
     }
     public override void Exit()
     {

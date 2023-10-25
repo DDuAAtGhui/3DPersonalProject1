@@ -39,7 +39,8 @@ public class Entity : MonoBehaviour
     [SerializeField] public LayerMask hangableLayer;
     [HideInInspector] public bool isHangable = false;
     [HideInInspector] public bool isHanging = false;
-    [Tooltip("신체 말단이 장애물 밖에있는지 판정에 사용할 레이캐스트 양극단 간격")][SerializeField] public Vector3 bodyPartRaySpace = new Vector3(0.1f, 0, 0);
+    [Tooltip("신체 말단이 장애물 밖에있는지 판정에 사용할 레이캐스트 양극단 간격")][SerializeField] public Vector3 bodyPartRayX_Space = new Vector3(0.1f, 0, 0);
+    [Tooltip("신체 말단이 장애물 밖에있는지 판정에 사용할 레이캐스트 양극단 간격")][SerializeField] public Vector3 bodyPartRayY_Space = new Vector3(0, 0.1f, 0);
     [HideInInspector] public HangableData hangableData { get; set; }
 
     //관리멤버

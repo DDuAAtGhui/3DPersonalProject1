@@ -117,7 +117,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_BracedHangHopLeft;
     [HideInInspector] public int animIDParkour_BracedHangShimmyRight;
     [HideInInspector] public int animIDParkour_BracedHangShimmyLeft;
-    
+    [HideInInspector] public int animIDParkour_BracedHangToCrouch;
+
     void animParameterToHash()
     {
         animIDSpeed = Animator.StringToHash("Speed");
@@ -144,6 +145,7 @@ public class GameManager : MonoBehaviour
         animIDParkour_BracedHangHopLeft = Animator.StringToHash("Parkour_BracedHangHopLeft");
         animIDParkour_BracedHangShimmyRight = Animator.StringToHash("Parkour_BracedHangShimmyRight");
         animIDParkour_BracedHangShimmyLeft = Animator.StringToHash("Parkour_BracedHangShimmyLeft");
+        animIDParkour_BracedHangToCrouch = Animator.StringToHash("Parkou_BracedHangToCrouch");
     }
     #endregion
     #region DEBUG_OPTION

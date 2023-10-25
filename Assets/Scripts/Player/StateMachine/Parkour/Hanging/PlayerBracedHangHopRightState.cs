@@ -15,6 +15,8 @@ public class PlayerBracedHangHopRightState : PlayerHangingState
         ControllableLedgeAction = false;
 
         player.StartCoroutine("nowBusy", 0.7f);
+
+        player.transform.rotation = Quaternion.LookRotation(-player.climbPoint.transform.forward);
     }
 
     public override void Update()
