@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
         animIDParkour_BracedHangHopLeft = Animator.StringToHash("Parkour_BracedHangHopLeft");
         animIDParkour_BracedHangShimmyRight = Animator.StringToHash("Parkour_BracedHangShimmyRight");
         animIDParkour_BracedHangShimmyLeft = Animator.StringToHash("Parkour_BracedHangShimmyLeft");
-        animIDParkour_BracedHangToCrouch = Animator.StringToHash("Parkou_BracedHangToCrouch");
+        animIDParkour_BracedHangToCrouch = Animator.StringToHash("Parkour_BracedHangToCrouch");
     }
     #endregion
     #region DEBUG_OPTION

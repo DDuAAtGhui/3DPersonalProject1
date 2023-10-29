@@ -10,6 +10,7 @@ public class Entity : MonoBehaviour
     #region Infos
     [Header("Entity")]
     public GameManager gameManager;
+
     [Header("Collision Info")]
     [SerializeField] public bool isGrounded = false;
     [SerializeField] public float GroundedOffset = -0.14f; //거친 표면 체크에 유용

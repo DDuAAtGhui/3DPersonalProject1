@@ -85,7 +85,9 @@ public class Player : Entity
     public bool isControlable = true;
     [HideInInspector] public Vector3 inputDirection;
 
-
+    [Header("Aim Info")]
+    [SerializeField] public Vector2 Look;
+    [HideInInspector] public bool _InputAim; // RightClick
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -166,6 +168,12 @@ public class Player : Entity
         playerInput.CharacterControls.Jump.started += onJumpAction;
         playerInput.CharacterControls.Jump.canceled += onJumpAction;
 
+        playerInput.CharacterControls.Look.started += onLookAction;
+        playerInput.CharacterControls.Look.performed += onLookAction;
+        playerInput.CharacterControls.Look.canceled += onLookAction;
+
+        playerInput.CharacterControls.Aim.started += onAimAction;
+        playerInput.CharacterControls.Aim.canceled += onAimAction;
         #endregion
     }
     #endregion
@@ -507,6 +515,16 @@ public class Player : Entity
     void onCurosrVisible(InputAction.CallbackContext context)
     {
         _inputCurosrVisible = context.ReadValueAsButton();
+    }
+
+    void onLookAction(InputAction.CallbackContext context)
+    {
+        Look = context.ReadValue<Vector2>();
+    }
+
+    void onAimAction(InputAction.CallbackContext context)
+    {
+        _InputAim = context.ReadValueAsButton();
     }
     #endregion
 
