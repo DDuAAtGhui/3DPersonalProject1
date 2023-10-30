@@ -4,7 +4,7 @@ using UnityEngine;
 public class TPSController : MonoBehaviour
 {
     Player player;
-    
+
     [Header("Aim Info")]
     [SerializeField] CinemachineVirtualCamera aimVirtualCamera;
     [SerializeField] GameObject cameraRoot;
@@ -34,10 +34,11 @@ public class TPSController : MonoBehaviour
     //조준점 레이캐스트
     Ray ray;
     RaycastHit raycastHit;
+    [SerializeField] LayerMask AimRayLayer;
     private void Aim()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        rayHitFound = Physics.Raycast(ray, out raycastHit, 999f);
+        rayHitFound = Physics.Raycast(ray, out raycastHit, 999f, AimRayLayer);
     }
 
     private void Rotate()
@@ -46,6 +47,9 @@ public class TPSController : MonoBehaviour
         {
             aimVirtualCamera.gameObject.SetActive(true);
             crossHair?.SetActive(true);
+
+            player.isAiming = true;
+
 
             //Rotate 메소드처럼 현재 각도에다가 추가로 더하게 만들어줌
             float X_Rotation = cameraRoot.transform.eulerAngles.x + player.Look.y * AimSensitive;
@@ -72,6 +76,8 @@ public class TPSController : MonoBehaviour
         {
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
+            player.isAiming = false;
+
             cameraRoot.transform.rotation = player.transform.rotation;
         }
     }

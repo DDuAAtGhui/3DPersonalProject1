@@ -72,6 +72,7 @@ public class Player : Entity
 
     [Header("Camera Info")]
     [SerializeField] public CinemachineFreeLook VCamera;
+    [SerializeField] public CinemachineVirtualCamera AimingCamera;
     [SerializeField] public Transform orientation; //플레이어 원점
     [HideInInspector] public Vector3 LookDir;
 
@@ -88,6 +89,7 @@ public class Player : Entity
     [Header("Aim Info")]
     [SerializeField] public Vector2 Look;
     [HideInInspector] public bool _InputAim; // RightClick
+    [HideInInspector] public bool isAiming;
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백

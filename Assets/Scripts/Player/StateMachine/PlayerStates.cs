@@ -158,6 +158,9 @@ public class PlayerStates
 
         targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
 
+        //조준중일때도 느리게 움직이게
+        targetSpeed = player.isAiming ? walkSpeed : player.moveSpeed;
+
         //플레이어 horizon 벨로시티
         float currentHorizontalVelocity = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
 
@@ -192,19 +195,36 @@ public class PlayerStates
 
         if (player._inputXZ != Vector2.zero)
         {
+            //switch (player.isAiming)
+            //{
+            //    case true:
+            //        targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
+            //+ player.AimingCamera.transform.eulerAngles.y; break;
+
+            //    case false:
+            //        targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
+            //+ player.VCamera.transform.eulerAngles.y; break;
+            //}
+
             targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
-                + player.VCamera.transform.eulerAngles.y;
+            + player.VCamera.transform.eulerAngles.y;
 
             float rotation = Mathf.SmoothDampAngle(player.transform.eulerAngles.y, targetRotation,
                 ref rotationVelocity, player.RotatonSmoothTime);
 
             //카메라 위치에 비례하여 회전, 공중에 뜬 상태면 회전 불가
-            if (player.Can_Rotate)
+            //우클릭해서 조준중일때도 회전 비활성화
+            if (player.Can_Rotate && !player.isAiming)
                 player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
-
-        targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
+        switch (player.isAiming)
+        {
+            case true:
+                targetDirection = Quaternion.Euler(0, targetRotation, 0) * player.transform.forward; break;
+            case false:
+                targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward; break;
+        }
 
         if (player.isGrounded && player.Can_MoveHorizontally && !LedgeMovement())
         {
