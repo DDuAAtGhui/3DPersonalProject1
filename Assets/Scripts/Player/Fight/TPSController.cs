@@ -7,7 +7,7 @@ public class TPSController : MonoBehaviour
 
     [Header("Aim Info")]
     [SerializeField] CinemachineVirtualCamera aimVirtualCamera;
-    [SerializeField] GameObject cameraRoot;
+    [SerializeField] public GameObject cameraRoot;
     [SerializeField] float AimSensitive = 1f;
     [SerializeField] float Limit_LookVerticalLimit = 70f;
     [SerializeField] GameObject crossHair;
@@ -35,10 +35,38 @@ public class TPSController : MonoBehaviour
     Ray ray;
     RaycastHit raycastHit;
     [SerializeField] LayerMask AimRayLayer;
+    [HideInInspector] public Vector3 mouseWorldPosition;
     private void Aim()
     {
+        mouseWorldPosition = Vector3.zero;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         rayHitFound = Physics.Raycast(ray, out raycastHit, 999f, AimRayLayer);
+
+        if (rayHitFound)
+        {
+            mouseWorldPosition = raycastHit.point;
+        }
+
+        //if (player._InputAim)
+        //{
+        //    aimVirtualCamera.gameObject.SetActive(true);
+        //    crossHair?.SetActive(true);
+        //    player.isAiming = true;
+
+        //    Vector3 worldAimTarget = mouseWorldPosition;
+        //    worldAimTarget.y = transform.position.y;
+        //    Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
+
+        //    transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+        //}
+
+        //else
+        //{
+        //    aimVirtualCamera.gameObject.SetActive(false);
+        //    crossHair?.SetActive(false);
+        //    player.isAiming = false;
+
+        //}
     }
 
     private void Rotate()

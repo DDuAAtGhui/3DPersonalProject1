@@ -16,6 +16,7 @@ public class Player : Entity
     [HideInInspector] public CharacterController CC;
     [HideInInspector] public PlayerInputSystem playerInput;
     [HideInInspector] public Animator anim;
+    [HideInInspector] public TPSController tpsController;
     #endregion
     #region infos
     //개별 Collision
@@ -146,6 +147,7 @@ public class Player : Entity
         #region 컴포넌트
         CC = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
+        tpsController = GetComponent<TPSController>();
         #endregion
         #region 인풋시스템 콜백관련
         playerInput = new PlayerInputSystem();

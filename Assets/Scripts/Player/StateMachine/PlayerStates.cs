@@ -6,6 +6,7 @@ public class PlayerStates
 {
     protected PlayerStateMachine stateMachine;
     protected Player player;
+    protected TPSController tpsController;
     public float StateTimer;
 
     #region 멤버 연결용 변수선언
@@ -48,6 +49,7 @@ public class PlayerStates
         CC = player.CC;
         anim = player.anim;
         gameManager = player.gameManager;
+        tpsController = player.tpsController;
         #endregion
 
         if (gameManager.Log_StateEnter)
@@ -156,10 +158,17 @@ public class PlayerStates
         else
             player.moveSpeed = player.temp_moveSpeed;
 
-        targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+        switch (player.isAiming)
+        {
+            case true:
+                targetSpeed = walkSpeed;
+                break;
+            case false:
+                targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+                break;
+        }
 
         //조준중일때도 느리게 움직이게
-        targetSpeed = player.isAiming ? walkSpeed : player.moveSpeed;
 
         //플레이어 horizon 벨로시티
         float currentHorizontalVelocity = new Vector3(CC.velocity.x, 0, CC.velocity.z).magnitude;
@@ -195,17 +204,6 @@ public class PlayerStates
 
         if (player._inputXZ != Vector2.zero)
         {
-            //switch (player.isAiming)
-            //{
-            //    case true:
-            //        targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
-            //+ player.AimingCamera.transform.eulerAngles.y; break;
-
-            //    case false:
-            //        targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
-            //+ player.VCamera.transform.eulerAngles.y; break;
-            //}
-
             targetRotation = Mathf.Atan2(player.inputDirection.x, player.inputDirection.z) * Mathf.Rad2Deg
             + player.VCamera.transform.eulerAngles.y;
 
@@ -218,19 +216,25 @@ public class PlayerStates
                 player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
-        switch (player.isAiming)
-        {
-            case true:
-                targetDirection = Quaternion.Euler(0, targetRotation, 0) * player.transform.forward; break;
-            case false:
-                targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward; break;
-        }
+        targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
         if (player.isGrounded && player.Can_MoveHorizontally && !LedgeMovement())
         {
             //  Debug.Log("타겟 디렉션 적용중");
-            CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
-                + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+            if (!player.isAiming)
+                CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
+                    + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+
+
+            //조준중일땐 TPSController가 잡아준 cameraRoot값 써서 이동
+            else
+            {
+                Vector3 moveDirection = tpsController.cameraRoot.transform.forward * player._inputXZ.y +
+                           tpsController.cameraRoot.transform.right * player._inputXZ.x;
+
+                CC.Move(moveDirection * (speed * Time.deltaTime)
+                    + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+            }
         }
 
         //공중에 뜬 상태면 조작 불가
