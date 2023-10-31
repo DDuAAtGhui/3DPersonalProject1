@@ -6,7 +6,7 @@ public class TPSController : MonoBehaviour
     Player player;
 
     [Header("Aim Info")]
-    [SerializeField] CinemachineVirtualCamera aimVirtualCamera;
+    [SerializeField] CinemachineVirtualCamera aimVirtualCamera; //cameraRoot Follow 거는중
     [SerializeField] public GameObject cameraRoot;
     [SerializeField] float AimSensitive = 1f;
     [SerializeField] float Limit_LookVerticalLimit = 70f;
@@ -46,38 +46,32 @@ public class TPSController : MonoBehaviour
         {
             mouseWorldPosition = raycastHit.point;
         }
-
-        //if (player._InputAim)
-        //{
-        //    aimVirtualCamera.gameObject.SetActive(true);
-        //    crossHair?.SetActive(true);
-        //    player.isAiming = true;
-
-        //    Vector3 worldAimTarget = mouseWorldPosition;
-        //    worldAimTarget.y = transform.position.y;
-        //    Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
-
-        //    transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
-        //}
-
-        //else
-        //{
-        //    aimVirtualCamera.gameObject.SetActive(false);
-        //    crossHair?.SetActive(false);
-        //    player.isAiming = false;
-
-        //}
     }
 
+    bool initialRotation = true;
     private void Rotate()
     {
         if (player._InputAim)
         {
             aimVirtualCamera.gameObject.SetActive(true);
             crossHair?.SetActive(true);
-
             player.isAiming = true;
 
+            //초기 회전 설정
+            if (initialRotation)
+            {
+                //플레이어 로테이션값 부분적으로 유지하기위해 사용
+                Vector3 eulerAngles = player.transform.eulerAngles;
+
+                //원신처럼 화면이 플레이어 앞에서 플레이어를 비추고 있어도(즉, 캐릭터 앞을 향하고있는데
+                //유저는 캐릭터의 뒤를 조준하고 있을때) 그 조준 방향을 바로 바라보도록 설정
+                eulerAngles.y = Quaternion.LookRotation(ray.direction, Vector3.up).eulerAngles.y;
+                player.transform.rotation = Quaternion.Euler(eulerAngles);
+                initialRotation = false;
+            }
+
+            if (player.Look == Vector2.zero)
+                return;
 
             //Rotate 메소드처럼 현재 각도에다가 추가로 더하게 만들어줌
             float X_Rotation = cameraRoot.transform.eulerAngles.x + player.Look.y * AimSensitive;
@@ -97,6 +91,7 @@ public class TPSController : MonoBehaviour
             cameraRoot.transform.eulerAngles = new Vector3(X_Rotation, cameraRoot.transform.eulerAngles.y, 0);
 
             //rotation은 새로운 각도로 초기화 하는거라 Rotate를 써줌
+            //플레이어가 회전하면 자식인 CameraRoot도 회전0
             player.transform.Rotate(0, player.Look.x * AimSensitive, 0);
         }
 
@@ -105,6 +100,7 @@ public class TPSController : MonoBehaviour
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
             player.isAiming = false;
+            initialRotation = true;
 
             cameraRoot.transform.rotation = player.transform.rotation;
         }

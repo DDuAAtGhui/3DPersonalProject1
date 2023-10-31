@@ -658,7 +658,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121253711}
-  m_LocalRotation: {x: 0.52271616, y: -0.00000003024001, z: 0.00000001854172, w: 0.8525068}
+  m_LocalRotation: {x: 0.52271616, y: 0.00000003024, z: -0.000000018541714, w: 0.8525068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7361,6 +7361,7 @@ MonoBehaviour:
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
   anim: {fileID: 0}
+  tpsController: {fileID: 0}
   PlayFallingAnimation: 0
   parkourActions: []
   forwardRayOffset: {x: 0, y: 0.22, z: 0}
@@ -19731,6 +19732,7 @@ MonoBehaviour:
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
   anim: {fileID: 0}
+  tpsController: {fileID: 0}
   PlayFallingAnimation: 0
   parkourActions:
   - {fileID: 11400000, guid: 66df278f1e366f3468eb5cd292b549bc, type: 2}
@@ -19914,7 +19916,8 @@ MonoBehaviour:
   crossHair: {fileID: 1939700213}
   AimRayLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32506039
+  mouseWorldPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1803823680
 GameObject:
   m_ObjectHideFlags: 0
@@ -25427,6 +25430,7 @@ MonoBehaviour:
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   CC: {fileID: 0}
   anim: {fileID: 0}
+  tpsController: {fileID: 0}
   PlayFallingAnimation: 0
   parkourActions: []
   forwardRayOffset: {x: 0, y: 0.22, z: 0}

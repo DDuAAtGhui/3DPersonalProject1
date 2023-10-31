@@ -229,7 +229,7 @@ public class PlayerStates
             //조준중일땐 TPSController가 잡아준 cameraRoot값 써서 이동
             else
             {
-                Vector3 moveDirection = tpsController.cameraRoot.transform.forward * player._inputXZ.y +
+                Vector3 moveDirection = player.transform.forward * player._inputXZ.y +
                            tpsController.cameraRoot.transform.right * player._inputXZ.x;
 
                 CC.Move(moveDirection * (speed * Time.deltaTime)
