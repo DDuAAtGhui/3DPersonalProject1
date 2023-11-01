@@ -91,6 +91,7 @@ public class Player : Entity
     [SerializeField] public Vector2 Look;
     [HideInInspector] public bool _InputAim; // RightClick
     [HideInInspector] public bool isAiming;
+    [HideInInspector] public bool _InputFire;
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -178,6 +179,9 @@ public class Player : Entity
 
         playerInput.CharacterControls.Aim.started += onAimAction;
         playerInput.CharacterControls.Aim.canceled += onAimAction;
+
+            playerInput.CharacterControls.Fire.started += onFireAction;
+            playerInput.CharacterControls.Fire.canceled += onFireAction;
         #endregion
     }
     #endregion
@@ -529,6 +533,11 @@ public class Player : Entity
     void onAimAction(InputAction.CallbackContext context)
     {
         _InputAim = context.ReadValueAsButton();
+    }
+
+    void onFireAction(InputAction.CallbackContext context)
+    {
+        _InputFire = context.ReadValueAsButton();
     }
     #endregion
 

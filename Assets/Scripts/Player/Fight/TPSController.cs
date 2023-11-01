@@ -12,7 +12,8 @@ public class TPSController : MonoBehaviour
     [SerializeField] float AimSensitive = 1f;
     [SerializeField] float Limit_LookVerticalLimit = 70f;
     [SerializeField] GameObject crossHair;
-
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform fireTransform;
 
     bool rayHitFound;
     private void Awake()
@@ -29,6 +30,13 @@ public class TPSController : MonoBehaviour
     {
         Aim();
         Rotate();
+
+
+        if (player._InputFire)
+        {
+            Vector3 aimDir = (mouseWorldPosition - fireTransform.position).normalized;
+            GameObject go = Instantiate(bullet, fireTransform.position, Quaternion.LookRotation(aimDir, Vector3.up));
+        }
     }
 
 
@@ -47,6 +55,7 @@ public class TPSController : MonoBehaviour
         {
             mouseWorldPosition = raycastHit.point;
         }
+
     }
 
     bool initialRotation = true;
