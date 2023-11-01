@@ -1,4 +1,5 @@
 using Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class TPSController : MonoBehaviour
@@ -63,10 +64,13 @@ public class TPSController : MonoBehaviour
                 //플레이어 로테이션값 부분적으로 유지하기위해 사용
                 Vector3 eulerAngles = player.transform.eulerAngles;
 
+                eulerAngles.x = Quaternion.LookRotation(ray.direction, Vector3.up).eulerAngles.x;
+
                 //원신처럼 화면이 플레이어 앞에서 플레이어를 비추고 있어도(즉, 캐릭터 앞을 향하고있는데
                 //유저는 캐릭터의 뒤를 조준하고 있을때) 그 조준 방향을 바로 바라보도록 설정
                 eulerAngles.y = Quaternion.LookRotation(ray.direction, Vector3.up).eulerAngles.y;
-                player.transform.rotation = Quaternion.Euler(eulerAngles);
+                player.transform.rotation = Quaternion.Euler(new Vector3(0, eulerAngles.y, 0));
+                cameraRoot.transform.Rotate(new Vector3(eulerAngles.x, 0, 0));
                 initialRotation = false;
             }
 
