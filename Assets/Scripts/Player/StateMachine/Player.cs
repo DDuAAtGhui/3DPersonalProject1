@@ -180,8 +180,8 @@ public class Player : Entity
         playerInput.CharacterControls.Aim.started += onAimAction;
         playerInput.CharacterControls.Aim.canceled += onAimAction;
 
-            playerInput.CharacterControls.Fire.started += onFireAction;
-            playerInput.CharacterControls.Fire.canceled += onFireAction;
+        playerInput.CharacterControls.Fire.started += onFireAction;
+        playerInput.CharacterControls.Fire.canceled += onFireAction;
         #endregion
     }
     #endregion
@@ -202,6 +202,8 @@ public class Player : Entity
 
         if (!inParkourAction)
             ParkourAbleObstacleCheck();
+
+        anim.SetBool(gameManager.animIDisAiming, isAiming);
 
         #region 디버그 로그
 

@@ -1,5 +1,5 @@
 using Cinemachine;
-using Unity.Mathematics;
+using System.Collections;
 using UnityEngine;
 
 public class TPSController : MonoBehaviour
@@ -21,22 +21,19 @@ public class TPSController : MonoBehaviour
         player = GetComponent<Player>();
     }
 
+    int playerAimingAnimLayerIndex;
     private void Start()
     {
+        playerAimingAnimLayerIndex = player.anim.GetLayerIndex("Aiming");
 
+        initialSpineRotation =
+            player.anim.GetBoneTransform(HumanBodyBones.Spine).localEulerAngles;
     }
 
     private void Update()
     {
-        Aim();
-        Rotate();
-
-
-        if (player._InputFire)
-        {
-            Vector3 aimDir = (mouseWorldPosition - fireTransform.position).normalized;
-            GameObject go = Instantiate(bullet, fireTransform.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        }
+        AimInfo();
+        AimFeatures();
     }
 
 
@@ -44,25 +41,60 @@ public class TPSController : MonoBehaviour
     Ray ray;
     RaycastHit raycastHit;
     [SerializeField] LayerMask AimRayLayer;
-    [HideInInspector] public Vector3 mouseWorldPosition;
-    private void Aim()
+    [HideInInspector] public Vector3 mouseWorldPosition = Vector3.zero;
+    [SerializeField] float shootingSpeed = 0.05f;
+    [SerializeField] float MOA = 1f;
+    float timer = 0f;
+    private void AimInfo()
     {
+        Vector3 bulletSpread =
+            new Vector3(Random.Range(-MOA, MOA), Random.Range(-MOA, MOA), 0);
+
+
+
         mouseWorldPosition = Vector3.zero;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        rayHitFound = Physics.Raycast(ray, out raycastHit, 999f, AimRayLayer);
+        rayHitFound = Physics.Raycast(ray, out raycastHit, 10000f, AimRayLayer);
+
+
+        Debug.Log(rayHitFound);
+
 
         if (rayHitFound)
         {
             mouseWorldPosition = raycastHit.point;
         }
 
+        timer += Time.deltaTime;
+
+        if (player._InputFire)
+        {
+            Vector3 aimDir = (mouseWorldPosition - fireTransform.position).normalized;
+
+            if (timer >= shootingSpeed)
+            {
+                timer = 0f;
+                GameObject go = Instantiate(bullet, fireTransform.position, Quaternion.LookRotation(aimDir + bulletSpread, Vector3.up));
+            }
+
+        }
     }
 
     bool initialRotation = true;
-    private void Rotate()
+    Vector3 initialSpineRotation;
+    private void AimFeatures()
     {
         if (player._InputAim)
         {
+            #region 애니메이션
+            player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+                Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+                1f, Time.deltaTime * 16f));
+
+
+
+            #endregion
+
             aimVirtualCamera.gameObject.SetActive(true);
             crossHair?.SetActive(true);
             player.isAiming = true;
@@ -110,6 +142,12 @@ public class TPSController : MonoBehaviour
 
         else
         {
+            #region 애니메이션
+            player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+                Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+                0f, Time.deltaTime * 12f));
+            #endregion
+
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
             player.isAiming = false;

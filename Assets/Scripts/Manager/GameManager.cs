@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
     }
 
     #region 애니메이터 파라미터 해쉬화
+    [HideInInspector] public int animIDisAiming;
     [HideInInspector] public int animIDSpeed;
     [HideInInspector] public int animIDMotionSpeed;
     [HideInInspector] public int animIDJump;
@@ -121,6 +122,7 @@ public class GameManager : MonoBehaviour
 
     void animParameterToHash()
     {
+        animIDisAiming = Animator.StringToHash("isAiming");
         animIDSpeed = Animator.StringToHash("Speed");
         animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         animIDJump = Animator.StringToHash("Jump");
