@@ -1,6 +1,8 @@
 using Cinemachine;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Animations.Rigging;
 
 public class TPSController : MonoBehaviour
 {
@@ -13,12 +15,16 @@ public class TPSController : MonoBehaviour
     [SerializeField] float Limit_LookVerticalLimit = 70f;
     [SerializeField] GameObject crossHair;
     [SerializeField] GameObject bullet;
+    // 이거 애니메이션 리깅 타겟포지션으로 잡을거니까 생성시키지 말기
+    [SerializeField] GameObject LaserPoint;
+    [SerializeField] bool ActivateLaserPoint;
     [SerializeField] Transform fireTransform;
-
     bool rayHitFound;
     private void Awake()
     {
         player = GetComponent<Player>();
+
+        LaserPoint.SetActive(false);
     }
 
     int playerAimingAnimLayerIndex;
@@ -50,7 +56,8 @@ public class TPSController : MonoBehaviour
         Vector3 bulletSpread =
             new Vector3(Random.Range(-MOA, MOA), Random.Range(-MOA, MOA), 0);
 
-
+        if (!ActivateLaserPoint)
+            LaserPoint.SetActive(false);
 
         mouseWorldPosition = Vector3.zero;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -63,6 +70,12 @@ public class TPSController : MonoBehaviour
         if (rayHitFound)
         {
             mouseWorldPosition = raycastHit.point;
+
+            if (ActivateLaserPoint)
+            {
+                LaserPoint.SetActive(true);
+                LaserPoint.transform.position = mouseWorldPosition;
+            }
         }
 
         timer += Time.deltaTime;
@@ -150,6 +163,8 @@ public class TPSController : MonoBehaviour
 
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
+            LaserPoint.SetActive(false);
+            
             player.isAiming = false;
             initialRotation = true;
 
@@ -160,9 +175,9 @@ public class TPSController : MonoBehaviour
     private void OnDrawGizmos()
     {
 
-        Gizmos.DrawRay(ray);
+        //Gizmos.DrawRay(ray);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(raycastHit.point, 0.1f);
+        //Gizmos.color = Color.green;
+        //Gizmos.DrawSphere(raycastHit.point, 0.1f);
     }
 }
