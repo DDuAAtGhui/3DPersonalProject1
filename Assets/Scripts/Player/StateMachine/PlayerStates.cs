@@ -161,7 +161,7 @@ public class PlayerStates
         switch (player.isAiming)
         {
             case true:
-                targetSpeed = walkSpeed;
+                targetSpeed = walkSpeed / 2;
                 break;
             case false:
                 targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;

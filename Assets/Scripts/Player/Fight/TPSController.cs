@@ -38,6 +38,20 @@ public class TPSController : MonoBehaviour
 
     private void Update()
     {
+        player._InputAim = true;
+        aimVirtualCamera.gameObject.SetActive(true);
+        player.isAiming = true;
+        #region 애니메이션
+        player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+            Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+            1f, Time.deltaTime * 16f));
+
+
+
+        #endregion
+
+        return;
+
         AimInfo();
         AimFeatures();
     }
@@ -62,10 +76,6 @@ public class TPSController : MonoBehaviour
         mouseWorldPosition = Vector3.zero;
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         rayHitFound = Physics.Raycast(ray, out raycastHit, 10000f, AimRayLayer);
-
-
-        Debug.Log(rayHitFound);
-
 
         if (rayHitFound)
         {
@@ -128,6 +138,8 @@ public class TPSController : MonoBehaviour
                 initialRotation = false;
             }
 
+
+
             if (player.Look == Vector2.zero)
                 return;
 
@@ -164,7 +176,7 @@ public class TPSController : MonoBehaviour
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
             LaserPoint.SetActive(false);
-            
+
             player.isAiming = false;
             initialRotation = true;
 
