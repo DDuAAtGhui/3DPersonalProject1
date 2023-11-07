@@ -92,6 +92,7 @@ public class Player : Entity
     [HideInInspector] public bool _InputAim; // RightClick
     [HideInInspector] public bool isAiming;
     [HideInInspector] public bool _InputFire;
+    [HideInInspector] public bool _InputReload;
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -182,8 +183,12 @@ public class Player : Entity
 
         playerInput.CharacterControls.Fire.started += onFireAction;
         playerInput.CharacterControls.Fire.canceled += onFireAction;
+
+        playerInput.CharacterControls.Reload.started += onReloadAction;
+        playerInput.CharacterControls.Reload.canceled += onReloadAction;
         #endregion
     }
+
     #endregion
     public override void Start()
     {
@@ -541,6 +546,12 @@ public class Player : Entity
     {
         _InputFire = context.ReadValueAsButton();
     }
+
+    private void onReloadAction(InputAction.CallbackContext context)
+    {
+        _InputReload = context.ReadValueAsButton();
+    }
+
     #endregion
 
     #region 캐릭터 컨트롤러 쓸 때 항상 해줘야하는거

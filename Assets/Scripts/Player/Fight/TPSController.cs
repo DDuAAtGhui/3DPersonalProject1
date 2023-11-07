@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -7,6 +8,12 @@ using UnityEngine.Animations.Rigging;
 public class TPSController : MonoBehaviour
 {
     Player player;
+    RigBuilder rigBuilder;
+
+    #region 액션
+    public static Action shootInput;
+    public static Action reloadInput;
+    #endregion
 
     [Header("Aim Info")]
     [SerializeField] CinemachineVirtualCamera aimVirtualCamera; //cameraRoot Follow 거는중
@@ -20,9 +27,12 @@ public class TPSController : MonoBehaviour
     [SerializeField] bool ActivateLaserPoint;
     [SerializeField] Transform fireTransform;
     bool rayHitFound;
+
+
     private void Awake()
     {
         player = GetComponent<Player>();
+        rigBuilder = GetComponentInChildren<RigBuilder>();
 
         LaserPoint.SetActive(false);
     }
@@ -32,12 +42,11 @@ public class TPSController : MonoBehaviour
     {
         playerAimingAnimLayerIndex = player.anim.GetLayerIndex("Aiming");
 
-        initialSpineRotation =
-            player.anim.GetBoneTransform(HumanBodyBones.Spine).localEulerAngles;
     }
 
     private void Update()
     {
+        #region 활성화시 조준한채로 플레이어 굳게하기
         //player._InputAim = true;
         //aimVirtualCamera.gameObject.SetActive(true);
         //player.isAiming = true;
@@ -51,9 +60,16 @@ public class TPSController : MonoBehaviour
         //#endregion
 
         //return;
+        #endregion
 
         AimInfo();
         AimFeatures();
+
+        if (player._InputFire && player.isAiming)
+            shootInput?.Invoke();
+
+        if (player._InputReload)
+            reloadInput?.Invoke();
     }
 
 
@@ -62,14 +78,8 @@ public class TPSController : MonoBehaviour
     RaycastHit raycastHit;
     [SerializeField] LayerMask AimRayLayer;
     [HideInInspector] public Vector3 mouseWorldPosition = Vector3.zero;
-    [SerializeField] float shootingSpeed = 0.05f;
-    [SerializeField] float MOA = 1f;
-    float timer = 0f;
     private void AimInfo()
     {
-        Vector3 bulletSpread =
-            new Vector3(Random.Range(-MOA, MOA), Random.Range(-MOA, MOA), 0);
-
         if (!ActivateLaserPoint)
             LaserPoint.SetActive(false);
 
@@ -87,24 +97,9 @@ public class TPSController : MonoBehaviour
                 LaserPoint.transform.position = mouseWorldPosition;
             }
         }
-
-        timer += Time.deltaTime;
-
-        if (player._InputFire)
-        {
-            Vector3 aimDir = (mouseWorldPosition - fireTransform.position).normalized;
-
-            if (timer >= shootingSpeed)
-            {
-                timer = 0f;
-                GameObject go = Instantiate(bullet, fireTransform.position, Quaternion.LookRotation(aimDir + bulletSpread, Vector3.up));
-            }
-
-        }
     }
 
     bool initialRotation = true;
-    Vector3 initialSpineRotation;
     private void AimFeatures()
     {
         if (player._InputAim)
@@ -120,6 +115,7 @@ public class TPSController : MonoBehaviour
 
             aimVirtualCamera.gameObject.SetActive(true);
             crossHair?.SetActive(true);
+            rigBuilder.enabled = true;
             player.isAiming = true;
 
             //초기 회전 설정
@@ -175,6 +171,7 @@ public class TPSController : MonoBehaviour
 
             aimVirtualCamera.gameObject.SetActive(false);
             crossHair?.SetActive(false);
+            rigBuilder.enabled = false; //아니 리그빌더 활성화되면 어깨가 뒤틀려있어 idle상태일때
             LaserPoint.SetActive(false);
 
             player.isAiming = false;

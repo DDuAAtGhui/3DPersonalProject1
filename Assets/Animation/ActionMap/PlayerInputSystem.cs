@@ -89,6 +89,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""9ea2d685-8168-499e-b2d2-5517f7c3104f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -234,6 +243,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92fcf1f8-9d29-496e-86f4-6bbe54b18058"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -249,6 +269,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_CharacterControls_CurosrVisible = m_CharacterControls.FindAction("CurosrVisible", throwIfNotFound: true);
         m_CharacterControls_Aim = m_CharacterControls.FindAction("Aim", throwIfNotFound: true);
         m_CharacterControls_Fire = m_CharacterControls.FindAction("Fire", throwIfNotFound: true);
+        m_CharacterControls_Reload = m_CharacterControls.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +338,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_CurosrVisible;
     private readonly InputAction m_CharacterControls_Aim;
     private readonly InputAction m_CharacterControls_Fire;
+    private readonly InputAction m_CharacterControls_Reload;
     public struct CharacterControlsActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -328,6 +350,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @CurosrVisible => m_Wrapper.m_CharacterControls_CurosrVisible;
         public InputAction @Aim => m_Wrapper.m_CharacterControls_Aim;
         public InputAction @Fire => m_Wrapper.m_CharacterControls_Fire;
+        public InputAction @Reload => m_Wrapper.m_CharacterControls_Reload;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +381,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -383,6 +409,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -409,5 +438,6 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnCurosrVisible(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

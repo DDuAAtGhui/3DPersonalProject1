@@ -26,6 +26,10 @@ public class BulletProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        var damageAble = collision.gameObject.GetComponent<InterDamageable>();
+
+        damageAble?.TakeDamage(GetComponent<RememberingParent>().parent.GetComponent<GunTweak>().gunData.damage);
+
         Destroy(gameObject);
     }
 }
