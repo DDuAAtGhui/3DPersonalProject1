@@ -97,6 +97,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 140
   LifeSpan: 2
+  impactEffects:
+  - {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
 --- !u!1 &1813707073295604691
 GameObject:
   m_ObjectHideFlags: 0

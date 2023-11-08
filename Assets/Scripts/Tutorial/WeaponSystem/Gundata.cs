@@ -1,12 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Type
+{
+    None,AssultRifle, Rifle, Pistol
+}
+
 [CreateAssetMenu(fileName = "Gun", menuName = "WeaponSystem/Create New Gun")]
 public class Gundata : ScriptableObject
 {
+
     [Header("Info")]
     public new string name;
+    public Type type;
 
     [Header("Shot Info")]
     public float damage;
@@ -14,11 +22,16 @@ public class Gundata : ScriptableObject
     public int fireRate;
     public GameObject bullet;
     public float bulletSpread = 0.01f;
-    public float muzzleFire;
+
+    public GameObject muzzleFire;
+    //파티클 시스템 단독으로만 존재할경우
+    //public ParticleSystem muzzleFire;
 
     [Header("Reload Info")]
+    public AnimationClip reloadAnimation;
     public float reloadTime;
     [HideInInspector] public bool isReloading;
+
 
     public int currentAmmo;
     public int magSize;

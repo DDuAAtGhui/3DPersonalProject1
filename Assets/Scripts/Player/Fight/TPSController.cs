@@ -25,7 +25,6 @@ public class TPSController : MonoBehaviour
     // 이거 애니메이션 리깅 타겟포지션으로 잡을거니까 생성시키지 말기
     [SerializeField] GameObject LaserPoint;
     [SerializeField] bool ActivateLaserPoint;
-    [SerializeField] Transform fireTransform;
     bool rayHitFound;
 
 

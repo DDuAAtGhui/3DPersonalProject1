@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: BasicAssultRifle
   m_EditorClassIdentifier: 
   name: BasicAssultRifle
+  type: 1
   damage: 25
   maxDistance: 200
-  fireRate: 800
+  fireRate: 2000
   bullet: {fileID: 483524661915728619, guid: b8ab92b09a8b2e244a61295310321fc3, type: 3}
   bulletSpread: 0.03
-  muzzleFire: 0
-  reloadTime: 0.3
+  muzzleFire: {fileID: 446266838095192071, guid: c59bee9ab1764e1429f872a59a0610fd,
+    type: 3}
+  reloadAnimation: {fileID: -203655887218126122, guid: 53b392777f0651b4aa0b5b5422607d8a,
+    type: 3}
+  reloadTime: 1.5
   isReloading: 0
-  currentAmmo: 100
-  magSize: 100
+  currentAmmo: 8000
+  magSize: 8000
