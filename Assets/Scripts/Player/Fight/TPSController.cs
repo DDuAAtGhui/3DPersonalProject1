@@ -46,19 +46,19 @@ public class TPSController : MonoBehaviour
     private void Update()
     {
         #region 활성화시 조준한채로 플레이어 굳게하기
-        //player._InputAim = true;
-        //aimVirtualCamera.gameObject.SetActive(true);
-        //player.isAiming = true;
-        //#region 애니메이션
-        //player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
-        //    Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
-        //    1f, Time.deltaTime * 16f));
+        player._InputAim = true;
+        aimVirtualCamera.gameObject.SetActive(true);
+        player.isAiming = true;
+        #region 애니메이션
+        player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+            Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+            1f, Time.deltaTime * 16f));
 
 
 
-        //#endregion
+        #endregion
 
-        //return;
+        return;
         #endregion
 
         AimInfo();
