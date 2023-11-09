@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerGroundedState : PlayerStates
 {
@@ -50,6 +51,8 @@ public class PlayerGroundedState : PlayerStates
         ///모서리에서 움직이면 내려가는 애니메이션 사용할거면 사용
         if (shouldJumpDown)
             player.PerformParkourState(Vector3.zero, player.standjumpingDownState);
+
+
     }
     public override void FixedUpdate()
     {

@@ -6,7 +6,6 @@ using UnityEngine;
 //기본으로 약한 착지모션 존재
 public class PlayerStandJumpingDownState : PlayerParkourState
 {
-    float t = 0f;
     public PlayerStandJumpingDownState(Player player, PlayerStateMachine stateMachine)
         : base(player, stateMachine)
     {
@@ -26,11 +25,9 @@ public class PlayerStandJumpingDownState : PlayerParkourState
 
         player.Can_MoveHorizontally = false;
 
-        t = Mathf.MoveTowards(0f, 1f, Time.deltaTime * 40f);
-
         if (player.LedgeData.height > player.ledgeCheckHeightStandard_Bottom)
             anim.SetLayerWeight(anim.GetLayerIndex("Upper Layer"),
-            Mathf.MoveTowards(0, 1, t));
+            Mathf.Lerp(anim.GetLayerWeight(anim.GetLayerIndex("Upper Layer")), 1, 15 * Time.deltaTime));
 
 
 
@@ -47,7 +44,6 @@ public class PlayerStandJumpingDownState : PlayerParkourState
     public override void Exit()
     {
         base.Exit();
-        anim.SetLayerWeight(anim.GetLayerIndex("Upper Layer"), 0);
         anim.SetBool(gameManager.animIDParkour_StandJumpingDown, false);
     }
 

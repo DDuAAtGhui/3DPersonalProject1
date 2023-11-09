@@ -33,6 +33,7 @@ public class TPSController : MonoBehaviour
         player = GetComponent<Player>();
         rigBuilder = GetComponentInChildren<RigBuilder>();
 
+        //기본 안보이는 상태
         LaserPoint.SetActive(false);
     }
 
@@ -41,27 +42,37 @@ public class TPSController : MonoBehaviour
     {
         playerAimingAnimLayerIndex = player.anim.GetLayerIndex("Aiming");
 
+        //시작시 에임기능 비활성화로 초기화
+        ResetAimFeatures();
     }
 
     private void Update()
     {
         #region 활성화시 조준한채로 플레이어 굳게하기
-        player._InputAim = true;
-        aimVirtualCamera.gameObject.SetActive(true);
-        player.isAiming = true;
-        #region 애니메이션
-        player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
-            Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
-            1f, Time.deltaTime * 16f));
+        //player._InputAim = true;
+        //aimVirtualCamera.gameObject.SetActive(true);
+        //player.isAiming = true;
+        //#region 애니메이션
+        //player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+        //    Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+        //    1f, Time.deltaTime * 16f));
 
 
 
+        //#endregion
+
+        //return;
         #endregion
 
-        return;
-        #endregion
+        AimInfo(); //레이캐스트
 
-        AimInfo();
+        rigBuilder.enabled = player.isArmed;
+
+        //플레이어 무장해제 상태면 에임기능 비활성화
+        if (!player.isArmed)
+            return;
+
+
         AimFeatures();
 
         if (player._InputFire && player.isAiming)
@@ -113,6 +124,7 @@ public class TPSController : MonoBehaviour
             #endregion
 
             aimVirtualCamera.gameObject.SetActive(true);
+            ActivateLaserPoint = true;
             crossHair?.SetActive(true);
             rigBuilder.enabled = true;
             player.isAiming = true;
@@ -138,6 +150,7 @@ public class TPSController : MonoBehaviour
             if (player.Look == Vector2.zero)
                 return;
 
+
             //Rotate 메소드처럼 현재 각도에다가 추가로 더하게 만들어줌
             float X_Rotation = cameraRoot.transform.eulerAngles.x + player.Look.y * AimSensitive;
 
@@ -161,23 +174,29 @@ public class TPSController : MonoBehaviour
         }
 
         else
-        {
-            #region 애니메이션
-            player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
-                Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
-                0f, Time.deltaTime * 12f));
-            #endregion
+            ResetAimFeatures();
 
-            aimVirtualCamera.gameObject.SetActive(false);
-            crossHair?.SetActive(false);
-            rigBuilder.enabled = false; //아니 리그빌더 활성화되면 어깨가 뒤틀려있어 idle상태일때
-            LaserPoint.SetActive(false);
+    }
 
-            player.isAiming = false;
-            initialRotation = true;
+    private void ResetAimFeatures()
+    {
+        #region 애니메이션
+        player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+            Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+            0f, Time.deltaTime * 12f));
+        #endregion
 
-            cameraRoot.transform.rotation = player.transform.rotation;
-        }
+        aimVirtualCamera.gameObject.SetActive(false);
+        crossHair?.SetActive(false);
+
+        //   rigBuilder.enabled = false; //아니 리그빌더 활성화되면 어깨가 뒤틀려있어 idle상태일때
+
+        ActivateLaserPoint = false;
+
+        player.isAiming = false;
+        initialRotation = true;
+
+        cameraRoot.transform.rotation = player.transform.rotation;
     }
 
     private void OnDrawGizmos()

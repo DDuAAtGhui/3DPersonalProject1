@@ -78,6 +78,7 @@ public class PlayerStates
             Debug.Log("VerticalVelocity : " + verticalVelocity);
 
         moveDirAngle_toLedge = Vector3.Angle(targetDirection, player.LedgeData.LedgeHit.normal);
+
         if (gameManager.Log_moveDirAngle_toLedget)
             Debug.Log("모서리의 normal기준으로 플레이어의 이동방향 각도 : " + moveDirAngle_toLedge);
 
@@ -158,15 +159,17 @@ public class PlayerStates
         else
             player.moveSpeed = player.temp_moveSpeed;
 
-        switch (player.isAiming)
-        {
-            case true:
-                targetSpeed = walkSpeed / 2;
-                break;
-            case false:
-                targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
-                break;
-        }
+
+        targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+
+        if (player.isAiming)
+            targetSpeed = walkSpeed / 2;
+
+        else if (player.isArmed)
+            targetSpeed = player.moveSpeed * 0.7f;
+
+        //   else if (!player.isArmed && !player.isAiming)
+
 
         //조준중일때도 느리게 움직이게
 

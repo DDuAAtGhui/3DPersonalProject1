@@ -98,6 +98,33 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyboardNum1"",
+                    ""type"": ""Button"",
+                    ""id"": ""68e4e846-25d9-422e-bb37-d56c18e02e42"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""KeyboardNum2"",
+                    ""type"": ""Button"",
+                    ""id"": ""043f9648-f41e-427c-843c-d1bc180735fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""KeyboardNum3"",
+                    ""type"": ""Button"",
+                    ""id"": ""f62ebd5b-9778-48a3-964c-5b2e67461bae"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -254,6 +281,39 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9aafdbd8-0a9d-4c02-b2cf-09d784f2d23c"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeyboardNum1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87ac815e-3d85-4663-bd76-7fcc7536e40e"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeyboardNum2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7bb93860-9bbc-47d9-a0d5-6f153460cf0b"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeyboardNum3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -270,6 +330,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_CharacterControls_Aim = m_CharacterControls.FindAction("Aim", throwIfNotFound: true);
         m_CharacterControls_Fire = m_CharacterControls.FindAction("Fire", throwIfNotFound: true);
         m_CharacterControls_Reload = m_CharacterControls.FindAction("Reload", throwIfNotFound: true);
+        m_CharacterControls_KeyboardNum1 = m_CharacterControls.FindAction("KeyboardNum1", throwIfNotFound: true);
+        m_CharacterControls_KeyboardNum2 = m_CharacterControls.FindAction("KeyboardNum2", throwIfNotFound: true);
+        m_CharacterControls_KeyboardNum3 = m_CharacterControls.FindAction("KeyboardNum3", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +402,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Aim;
     private readonly InputAction m_CharacterControls_Fire;
     private readonly InputAction m_CharacterControls_Reload;
+    private readonly InputAction m_CharacterControls_KeyboardNum1;
+    private readonly InputAction m_CharacterControls_KeyboardNum2;
+    private readonly InputAction m_CharacterControls_KeyboardNum3;
     public struct CharacterControlsActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -351,6 +417,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Aim => m_Wrapper.m_CharacterControls_Aim;
         public InputAction @Fire => m_Wrapper.m_CharacterControls_Fire;
         public InputAction @Reload => m_Wrapper.m_CharacterControls_Reload;
+        public InputAction @KeyboardNum1 => m_Wrapper.m_CharacterControls_KeyboardNum1;
+        public InputAction @KeyboardNum2 => m_Wrapper.m_CharacterControls_KeyboardNum2;
+        public InputAction @KeyboardNum3 => m_Wrapper.m_CharacterControls_KeyboardNum3;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -384,6 +453,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @KeyboardNum1.started += instance.OnKeyboardNum1;
+            @KeyboardNum1.performed += instance.OnKeyboardNum1;
+            @KeyboardNum1.canceled += instance.OnKeyboardNum1;
+            @KeyboardNum2.started += instance.OnKeyboardNum2;
+            @KeyboardNum2.performed += instance.OnKeyboardNum2;
+            @KeyboardNum2.canceled += instance.OnKeyboardNum2;
+            @KeyboardNum3.started += instance.OnKeyboardNum3;
+            @KeyboardNum3.performed += instance.OnKeyboardNum3;
+            @KeyboardNum3.canceled += instance.OnKeyboardNum3;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -412,6 +490,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @KeyboardNum1.started -= instance.OnKeyboardNum1;
+            @KeyboardNum1.performed -= instance.OnKeyboardNum1;
+            @KeyboardNum1.canceled -= instance.OnKeyboardNum1;
+            @KeyboardNum2.started -= instance.OnKeyboardNum2;
+            @KeyboardNum2.performed -= instance.OnKeyboardNum2;
+            @KeyboardNum2.canceled -= instance.OnKeyboardNum2;
+            @KeyboardNum3.started -= instance.OnKeyboardNum3;
+            @KeyboardNum3.performed -= instance.OnKeyboardNum3;
+            @KeyboardNum3.canceled -= instance.OnKeyboardNum3;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -439,5 +526,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnKeyboardNum1(InputAction.CallbackContext context);
+        void OnKeyboardNum2(InputAction.CallbackContext context);
+        void OnKeyboardNum3(InputAction.CallbackContext context);
     }
 }

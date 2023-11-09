@@ -91,8 +91,11 @@ public class Player : Entity
     [SerializeField] public Vector2 Look;
     [HideInInspector] public bool _InputAim; // RightClick
     [HideInInspector] public bool isAiming;
+    public bool isArmed;
     [HideInInspector] public bool _InputFire;
     [HideInInspector] public bool _InputReload;
+    // 0번 인덱스를 키보드 위의 숫자 1번으로
+    public List<bool> _InputKeyNums = new List<bool>();
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -186,8 +189,16 @@ public class Player : Entity
 
         playerInput.CharacterControls.Reload.started += onReloadAction;
         playerInput.CharacterControls.Reload.canceled += onReloadAction;
+
+        playerInput.CharacterControls.KeyboardNum1.started += onKeyboardNum1Action;
+        playerInput.CharacterControls.KeyboardNum1.canceled += onKeyboardNum1Action;
+        playerInput.CharacterControls.KeyboardNum2.started += onKeyboardNum2Action;
+        playerInput.CharacterControls.KeyboardNum2.canceled += onKeyboardNum2Action;
+        playerInput.CharacterControls.KeyboardNum3.started += onKeyboardNum3Action;
+        playerInput.CharacterControls.KeyboardNum3.canceled += onKeyboardNum3Action;
         #endregion
     }
+
 
     #endregion
     public override void Start()
@@ -551,6 +562,21 @@ public class Player : Entity
     {
         _InputReload = context.ReadValueAsButton();
     }
+
+    private void onKeyboardNum1Action(InputAction.CallbackContext context)
+    {
+        _InputKeyNums[0] = context.ReadValueAsButton();
+    }
+    private void onKeyboardNum2Action(InputAction.CallbackContext context)
+    {
+        _InputKeyNums[1] = context.ReadValueAsButton();
+
+    }
+    private void onKeyboardNum3Action(InputAction.CallbackContext context)
+    {
+        _InputKeyNums[2] = context.ReadValueAsButton();
+    }
+
 
     #endregion
 
