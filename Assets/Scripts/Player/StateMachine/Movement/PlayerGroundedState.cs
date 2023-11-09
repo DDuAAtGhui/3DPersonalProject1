@@ -17,7 +17,7 @@ public class PlayerGroundedState : PlayerStates
     public override void Update()
     {
         base.Update();
-        anim.applyRootMotion = false;
+        // anim.applyRootMotion = false;
 
         //속도가 떨어지거나 입력없으면 Idle
         if (speed <= 0.1f || player._inputXZ == Vector2.zero)
