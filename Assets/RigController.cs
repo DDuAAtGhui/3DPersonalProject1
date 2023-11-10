@@ -9,6 +9,8 @@ public class RigController : MonoBehaviour
     Player player;
 
     float targetWeight;
+    [Header("Option")]
+    [SerializeField] bool AimFeature;
     private void Awake()
     {
         player = GetComponentInParent<Player>();
@@ -17,13 +19,16 @@ public class RigController : MonoBehaviour
 
     private void Update()
     {
-        rig.weight =
+        if (AimFeature)
+        {
+            rig.weight =
             Mathf.Lerp(rig.weight, targetWeight, 10 * Time.deltaTime);
 
-        if (player._InputAim)
-            targetWeight = 1f;
+            if (player._InputAim)
+                targetWeight = 1f;
 
-        else
-            targetWeight = 0f;
+            else
+                targetWeight = 0f;
+        }
     }
 }

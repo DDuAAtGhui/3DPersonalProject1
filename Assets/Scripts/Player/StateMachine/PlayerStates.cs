@@ -88,22 +88,17 @@ public class PlayerStates
             player.ledgeCheckHeightStandard_Top, player.ledgeCheckHeightStandard_Bottom);
         player.LedgeData = ledgeData;
 
-
-
-
-
-        Move();
-        LedgeMovement();
-        ApplyGravity();
         whenLostControl();
-
-
     }
 
     public virtual void FixedUpdate()
     {
         if (gameManager.Log_StateFixedUpdate)
             Debug.Log("FixedUpdate : " + this.GetType().Name);
+
+        Move();
+        LedgeMovement();
+        ApplyGravity();
     }
 
     public virtual void LateUpdate()
@@ -289,31 +284,6 @@ public class PlayerStates
         return false;
     }
 
-    //protected void Jump()
-    //{
-    //    if (player.isGrounded)
-    //    {
-    //        anim.SetBool(gameManager.animIDJump, false);
-
-    //        if (player._inputJump && jumpTimeoutDelta <= 0.0f)
-    //        {
-    //            // 루트 높이 * -2f * 중력 = 원하는 높이까지 도달하는 벨로시티값
-    //            verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.Gravity);
-    //            anim.SetBool(gameManager.animIDJump, true);
-    //        }
-
-    //        // 타이머가 0보다 크면 타이머 감소시킴
-    //        if (jumpTimeoutDelta >= 0f)
-    //        {
-    //            jumpTimeoutDelta -= Time.deltaTime;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        // 혹시 모르니 땅에 붙어있으면 초기화
-    //        player._inputJump = false;
-    //    }
-    //}
     protected void ApplyGravity()
     {
         if (!player.isControlable)

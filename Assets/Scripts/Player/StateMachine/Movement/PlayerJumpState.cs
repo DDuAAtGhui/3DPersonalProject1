@@ -27,6 +27,7 @@ public class PlayerJumpState : PlayerAirborneState
         verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.Gravity);
     }
 
+
     public override void Update()
     {
         base.Update();
@@ -41,6 +42,16 @@ public class PlayerJumpState : PlayerAirborneState
         else if (player.isGrounded && StateTimer <= 0f)
             stateMachine.ChangeState(player.idleState);
     }
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        //루트모션 적용할 때 벨로시티 초기화되는 버그있어서
+        //일단 점프에서 CC.Move 할 수 있도록함
+        CC.Move(targetDirection.normalized * (speed * Time.deltaTime)
+    + new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+
+    }
     public override void Exit()
     {
         base.Exit();
@@ -49,4 +60,6 @@ public class PlayerJumpState : PlayerAirborneState
         player._inputJump = false;
         anim.SetBool(gameManager.animIDJump, false);
     }
+
+
 }

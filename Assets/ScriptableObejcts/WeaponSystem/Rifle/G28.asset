@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: G28
   type: 2
-  damage: 70
+  damage: 200
   maxDistance: 2000
   fireRate: 200
   bullet: {fileID: 483524661915728619, guid: b8ab92b09a8b2e244a61295310321fc3, type: 3}
@@ -25,5 +25,5 @@ MonoBehaviour:
     type: 3}
   reloadTime: 1.5
   isReloading: 0
-  currentAmmo: 10
-  magSize: 10
+  currentAmmo: 100
+  magSize: 100

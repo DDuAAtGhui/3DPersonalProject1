@@ -17,6 +17,7 @@ public class TPSController : MonoBehaviour
 
     [Header("Aim Info")]
     [SerializeField] CinemachineVirtualCamera aimVirtualCamera; //cameraRoot Follow 거는중
+    [SerializeField] Rig aimingRig;
     [SerializeField] public GameObject cameraRoot;
     [SerializeField] float AimSensitive = 1f;
     [SerializeField] float Limit_LookVerticalLimit = 70f;
@@ -126,7 +127,10 @@ public class TPSController : MonoBehaviour
             aimVirtualCamera.gameObject.SetActive(true);
             ActivateLaserPoint = true;
             crossHair?.SetActive(true);
+
             rigBuilder.enabled = true;
+            aimingRig.weight = 1f;
+
             player.isAiming = true;
 
             //초기 회전 설정
@@ -192,6 +196,8 @@ public class TPSController : MonoBehaviour
         //   rigBuilder.enabled = false; //아니 리그빌더 활성화되면 어깨가 뒤틀려있어 idle상태일때
 
         ActivateLaserPoint = false;
+
+        aimingRig.weight = 0f;
 
         player.isAiming = false;
         initialRotation = true;
