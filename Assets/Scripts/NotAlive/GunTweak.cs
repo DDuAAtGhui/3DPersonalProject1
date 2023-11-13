@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class GunTweak : MonoBehaviour
 {
-    [SerializeField] TPSController tpsController;
     [SerializeField] public Gundata gunData;
     [SerializeField] Transform fireTransform;
+    public Transform raycastDestination;
+    TPSController tpsController;
 
     GameObject muzzleFireObject;
     ParticleSystem[] muzzleFires;
@@ -18,7 +18,7 @@ public class GunTweak : MonoBehaviour
     //1초 / rps = 1발 발사당 소요되는 시간
     bool CanShoot() => !gunData.isReloading &&
         timePassSinceLastShooting > SecondPerRound;
-    bool isOwnerPlayer => GetComponentInParent<Player>() != null;
+    bool isOwnerPlayer => GetComponentInParent<Player>();
     Player player;
     private void Start()
     {
@@ -26,6 +26,9 @@ public class GunTweak : MonoBehaviour
         //bool값 초기화
         gunData.isReloading = false;
         gunData.currentAmmo = gunData.magSize;
+        Debug.Log(isOwnerPlayer);
+
+        tpsController = GetComponentInParent<TPSController>();
 
         if (isOwnerPlayer) //총이 플레이어 자식으로 존재하면
         {
@@ -37,9 +40,11 @@ public class GunTweak : MonoBehaviour
         }
 
         #region Initialize MuzzleFire
+
         //오브젝트 생성하고 총의 자식으로 배치하고 꺼둠
         muzzleFireObject = Instantiate(gunData.muzzleFire,
-            fireTransform.position, Quaternion.identity, fireTransform);
+             fireTransform.position, Quaternion.identity, fireTransform);
+
         muzzleFireObject.SetActive(true);
 
 
@@ -133,7 +138,6 @@ public class GunTweak : MonoBehaviour
         switch (isOwnerPlayer)
         {
             case true:
-
                 player.anim.Play(gunData.reloadAnimation.name);
                 break;
             case false:

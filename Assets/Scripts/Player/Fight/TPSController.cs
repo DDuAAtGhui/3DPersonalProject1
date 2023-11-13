@@ -8,7 +8,6 @@ using UnityEngine.Animations.Rigging;
 public class TPSController : MonoBehaviour
 {
     Player player;
-    RigBuilder rigBuilder;
 
     #region 액션
     public static Action shootInput;
@@ -32,7 +31,6 @@ public class TPSController : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<Player>();
-        rigBuilder = GetComponentInChildren<RigBuilder>();
 
         //기본 안보이는 상태
         LaserPoint.SetActive(false);
@@ -66,8 +64,6 @@ public class TPSController : MonoBehaviour
         #endregion
 
         AimInfo(); //레이캐스트
-
-        rigBuilder.enabled = player.isArmed;
 
         //플레이어 무장해제 상태면 에임기능 비활성화
         if (!player.isArmed)
@@ -128,7 +124,6 @@ public class TPSController : MonoBehaviour
             ActivateLaserPoint = true;
             crossHair?.SetActive(true);
 
-            rigBuilder.enabled = true;
             aimingRig.weight = 1f;
 
             player.isAiming = true;

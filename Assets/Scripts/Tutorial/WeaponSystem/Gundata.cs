@@ -15,6 +15,7 @@ public class Gundata : ScriptableObject
     [Header("Info")]
     public new string name;
     public Type type;
+    public Vector3 holdingPosition = Vector3.zero;
 
     [Header("Shot Info")]
     public float damage;

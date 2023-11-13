@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: G28
   type: 2
+  holdingPosition: {x: 0, y: 0, z: 0.5}
   damage: 200
   maxDistance: 2000
   fireRate: 200

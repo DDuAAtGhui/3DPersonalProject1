@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6788405944667840597}
-  - component: {fileID: 2869465117707009244}
+  - component: {fileID: 2747160654318552820}
   m_Layer: 0
   m_Name: BasicAssultRifle
   m_TagString: Untagged
@@ -248,14 +248,14 @@ Transform:
   m_GameObject: {fileID: 6776118689093514653}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 38.31803, y: 0.487, z: -24.613}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3212485338807869539}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2869465117707009244
+--- !u!114 &2747160654318552820
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,11 +264,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6776118689093514653}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16605ee9233005e4abac9eb38f7b90ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fcddcb360bbcfe418bdfabd1b3f9fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gunData: {fileID: 11400000, guid: 0030ddfd82f35e74f87274d862385e31, type: 2}
-  muzzle: {fileID: 8479600812380488797}
+  fireTransform: {fileID: 8479600812380488797}
+  raycastDestination: {fileID: 0}
 --- !u!1 &8759402488947666488
 GameObject:
   m_ObjectHideFlags: 0
