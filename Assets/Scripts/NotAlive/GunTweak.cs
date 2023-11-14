@@ -20,24 +20,30 @@ public class GunTweak : MonoBehaviour
         timePassSinceLastShooting > SecondPerRound;
     bool isOwnerPlayer => GetComponentInParent<Player>();
     Player player;
+
+    public AnimationClip weaponAnimation;
+
+    AudioSource audioSource;
     private void Start()
     {
         //스크립터블 오브젝트는 씬 끝나도 데이터 저장되어있으므로
         //bool값 초기화
         gunData.isReloading = false;
         gunData.currentAmmo = gunData.magSize;
-        Debug.Log(isOwnerPlayer);
 
         tpsController = GetComponentInParent<TPSController>();
+        audioSource = GetComponent<AudioSource>();
 
         if (isOwnerPlayer) //총이 플레이어 자식으로 존재하면
         {
+            player = GetComponentInParent<Player>();
+
             //델리게이트 등록
             TPSController.shootInput += Shoot;
             TPSController.reloadInput += DoReload;
-
-            player = GetComponentInParent<Player>();
         }
+
+
 
         #region Initialize MuzzleFire
 
@@ -111,6 +117,11 @@ public class GunTweak : MonoBehaviour
         go.AddComponent<RememberingParent>(); //부모 오브젝트 기억
 
         go.transform.SetParent(null); //부모화 해제
+
+        if (gunData.fireSound != null)
+        {
+            audioSource.PlayOneShot(gunData.fireSound);
+        }
     }
 
     IEnumerator MuzzleFire()
@@ -149,5 +160,12 @@ public class GunTweak : MonoBehaviour
 
         gunData.currentAmmo = gunData.magSize;
         gunData.isReloading = false;
+    }
+
+    private void OnDestroy()
+    {
+        //현재 스크립트 파괴시 델리게이트 구독 해제
+        TPSController.shootInput -= Shoot;
+        TPSController.reloadInput -= DoReload;
     }
 }

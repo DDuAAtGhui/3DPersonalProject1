@@ -86,6 +86,7 @@ public class Player : Entity
     public bool ApplyAnalogMovement = false;
     public bool isControlable = true;
     [HideInInspector] public Vector3 inputDirection;
+    [HideInInspector] public bool _inputQuickWeaponMenu; //Tab
 
     [Header("Aim Info")]
     [SerializeField] public Vector2 Look;
@@ -189,6 +190,9 @@ public class Player : Entity
 
         playerInput.CharacterControls.Reload.started += onReloadAction;
         playerInput.CharacterControls.Reload.canceled += onReloadAction;
+
+        playerInput.CharacterControls.QuickWeaponMenu.started += onQuickWeaponMenu;
+        playerInput.CharacterControls.QuickWeaponMenu.canceled += onQuickWeaponMenu;
 
         playerInput.CharacterControls.KeyboardNum1.started += onKeyboardNum1Action;
         playerInput.CharacterControls.KeyboardNum1.canceled += onKeyboardNum1Action;
@@ -563,6 +567,10 @@ public class Player : Entity
         _InputReload = context.ReadValueAsButton();
     }
 
+    void onQuickWeaponMenu(InputAction.CallbackContext context)
+    {
+        _inputQuickWeaponMenu = context.ReadValueAsButton();
+    }
     private void onKeyboardNum1Action(InputAction.CallbackContext context)
     {
         _InputKeyNums[0] = context.ReadValueAsButton();

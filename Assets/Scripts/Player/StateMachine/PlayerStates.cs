@@ -58,10 +58,6 @@ public class PlayerStates
             Debug.Log("상태 진입시 parkourToFallState : " + parkourToFallState);
         }
 
-
-
-
-
         player.Can_MoveHorizontally = true;
         isAnimEnd = false;
     }

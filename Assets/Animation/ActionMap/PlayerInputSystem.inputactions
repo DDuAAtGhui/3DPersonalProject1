@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "QuickWeaponMenu",
+                    "type": "Button",
+                    "id": "77ec8e39-734d-4be0-8011-c4bd3ff25820",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "KeyboardNum1",
                     "type": "Button",
                     "id": "68e4e846-25d9-422e-bb37-d56c18e02e42",
@@ -290,6 +299,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "KeyboardNum3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13e2b7af-bf51-4973-81ab-247b95cb88c1",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QuickWeaponMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

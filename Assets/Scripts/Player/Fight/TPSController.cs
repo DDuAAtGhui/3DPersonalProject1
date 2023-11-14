@@ -27,6 +27,7 @@ public class TPSController : MonoBehaviour
     [SerializeField] bool ActivateLaserPoint;
     bool rayHitFound;
 
+    public bool aimToggleDebug;
 
     private void Awake()
     {
@@ -47,36 +48,46 @@ public class TPSController : MonoBehaviour
 
     private void Update()
     {
+
         #region 활성화시 조준한채로 플레이어 굳게하기
-        //player._InputAim = true;
-        //aimVirtualCamera.gameObject.SetActive(true);
-        //player.isAiming = true;
-        //#region 애니메이션
-        //player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
-        //    Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
-        //    1f, Time.deltaTime * 16f));
+        if (Input.GetKeyDown(KeyCode.H))
+            aimToggleDebug = !aimToggleDebug;
+
+        if (aimToggleDebug)
+        {
+            player._InputAim = true;
+            aimVirtualCamera.gameObject.SetActive(true);
+            player.isAiming = true;
+            #region 애니메이션
+            player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
+                Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
+                1f, Time.deltaTime * 16f));
 
 
 
-        //#endregion
-
-        //return;
+            #endregion
+        }
         #endregion
+        if (!aimToggleDebug)
+        {
+            AimInfo(); //레이캐스트
 
-        AimInfo(); //레이캐스트
-
-        //플레이어 무장해제 상태면 에임기능 비활성화
-        if (!player.isArmed)
-            return;
+            //플레이어 무장해제 상태면 에임기능 비활성화
+            if (!player.isArmed)
+                return;
 
 
-        AimFeatures();
+            AimFeatures();
 
-        if (player._InputFire && player.isAiming)
-            shootInput?.Invoke();
+            if (GetComponentInChildren<GunTweak>() != null)
+            {
+                if (player._InputFire && player.isAiming)
+                    shootInput?.Invoke();
 
-        if (player._InputReload)
-            reloadInput?.Invoke();
+                if (player._InputReload)
+                    reloadInput?.Invoke();
+            }
+        }
     }
 
 

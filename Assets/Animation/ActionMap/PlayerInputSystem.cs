@@ -100,6 +100,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""QuickWeaponMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""77ec8e39-734d-4be0-8011-c4bd3ff25820"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""KeyboardNum1"",
                     ""type"": ""Button"",
                     ""id"": ""68e4e846-25d9-422e-bb37-d56c18e02e42"",
@@ -314,6 +323,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""KeyboardNum3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13e2b7af-bf51-4973-81ab-247b95cb88c1"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickWeaponMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -330,6 +350,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_CharacterControls_Aim = m_CharacterControls.FindAction("Aim", throwIfNotFound: true);
         m_CharacterControls_Fire = m_CharacterControls.FindAction("Fire", throwIfNotFound: true);
         m_CharacterControls_Reload = m_CharacterControls.FindAction("Reload", throwIfNotFound: true);
+        m_CharacterControls_QuickWeaponMenu = m_CharacterControls.FindAction("QuickWeaponMenu", throwIfNotFound: true);
         m_CharacterControls_KeyboardNum1 = m_CharacterControls.FindAction("KeyboardNum1", throwIfNotFound: true);
         m_CharacterControls_KeyboardNum2 = m_CharacterControls.FindAction("KeyboardNum2", throwIfNotFound: true);
         m_CharacterControls_KeyboardNum3 = m_CharacterControls.FindAction("KeyboardNum3", throwIfNotFound: true);
@@ -402,6 +423,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Aim;
     private readonly InputAction m_CharacterControls_Fire;
     private readonly InputAction m_CharacterControls_Reload;
+    private readonly InputAction m_CharacterControls_QuickWeaponMenu;
     private readonly InputAction m_CharacterControls_KeyboardNum1;
     private readonly InputAction m_CharacterControls_KeyboardNum2;
     private readonly InputAction m_CharacterControls_KeyboardNum3;
@@ -417,6 +439,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Aim => m_Wrapper.m_CharacterControls_Aim;
         public InputAction @Fire => m_Wrapper.m_CharacterControls_Fire;
         public InputAction @Reload => m_Wrapper.m_CharacterControls_Reload;
+        public InputAction @QuickWeaponMenu => m_Wrapper.m_CharacterControls_QuickWeaponMenu;
         public InputAction @KeyboardNum1 => m_Wrapper.m_CharacterControls_KeyboardNum1;
         public InputAction @KeyboardNum2 => m_Wrapper.m_CharacterControls_KeyboardNum2;
         public InputAction @KeyboardNum3 => m_Wrapper.m_CharacterControls_KeyboardNum3;
@@ -453,6 +476,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @QuickWeaponMenu.started += instance.OnQuickWeaponMenu;
+            @QuickWeaponMenu.performed += instance.OnQuickWeaponMenu;
+            @QuickWeaponMenu.canceled += instance.OnQuickWeaponMenu;
             @KeyboardNum1.started += instance.OnKeyboardNum1;
             @KeyboardNum1.performed += instance.OnKeyboardNum1;
             @KeyboardNum1.canceled += instance.OnKeyboardNum1;
@@ -490,6 +516,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @QuickWeaponMenu.started -= instance.OnQuickWeaponMenu;
+            @QuickWeaponMenu.performed -= instance.OnQuickWeaponMenu;
+            @QuickWeaponMenu.canceled -= instance.OnQuickWeaponMenu;
             @KeyboardNum1.started -= instance.OnKeyboardNum1;
             @KeyboardNum1.performed -= instance.OnKeyboardNum1;
             @KeyboardNum1.canceled -= instance.OnKeyboardNum1;
@@ -526,6 +555,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnQuickWeaponMenu(InputAction.CallbackContext context);
         void OnKeyboardNum1(InputAction.CallbackContext context);
         void OnKeyboardNum2(InputAction.CallbackContext context);
         void OnKeyboardNum3(InputAction.CallbackContext context);

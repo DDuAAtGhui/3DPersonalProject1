@@ -28,3 +28,4 @@ MonoBehaviour:
   isReloading: 0
   currentAmmo: 100
   magSize: 100
+  fireSound: {fileID: 8300000, guid: 2776d68a385072b4e9f771b5cd1cf8e2, type: 3}
