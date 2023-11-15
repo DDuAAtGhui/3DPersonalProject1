@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GunTweak : MonoBehaviour
@@ -13,6 +14,8 @@ public class GunTweak : MonoBehaviour
     GameObject muzzleFireObject;
     ParticleSystem[] muzzleFires;
 
+    int currentMaxAmmo;
+
     float timePassSinceLastShooting;
     float SecondPerRound;
     //1초 / rps = 1발 발사당 소요되는 시간
@@ -24,12 +27,16 @@ public class GunTweak : MonoBehaviour
     public AnimationClip weaponAnimation;
 
     AudioSource audioSource;
+
+    [SerializeField] TextMeshProUGUI currentAmmoTxt;
+    [SerializeField] TextMeshProUGUI totalAmmoTxt;
     private void Start()
     {
         //스크립터블 오브젝트는 씬 끝나도 데이터 저장되어있으므로
         //bool값 초기화
         gunData.isReloading = false;
         gunData.currentAmmo = gunData.magSize;
+        currentMaxAmmo = gunData.MaxAmmo;
 
         tpsController = GetComponentInParent<TPSController>();
         audioSource = GetComponent<AudioSource>();
@@ -37,6 +44,10 @@ public class GunTweak : MonoBehaviour
         if (isOwnerPlayer) //총이 플레이어 자식으로 존재하면
         {
             player = GetComponentInParent<Player>();
+            currentAmmoTxt = GameObject.Find("CurrentAmmo").GetComponent<TextMeshProUGUI>();
+            totalAmmoTxt = GameObject.Find("TotalAmmo").GetComponent<TextMeshProUGUI>();
+            currentAmmoTxt.text = gunData.currentAmmo.ToString();
+            totalAmmoTxt.text = gunData.MaxAmmo.ToString();
 
             //델리게이트 등록
             TPSController.shootInput += Shoot;
@@ -93,6 +104,7 @@ public class GunTweak : MonoBehaviour
             case true:
                 aimDir = (tpsController.mouseWorldPosition -
                     fireTransform.position).normalized;
+                currentAmmoTxt.text = gunData.currentAmmo.ToString();
 
                 break;
             case false:
@@ -136,10 +148,13 @@ public class GunTweak : MonoBehaviour
         muzzleFireObject.SetActive(false);
     }
 
+
     private void DoReload()
     {
-        if (!gunData.isReloading)
+        if (!gunData.isReloading && gunData.currentAmmo != gunData.magSize)
             StartCoroutine(Reload());
+
+        Debug.Log("Debug : currentTotalAmmo :" + currentMaxAmmo);
     }
 
     IEnumerator Reload()
@@ -150,6 +165,11 @@ public class GunTweak : MonoBehaviour
         {
             case true:
                 player.anim.Play(gunData.reloadAnimation.name);
+                currentMaxAmmo -= gunData.magSize - gunData.currentAmmo;
+                gunData.currentAmmo = gunData.magSize;
+                gunData.isReloading = false;
+                currentAmmoTxt.text = gunData.currentAmmo.ToString();
+                totalAmmoTxt.text = currentMaxAmmo.ToString();
                 break;
             case false:
                 break;
@@ -158,8 +178,6 @@ public class GunTweak : MonoBehaviour
         //스크립터블로 설정한 장전시간동안 isReolading이 true
         yield return new WaitForSeconds(gunData.reloadTime);
 
-        gunData.currentAmmo = gunData.magSize;
-        gunData.isReloading = false;
     }
 
     private void OnDestroy()

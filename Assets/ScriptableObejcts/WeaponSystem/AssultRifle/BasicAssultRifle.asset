@@ -17,7 +17,7 @@ MonoBehaviour:
   holdingPosition: {x: 0, y: 0, z: 0.6}
   damage: 25
   maxDistance: 200
-  fireRate: 2000
+  fireRate: 800
   bullet: {fileID: 483524661915728619, guid: b8ab92b09a8b2e244a61295310321fc3, type: 3}
   bulletSpread: 0.03
   muzzleFire: {fileID: 446266838095192071, guid: c59bee9ab1764e1429f872a59a0610fd,
@@ -26,8 +26,7 @@ MonoBehaviour:
     type: 3}
   reloadTime: 1.5
   isReloading: 0
-  currentAmmo: 7890
-  magSize: 8000
-  sources:
-  - {fileID: 0}
+  currentAmmo: 30
+  magSize: 30
+  MaxAmmo: 180
   fireSound: {fileID: 8300000, guid: ad9f3cebf63d19e4999cdb2d9f17edf2, type: 3}

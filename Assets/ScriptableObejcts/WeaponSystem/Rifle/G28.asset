@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dc557cb56a6b484997f24f0e0db3e78, type: 3}
   m_Name: G28
   m_EditorClassIdentifier: 
-  name: G28
+  name: Rifle
   type: 2
   holdingPosition: {x: 0, y: 0, z: 0.5}
   damage: 200
@@ -26,6 +26,7 @@ MonoBehaviour:
     type: 3}
   reloadTime: 1.5
   isReloading: 0
-  currentAmmo: 100
-  magSize: 100
+  currentAmmo: 8
+  magSize: 8
+  MaxAmmo: 32
   fireSound: {fileID: 8300000, guid: 2776d68a385072b4e9f771b5cd1cf8e2, type: 3}

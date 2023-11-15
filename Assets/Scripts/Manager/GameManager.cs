@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour
         CursorContorl();
         animParameterToHash();
         CalculateDigitalInputToAnalog();
-
     }
 
     void CursorContorl()

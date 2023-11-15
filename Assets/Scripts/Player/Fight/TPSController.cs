@@ -29,10 +29,11 @@ public class TPSController : MonoBehaviour
 
     public bool aimToggleDebug;
 
+    ActiveWepon activeWepon;
     private void Awake()
     {
         player = GetComponent<Player>();
-
+        activeWepon = GetComponent<ActiveWepon>();
         //기본 안보이는 상태
         LaserPoint.SetActive(false);
     }
@@ -120,6 +121,8 @@ public class TPSController : MonoBehaviour
     bool initialRotation = true;
     private void AimFeatures()
     {
+        activeWepon.HolsterTweak();
+
         if (player._InputAim)
         {
             #region 애니메이션
@@ -134,11 +137,11 @@ public class TPSController : MonoBehaviour
             aimVirtualCamera.gameObject.SetActive(true);
             ActivateLaserPoint = true;
             crossHair?.SetActive(true);
-
+            #region 리깅관련
             aimingRig.weight = 1f;
 
             player.isAiming = true;
-
+            #endregion
             //초기 회전 설정
             if (initialRotation)
             {
@@ -187,6 +190,8 @@ public class TPSController : MonoBehaviour
             ResetAimFeatures();
 
     }
+
+
 
     private void ResetAimFeatures()
     {

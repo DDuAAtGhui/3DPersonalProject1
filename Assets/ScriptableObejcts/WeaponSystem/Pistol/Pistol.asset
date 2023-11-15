@@ -27,4 +27,5 @@ MonoBehaviour:
   isReloading: 0
   currentAmmo: 12
   magSize: 12
+  MaxAmmo: 24
   fireSound: {fileID: 8300000, guid: 1643eefcacb49b14e85935687cc98596, type: 3}

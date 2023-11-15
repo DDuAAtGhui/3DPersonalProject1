@@ -36,6 +36,7 @@ public class Gundata : ScriptableObject
 
     public int currentAmmo;
     public int magSize;
+    public int MaxAmmo;
 
     [Header("Audio Info")]
     public AudioClip fireSound;

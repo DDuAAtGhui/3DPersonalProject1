@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-using UnityEditor.Animations;
-using UnityEngine.InputSystem.XR.Haptics;
-
 public class ActiveWepon : MonoBehaviour
 {
+    Player player;
+
     public Transform crossHairTarget;
     public Rig handIK; //HandIK 레이어 넣어주기
     RigBuilder rigBuilder;
@@ -15,30 +14,16 @@ public class ActiveWepon : MonoBehaviour
 
     public Transform weaponParent; // 무기가 위치할 weaponPivot 을 넣어주기
 
-    //에디터.애니메이션으로 녹화
-    public Transform weaponLeftGrip;
-    public Transform weaponRightGrip;
-    public Transform weaponHintL;
-    public Transform weaponHintR;
-
-    Animator anim;
-
-    public AnimatorOverrideController animOverride;
+    public Animator rigController;
     int animatorLayer_WeaponLayer;
 
     void Start()
     {
+        player = GetComponent<Player>();
         GunTweak currentWeapon = GetComponentInChildren<GunTweak>();
         rigBuilder = GetComponent<RigBuilder>();
-        anim = GetComponent<Animator>();
 
-        //애니메이션 오버라이드 설정
-        animOverride =
-            new AnimatorOverrideController(anim.runtimeAnimatorController);
-        anim.runtimeAnimatorController = animOverride; //필수
-
-
-        animatorLayer_WeaponLayer = anim.GetLayerIndex("Weapon Layer");
+        animatorLayer_WeaponLayer = rigController.GetLayerIndex("Weapon Layer");
 
         if (currentWeapon)
         {
@@ -53,17 +38,10 @@ public class ActiveWepon : MonoBehaviour
         {
             // Debug.Log("currentWeapon : " + GetComponentInChildren<GunTweak>().name);
         }
-
         else
         {
-            handIK.weight = 0f;
-
-            GameManager.instance.player.isArmed = false;
-
-            //모델이 이상해서 그런지 리그빌더 킨상태면 이상해짐
+            player.isArmed = false;
             rigBuilder.enabled = false;
-
-            anim.SetLayerWeight(animatorLayer_WeaponLayer, 0f);
         }
     }
 
@@ -78,50 +56,44 @@ public class ActiveWepon : MonoBehaviour
         weapon.transform.parent = weaponParent;
         weapon.transform.localPosition = weapon.gunData.holdingPosition;
         weapon.transform.localRotation = Quaternion.identity;
+        rigController.Play("Equip_" + weapon.gunData.name);
 
-        GameManager.instance.player.isArmed = true;
+        player.isArmed = true;
         rigBuilder.enabled = true;
         handIK.weight = 1f;
-        anim.SetLayerWeight(animatorLayer_WeaponLayer, 1f);
-
-
-        //중복 실행으로 버그터지는거 방지
-        Invoke(nameof(SetAnimationDelayed), 0.001f);
+        player.anim.SetFloat(GameManager.instance.animIDWeaponType,
+            (float)weapon.gunData.type);
     }
-    void SetAnimationDelayed()
-    {
-        if (animOverride != null)
-        {
-            Debug.Log("Before : " + animOverride["weapon_anim_Empty"]);
-            animOverride["weapon_anim_Empty"] = weapon.weaponAnimation;
-            Debug.Log("Current : " + animOverride["weapon_anim_Empty"]);
 
-            // anim.Update(0f);
+    [Header("Weapon Holster")]
+    public Transform holster_Back;
+    public Transform holster_RightThigh;
+    public void HolsterTweak()
+    {
+        if (weapon == null)
+            return;
+
+        if (player.isAiming)
+        {
+            weapon.transform.parent = weaponParent;
+            weapon.transform.localPosition = weapon.gunData.holdingPosition;
+            weapon.transform.localRotation = Quaternion.identity;
         }
         else
-            Debug.Log("animOverride is NULL");
-
-        //현재 장착중인 무기 타입 설정함
-        GameManager.instance.player.anim.SetFloat(GameManager.instance.animIDWeaponType,
-((float)GetComponentInChildren<GunTweak>().gunData.type));
-    }
-
-
-    [ContextMenu("Save weapon Pose")]
-    void SaveWeaponPose()
-    {
-        //플레이어 녹화
-        GameObjectRecorder recorder = new GameObjectRecorder(gameObject);
-
-        //노드들 바인딩 추가. true면 자식까지 바인딩 추가됨
-        recorder.BindComponentsOfType<Transform>(weaponParent.gameObject, false);
-        recorder.BindComponentsOfType<Transform>(weaponHintL.gameObject, false);
-        recorder.BindComponentsOfType<Transform>(weaponHintR.gameObject, false);
-        recorder.BindComponentsOfType<Transform>(weaponLeftGrip.gameObject, false);
-        recorder.BindComponentsOfType<Transform>(weaponRightGrip.gameObject, false);
-        recorder.TakeSnapshot(0.0f); //0일시 1프레임만 촬영
-
-        recorder.SaveToClip(weapon.weaponAnimation);
-
+        {
+            Transform tempParent;
+            switch (weapon.gunData.type)
+            {
+                case Type.Pistol:
+                    tempParent = holster_RightThigh.transform;
+                    break;
+                default:
+                    tempParent = holster_Back.transform;
+                    break;
+            }
+            weapon.transform.parent = tempParent;
+            weapon.transform.localPosition = Vector3.zero;
+            weapon.transform.localRotation = Quaternion.identity;
+        }
     }
 }

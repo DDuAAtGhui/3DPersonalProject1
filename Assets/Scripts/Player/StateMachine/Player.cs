@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -17,6 +18,7 @@ public class Player : Entity
     [HideInInspector] public PlayerInputSystem playerInput;
     [HideInInspector] public Animator anim;
     [HideInInspector] public TPSController tpsController;
+    RigBuilder rigbuilder;
     #endregion
     #region infos
     //개별 Collision
@@ -209,7 +211,7 @@ public class Player : Entity
     {
         base.Start();
         stateMachine.Initialize(idleState);
-
+        rigbuilder = GetComponent<RigBuilder>();
         temp_moveSpeed = moveSpeed;
     }
 
@@ -224,6 +226,8 @@ public class Player : Entity
             ParkourAbleObstacleCheck();
 
         anim.SetBool(gameManager.animIDisAiming, isAiming);
+        anim.SetBool(gameManager.animIDisArmed, isArmed);
+        rigbuilder.enabled = isAiming;
 
         #region 디버그 로그
 
