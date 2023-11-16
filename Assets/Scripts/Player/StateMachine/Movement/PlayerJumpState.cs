@@ -24,7 +24,7 @@ public class PlayerJumpState : PlayerAirborneState
         player.StartCoroutine("nowBusy", player.jumpTimeout);
 
         // 루트 높이 * -2f * 중력 = 원하는 높이까지 도달하는 벨로시티값
-        verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.Gravity);
+        verticalVelocity = Mathf.Sqrt(player.jumpHeight * -2f * player.gravity);
     }
 
 
@@ -33,7 +33,7 @@ public class PlayerJumpState : PlayerAirborneState
         base.Update();
 
         if (StateTimer > 0)
-            player.Can_MoveHorizontally = false;
+            player.can_MoveHorizontally = false;
 
 
         if (!player.isGrounded && verticalVelocity <= 0f && !player.isBusy)

@@ -24,9 +24,11 @@ MonoBehaviour:
     type: 3}
   reloadAnimation: {fileID: -203655887218126122, guid: 53b392777f0651b4aa0b5b5422607d8a,
     type: 3}
-  reloadTime: 1.5
-  isReloading: 0
+  reloadTime: 3
+  isReloading: 1
   currentAmmo: 30
   magSize: 30
   MaxAmmo: 180
+  reloadingHandlePosition: {x: -0.2352, y: 0.0229, z: -0.0082}
+  barrelAheadForwardQuaternion: {x: 0.639919, y: -0.508519, z: -0.43892962, w: 0.37316602}
   fireSound: {fileID: 8300000, guid: ad9f3cebf63d19e4999cdb2d9f17edf2, type: 3}

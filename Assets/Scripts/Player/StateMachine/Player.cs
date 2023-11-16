@@ -47,8 +47,8 @@ public class Player : Entity
     [HideInInspector] public float temp_moveSpeed;
     [SerializeField] public float RotatonSmoothTime = 0.12f;
     [SerializeField] public float SpeedChangeRate = 10.0f;
-    [SerializeField] public bool Can_MoveHorizontally = true;
-    [HideInInspector] public bool Can_Rotate = true;
+    [SerializeField] public bool can_MoveHorizontally = true;
+    [HideInInspector] public bool can_Rotate = true;
     [HideInInspector] public bool horizontalStop;
 
     //[HideInInspector] public float walkSpeed;
@@ -62,22 +62,22 @@ public class Player : Entity
 
     [Header("Jump And Gravity")]
     [SerializeField] public float jumpHeight = 12f;
-    [SerializeField] public float Gravity = -9.81f;
+    [SerializeField] public float gravity = -9.81f;
     [SerializeField] public float groundedGravity = -1f;
     [SerializeField] public float mass = 1f;
     [Tooltip("다시 점프 할 수 있을때까지 걸리는 시간")]
     [SerializeField] public float jumpTimeout = 0.5f;
     [Tooltip("fall스테이트 진입까지 걸리는시간 (계단에 유용)")]
-    [SerializeField] public float FallTimeout = 0.15f;
-    [Tooltip("공중 상태 진입 했을 때 점프 입력 할 수 있는 유예시간")][SerializeField] public float CoyoteTime = 0.1f;
+    [SerializeField] public float fallTimeout = 0.15f;
+    [Tooltip("공중 상태 진입 했을 때 점프 입력 할 수 있는 유예시간")][SerializeField] public float coyoteTime = 0.1f;
     [Tooltip("착지 모션 변화 낙하시간 기준")][SerializeField] public float landingMotionTimerStandard = 1f;
     //  [Tooltip("착지 모션 변화 벨로시티 기준")][SerializeField] public float landingMotionVelocityStandard = -10f;
 
     [Header("Camera Info")]
     [SerializeField] public CinemachineFreeLook VCamera;
-    [SerializeField] public CinemachineVirtualCamera AimingCamera;
+    [SerializeField] public CinemachineVirtualCamera aimingCamera;
     [SerializeField] public Transform orientation; //플레이어 원점
-    [HideInInspector] public Vector3 LookDir;
+    [HideInInspector] public Vector3 lookDir;
 
 
     [Header("Input Info")]
@@ -85,7 +85,7 @@ public class Player : Entity
     [HideInInspector] public bool _inputWalk; // Left Shift
     [HideInInspector] public bool _inputCurosrVisible; // Left Alt
     [HideInInspector] public bool _inputJump; // Space
-    public bool ApplyAnalogMovement = false;
+    public bool applyAnalogMovement = false;
     public bool isControlable = true;
     [HideInInspector] public Vector3 inputDirection;
     [HideInInspector] public bool _inputQuickWeaponMenu; //Tab
@@ -94,11 +94,12 @@ public class Player : Entity
     [SerializeField] public Vector2 Look;
     [HideInInspector] public bool _InputAim; // RightClick
     [HideInInspector] public bool isAiming;
+    [HideInInspector] public bool isReloading;
     public bool isArmed;
-    [HideInInspector] public bool _InputFire;
-    [HideInInspector] public bool _InputReload;
+    [HideInInspector] public bool _inputFire;
+    [HideInInspector] public bool _inputReload;
     // 0번 인덱스를 키보드 위의 숫자 1번으로
-    public List<bool> _InputKeyNums = new List<bool>();
+    public List<bool> _inputKeyNums = new List<bool>();
     #endregion
 
     #region 상태들, 객체선언, 인풋시스템 콜백
@@ -227,6 +228,7 @@ public class Player : Entity
 
         anim.SetBool(gameManager.animIDisAiming, isAiming);
         anim.SetBool(gameManager.animIDisArmed, isArmed);
+
         rigbuilder.enabled = isAiming;
 
         #region 디버그 로그
@@ -289,8 +291,8 @@ public class Player : Entity
     void CameraControl()
     {
         //카메라가 플레이어를 바라보는 벡터값(y축은 플레이어와 동일하게 한 코드)
-        LookDir = transform.position - new Vector3(VCamera.transform.position.x, transform.position.y, VCamera.transform.position.z);
-        orientation.forward = LookDir.normalized;
+        lookDir = transform.position - new Vector3(VCamera.transform.position.x, transform.position.y, VCamera.transform.position.z);
+        orientation.forward = lookDir.normalized;
 
         if (_inputXZ != Vector2.zero)
         {
@@ -563,12 +565,12 @@ public class Player : Entity
 
     void onFireAction(InputAction.CallbackContext context)
     {
-        _InputFire = context.ReadValueAsButton();
+        _inputFire = context.ReadValueAsButton();
     }
 
     private void onReloadAction(InputAction.CallbackContext context)
     {
-        _InputReload = context.ReadValueAsButton();
+        _inputReload = context.ReadValueAsButton();
     }
 
     void onQuickWeaponMenu(InputAction.CallbackContext context)
@@ -577,16 +579,16 @@ public class Player : Entity
     }
     private void onKeyboardNum1Action(InputAction.CallbackContext context)
     {
-        _InputKeyNums[0] = context.ReadValueAsButton();
+        _inputKeyNums[0] = context.ReadValueAsButton();
     }
     private void onKeyboardNum2Action(InputAction.CallbackContext context)
     {
-        _InputKeyNums[1] = context.ReadValueAsButton();
+        _inputKeyNums[1] = context.ReadValueAsButton();
 
     }
     private void onKeyboardNum3Action(InputAction.CallbackContext context)
     {
-        _InputKeyNums[2] = context.ReadValueAsButton();
+        _inputKeyNums[2] = context.ReadValueAsButton();
     }
 
 

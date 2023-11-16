@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Obstacle_Standable
   - Obstacle_Fence
+  - MagClip
   layers:
   - Default
   - TransparentFX

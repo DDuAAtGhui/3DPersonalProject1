@@ -33,10 +33,14 @@ public class Gundata : ScriptableObject
     public float reloadTime;
     [HideInInspector] public bool isReloading;
 
-
     public int currentAmmo;
     public int magSize;
     public int MaxAmmo;
+
+    [Tooltip("플레이어가 재장전 모션시 손잡이 위치")]
+    public Vector3 reloadingHandlePosition;
+    [Tooltip("플레이어 손과 총열이 평행되도록")]
+    public Quaternion barrelAheadForwardQuaternion;
 
     [Header("Audio Info")]
     public AudioClip fireSound;

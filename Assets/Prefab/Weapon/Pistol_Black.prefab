@@ -183,9 +183,10 @@ GameObject:
   - component: {fileID: 1066004730249564164}
   - component: {fileID: 6783062204877967374}
   - component: {fileID: 4615266058573478805}
+  - component: {fileID: 3687240889889288129}
   m_Layer: 0
   m_Name: Cube.002
-  m_TagString: Untagged
+  m_TagString: MagClip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -197,13 +198,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3527782209346981513}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0.2232976, y: -0.10177489, z: -0.05135546}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3461171331466761103}
-  m_RootOrder: 2
+  m_Father: {fileID: 6424800527316565093}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6783062204877967374
 MeshFilter:
@@ -255,6 +256,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3687240889889288129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527782209346981513}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0017400009, y: 0.00090000086, z: 0.004200002}
+  m_Center: {x: 0.00007453181, y: 8.4108016e-17, z: 0.00048700385}
 --- !u!1 &3531728562221320938
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +327,10 @@ MonoBehaviour:
   fireTransform: {fileID: 6724498003173518742}
   raycastDestination: {fileID: 0}
   weaponAnimation: {fileID: 7400000, guid: 8ff36af035ae02d44b6397a9cdce402c, type: 2}
+  currentAmmoTxt: {fileID: 0}
+  totalAmmoTxt: {fileID: 0}
+  clipSlot: {fileID: 6424800527316565093}
+  MagClip: {fileID: 3527782209346981513}
 --- !u!82 &1402870844587029623
 AudioSource:
   m_ObjectHideFlags: 0
@@ -431,7 +457,7 @@ Transform:
   m_Children:
   - {fileID: 2868172197474731647}
   - {fileID: 5257050443231123347}
-  - {fileID: 1066004730249564164}
+  - {fileID: 6424800527316565093}
   - {fileID: 203960177719144422}
   - {fileID: 4787368872467113552}
   - {fileID: 8846108072327681241}
@@ -522,6 +548,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4796399723506667249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6424800527316565093}
+  m_Layer: 0
+  m_Name: ClipSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6424800527316565093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4796399723506667249}
+  m_LocalRotation: {x: -0.70710695, y: -0, z: -0, w: 0.70710677}
+  m_LocalPosition: {x: -0.22329809, y: -0.10177489, z: -0.051355343}
+  m_LocalScale: {x: 100, y: 99.99998, z: 99.99997}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1066004730249564164}
+  m_Father: {fileID: 3461171331466761103}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6381466154853254742
 GameObject:
   m_ObjectHideFlags: 0

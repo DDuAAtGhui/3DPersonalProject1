@@ -35,7 +35,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1016942718749600407}
+  - {fileID: 2199597047895204200}
   - {fileID: 3069900511739582201}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -106,6 +106,10 @@ MonoBehaviour:
   fireTransform: {fileID: 3069900511739582201}
   raycastDestination: {fileID: 0}
   weaponAnimation: {fileID: 7400000, guid: c2bf34b3ced6cd344bfabc7956adc0db, type: 2}
+  currentAmmoTxt: {fileID: 0}
+  totalAmmoTxt: {fileID: 0}
+  clipSlot: {fileID: 2199597047895204200}
+  MagClip: {fileID: 4387007712375407724}
 --- !u!54 &1543769899971745201
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -284,9 +288,10 @@ GameObject:
   - component: {fileID: 1016942718749600407}
   - component: {fileID: 4646231211262489958}
   - component: {fileID: 6925843254410018689}
+  - component: {fileID: 3405333952250966356}
   m_Layer: 0
   m_Name: G28 Rifle_mag
-  m_TagString: Untagged
+  m_TagString: MagClip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -298,12 +303,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4387007712375407724}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3390242337221708618}
+  m_Father: {fileID: 2199597047895204200}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4646231211262489958
@@ -356,6 +361,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3405333952250966356
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4387007712375407724}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.047912493, y: 0.11987497, z: 0.0882446}
+  m_Center: {x: -0.0025034798, y: -0.105491824, z: -0.026103845}
 --- !u!1 &5838780022423157623
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,6 +410,38 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 3390242337221708618}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6899507336915407033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2199597047895204200}
+  m_Layer: 0
+  m_Name: ClipSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2199597047895204200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6899507336915407033}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1016942718749600407}
   m_Father: {fileID: 3390242337221708618}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

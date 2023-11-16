@@ -58,7 +58,7 @@ public class PlayerStates
             Debug.Log("상태 진입시 parkourToFallState : " + parkourToFallState);
         }
 
-        player.Can_MoveHorizontally = true;
+        player.can_MoveHorizontally = true;
         isAnimEnd = false;
     }
 
@@ -110,7 +110,7 @@ public class PlayerStates
             Debug.Log("Exit : " + this.GetType().Name);
 
         StateTimer = 0;
-        player.Can_MoveHorizontally = true;
+        player.can_MoveHorizontally = true;
     }
 
     public virtual void OnCollisionEnter(Collision collision)
@@ -170,7 +170,7 @@ public class PlayerStates
         //타겟스피드에서 벨로시티값이 벗어남 허용치
         float speedOffset = 0.1f;
 
-        float inputMagnitude = player.ApplyAnalogMovement ? player._inputXZ.magnitude : 1f;
+        float inputMagnitude = player.applyAnalogMovement ? player._inputXZ.magnitude : 1f;
 
         //횡 속도 기준치에서 벗어날경우 보간해서 보정
         if (currentHorizontalVelocity < targetSpeed - speedOffset ||
@@ -206,13 +206,13 @@ public class PlayerStates
 
             //카메라 위치에 비례하여 회전, 공중에 뜬 상태면 회전 불가
             //우클릭해서 조준중일때도 회전 비활성화
-            if (player.Can_Rotate && !player.isAiming)
+            if (player.can_Rotate && !player.isAiming)
                 player.transform.rotation = Quaternion.Euler(0, rotation, 0);
         }
 
         targetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
 
-        if (player.isGrounded && player.Can_MoveHorizontally && !LedgeMovement())
+        if (player.isGrounded && player.can_MoveHorizontally && !LedgeMovement())
         {
             //  Debug.Log("타겟 디렉션 적용중");
             if (!player.isAiming)
@@ -232,7 +232,7 @@ public class PlayerStates
         }
 
         //공중에 뜬 상태면 조작 불가
-        else if (!player.isGrounded || !player.Can_MoveHorizontally)
+        else if (!player.isGrounded || !player.can_MoveHorizontally)
         {
             //  Debug.Log("벨로시티 적용중");
             CC.Move(new Vector3(CC.velocity.x * 0.85f, 0, CC.velocity.z * 0.85f).normalized * (speed * Time.deltaTime)
@@ -289,7 +289,7 @@ public class PlayerStates
         if (player.isGrounded)
         {
             // 낙하 타이머 초기화
-            fallTimeoutDelta = player.FallTimeout;
+            fallTimeoutDelta = player.fallTimeout;
 
             // 수직 벨로시티 무한히 감소하는 것 방지
             // 파쿠르 중일때 velocity값 크게 유지되는거 방지(내려오는 파쿠르일때 급강하 방지)
@@ -314,7 +314,7 @@ public class PlayerStates
 
 
         if (verticalVelocity < terminalVelocity)
-            verticalVelocity += player.Gravity * player.mass * Time.deltaTime;
+            verticalVelocity += player.gravity * player.mass * Time.deltaTime;
 
 
         if (CC.velocity.y < -0.5f)

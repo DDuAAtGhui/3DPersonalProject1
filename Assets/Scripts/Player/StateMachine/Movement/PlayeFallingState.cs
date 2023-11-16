@@ -16,7 +16,7 @@ public class PlayeFallingState : PlayerAirborneState
         anim.SetBool(gameManager.animIDFreeFall, true);
 
         if (groundToFallState)
-            StateTimer = player.CoyoteTime;
+            StateTimer = player.coyoteTime;
 
        // Debug.Log("Falling 진입 수직 벨로시티" + verticalVelocity);
 

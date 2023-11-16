@@ -60,7 +60,8 @@ public class ActiveWepon : MonoBehaviour
 
         player.isArmed = true;
         rigBuilder.enabled = true;
-        handIK.weight = 1f;
+        if (!player.isReloading) // IK 따로 관리하는상황
+            handIK.weight = 1f;
         player.anim.SetFloat(GameManager.instance.animIDWeaponType,
             (float)weapon.gunData.type);
     }
@@ -68,6 +69,8 @@ public class ActiveWepon : MonoBehaviour
     [Header("Weapon Holster")]
     public Transform holster_Back;
     public Transform holster_RightThigh;
+    public Transform holster_RightHand;
+    public Transform holster_LeftHand;
     public void HolsterTweak()
     {
         if (weapon == null)
@@ -78,6 +81,12 @@ public class ActiveWepon : MonoBehaviour
             weapon.transform.parent = weaponParent;
             weapon.transform.localPosition = weapon.gunData.holdingPosition;
             weapon.transform.localRotation = Quaternion.identity;
+        }
+        else if (player.isReloading)
+        {
+            weapon.transform.parent = holster_RightHand;
+            weapon.transform.localPosition = weapon.gunData.reloadingHandlePosition;
+            weapon.transform.localRotation = weapon.gunData.barrelAheadForwardQuaternion;
         }
         else
         {

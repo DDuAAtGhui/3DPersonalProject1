@@ -23,9 +23,11 @@ MonoBehaviour:
   muzzleFire: {fileID: 446266838095192071, guid: c59bee9ab1764e1429f872a59a0610fd,
     type: 3}
   reloadAnimation: {fileID: 7400000, guid: 4a77deb0609b81c49b3297a460e49b32, type: 2}
-  reloadTime: 0.5
+  reloadTime: 3
   isReloading: 0
   currentAmmo: 12
   magSize: 12
   MaxAmmo: 24
+  reloadingHandlePosition: {x: -0.1417, y: 0.041, z: 0.0328}
+  barrelAheadForwardQuaternion: {x: -0.45716876, y: 0.4674255, z: 0.50099874, w: -0.5670189}
   fireSound: {fileID: 8300000, guid: 1643eefcacb49b14e85935687cc98596, type: 3}

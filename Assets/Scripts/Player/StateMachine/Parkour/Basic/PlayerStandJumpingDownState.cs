@@ -23,7 +23,7 @@ public class PlayerStandJumpingDownState : PlayerParkourState
     {
         base.Update();
 
-        player.Can_MoveHorizontally = false;
+        player.can_MoveHorizontally = false;
 
         if (player.LedgeData.height > player.ledgeCheckHeightStandard_Bottom)
             anim.SetLayerWeight(anim.GetLayerIndex("Upper Layer"),

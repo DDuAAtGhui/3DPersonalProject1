@@ -11,8 +11,8 @@ public class PlayerAirborneState : PlayerStates
     public override void Enter()
     {
         base.Enter();
-        player.Can_MoveHorizontally = false;
-        player.Can_Rotate = false;
+        player.can_MoveHorizontally = false;
+        player.can_Rotate = false;
     }
     public override void Update()
     {
@@ -22,7 +22,7 @@ public class PlayerAirborneState : PlayerStates
     public override void Exit()
     {
         base.Exit();
-        player.Can_MoveHorizontally = true;
-        player.Can_Rotate = true;
+        player.can_MoveHorizontally = true;
+        player.can_Rotate = true;
     }
 }

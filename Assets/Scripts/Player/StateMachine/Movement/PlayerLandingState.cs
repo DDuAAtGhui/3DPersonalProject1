@@ -21,8 +21,8 @@ public class PlayerLandingState : PlayerStates
 
         if (player.totalFallingTime >= player.landingMotionTimerStandard && player._inputXZ != Vector2.zero)
         {
-            player.Can_MoveHorizontally = false;
-            player.Can_Rotate = false;
+            player.can_MoveHorizontally = false;
+            player.can_Rotate = false;
             anim.SetBool(gameManager.animIDLanding_Roll, true);
             roll = true;
         }
@@ -30,8 +30,8 @@ public class PlayerLandingState : PlayerStates
         else if (player.totalFallingTime >= player.landingMotionTimerStandard && player._inputXZ == Vector2.zero)
         {
             player.horizontalStop = true;
-            player.Can_MoveHorizontally = false;
-            player.Can_Rotate = false;
+            player.can_MoveHorizontally = false;
+            player.can_Rotate = false;
             anim.SetBool(gameManager.animIDLanding_Hard, true);
             hard = true;
         }
@@ -96,8 +96,8 @@ public class PlayerLandingState : PlayerStates
     {
         player._inputWalk = false;
         player.horizontalStop = true;
-        player.Can_MoveHorizontally = true;
-        player.Can_Rotate = true;
+        player.can_MoveHorizontally = true;
+        player.can_Rotate = true;
         player.totalFallingTime = 0f;
         roll = false;
         hard = false;

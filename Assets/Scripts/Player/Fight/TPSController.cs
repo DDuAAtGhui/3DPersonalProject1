@@ -57,8 +57,8 @@ public class TPSController : MonoBehaviour
         if (aimToggleDebug)
         {
             player._InputAim = true;
-            aimVirtualCamera.gameObject.SetActive(true);
             player.isAiming = true;
+            aimVirtualCamera.gameObject.SetActive(true);
             #region 애니메이션
             player.anim.SetLayerWeight(playerAimingAnimLayerIndex,
                 Mathf.Lerp(player.anim.GetLayerWeight(playerAimingAnimLayerIndex),
@@ -82,10 +82,10 @@ public class TPSController : MonoBehaviour
 
             if (GetComponentInChildren<GunTweak>() != null)
             {
-                if (player._InputFire && player.isAiming)
+                if (player._inputFire && player.isAiming)
                     shootInput?.Invoke();
 
-                if (player._InputReload)
+                if (player._inputReload)
                     reloadInput?.Invoke();
             }
         }

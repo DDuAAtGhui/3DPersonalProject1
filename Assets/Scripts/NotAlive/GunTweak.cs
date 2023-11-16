@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class GunTweak : MonoBehaviour
 {
@@ -23,13 +24,17 @@ public class GunTweak : MonoBehaviour
         timePassSinceLastShooting > SecondPerRound;
     bool isOwnerPlayer => GetComponentInParent<Player>();
     Player player;
-
+    RigBuilder playerRigbuilder;
     public AnimationClip weaponAnimation;
 
     AudioSource audioSource;
 
     [SerializeField] TextMeshProUGUI currentAmmoTxt;
     [SerializeField] TextMeshProUGUI totalAmmoTxt;
+
+    public Transform clipSlot; //인스펙터에서 넣기
+    public GameObject MagClip; //인스펙터에서 넣기
+    GameObject instance_mag;
     private void Start()
     {
         //스크립터블 오브젝트는 씬 끝나도 데이터 저장되어있으므로
@@ -41,13 +46,25 @@ public class GunTweak : MonoBehaviour
         tpsController = GetComponentInParent<TPSController>();
         audioSource = GetComponent<AudioSource>();
 
+        Rigidbody MagRb;
+
+        if (MagClip.GetComponent<Rigidbody>() == null)
+            MagClip.AddComponent<Rigidbody>();
+
+        MagRb = MagClip.GetComponent<Rigidbody>();
+        MagRb.mass = 0.5f;
+        MagRb.useGravity = false;
+        MagRb.GetComponent<BoxCollider>().enabled = false;
+
         if (isOwnerPlayer) //총이 플레이어 자식으로 존재하면
         {
             player = GetComponentInParent<Player>();
+            playerRigbuilder = player.GetComponent<RigBuilder>();
             currentAmmoTxt = GameObject.Find("CurrentAmmo").GetComponent<TextMeshProUGUI>();
             totalAmmoTxt = GameObject.Find("TotalAmmo").GetComponent<TextMeshProUGUI>();
             currentAmmoTxt.text = gunData.currentAmmo.ToString();
             totalAmmoTxt.text = gunData.MaxAmmo.ToString();
+
 
             //델리게이트 등록
             TPSController.shootInput += Shoot;
@@ -113,6 +130,8 @@ public class GunTweak : MonoBehaviour
 
         // StartCoroutine(MuzzleFire());
 
+
+
         foreach (var muzzleFire in muzzleFires)
             muzzleFire.Emit(1);
 
@@ -151,7 +170,7 @@ public class GunTweak : MonoBehaviour
 
     private void DoReload()
     {
-        if (!gunData.isReloading && gunData.currentAmmo != gunData.magSize)
+        if ((!gunData.isReloading && gunData.currentAmmo != gunData.magSize) || tpsController.aimToggleDebug)
             StartCoroutine(Reload());
 
         Debug.Log("Debug : currentTotalAmmo :" + currentMaxAmmo);
@@ -160,6 +179,27 @@ public class GunTweak : MonoBehaviour
     IEnumerator Reload()
     {
         gunData.isReloading = true;
+        player.isReloading = true;
+        MagClip.SetActive(false);
+
+        instance_mag = Instantiate(MagClip, clipSlot.transform.position,
+            clipSlot.transform.rotation);
+
+        instance_mag.transform.localScale = clipSlot.transform.localScale;
+
+        instance_mag.SetActive(true);
+        instance_mag.AddComponent<MagController>();
+
+
+        Rigidbody instance_magRB = instance_mag.GetComponent<Rigidbody>();
+
+        if (clipSlot != null && MagClip != null)
+        {
+            instance_mag.GetComponent<BoxCollider>().enabled = true;
+            instance_magRB.useGravity = true;
+            instance_magRB.AddForce(transform.InverseTransformDirection(Vector3.down)
+                , ForceMode.Impulse);
+        }
 
         switch (isOwnerPlayer)
         {
@@ -167,7 +207,6 @@ public class GunTweak : MonoBehaviour
                 player.anim.Play(gunData.reloadAnimation.name);
                 currentMaxAmmo -= gunData.magSize - gunData.currentAmmo;
                 gunData.currentAmmo = gunData.magSize;
-                gunData.isReloading = false;
                 currentAmmoTxt.text = gunData.currentAmmo.ToString();
                 totalAmmoTxt.text = currentMaxAmmo.ToString();
                 break;
@@ -177,7 +216,13 @@ public class GunTweak : MonoBehaviour
 
         //스크립터블로 설정한 장전시간동안 isReolading이 true
         yield return new WaitForSeconds(gunData.reloadTime);
+        gunData.isReloading = false;
+        player.isReloading = false;
 
+        if (clipSlot != null)
+        {
+            MagClip.SetActive(true);
+        }
     }
 
     private void OnDestroy()
