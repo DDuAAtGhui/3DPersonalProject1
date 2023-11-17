@@ -7,6 +7,8 @@ TagManager:
   - Obstacle_Standable
   - Obstacle_Fence
   - MagClip
+  - PlayerBullet
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
