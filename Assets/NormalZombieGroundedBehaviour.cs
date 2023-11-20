@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class DeadBehaviour : StateMachineBehaviour
+public class NormalZombieGroundedBehaviour : StateMachineBehaviour
 {
-    Rigidbody rb;
-    float random;
+    GameManager gameManager;
+    FieldOfView fov;
+    NavMeshAgent navMeshAgent;
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        rb = animator.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.mass = 10f;
-        animator.GetComponent<Collider>().enabled = false;
-        animator.applyRootMotion = true;
-
-        animator.SetFloat("deadMotionPar", Mathf.Clamp(Random.Range(0f, 1f), 0.15f, 1f));
-        animator.GetComponent<NavMeshAgent>().enabled = false;
-        Destroy(animator.gameObject, 20f);
+        fov = animator.GetComponentInChildren<FieldOfView>();
+        gameManager = GameManager.instance;
+        navMeshAgent = animator.GetComponent<NavMeshAgent>();
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.SetBool(gameManager.animIDisPlayerFound,
+            fov.isTargetFound(gameManager.player.gameObject));
+
+        navMeshAgent.speed = fov.isTargetFound(gameManager.player.gameObject) ? 7f : 2f;
 
     }
 

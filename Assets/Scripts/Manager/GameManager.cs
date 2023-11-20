@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -121,6 +119,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDParkour_BracedHangShimmyLeft;
     [HideInInspector] public int animIDParkour_BracedHangToCrouch;
 
+    [HideInInspector] public int animIDisIdle;
+    [HideInInspector] public int animIDisMove;
+    [HideInInspector] public int animIDisPlayerFound;
+    [HideInInspector] public int animIDisGrounded;
+    [HideInInspector] public int animIDisDead;
+
+
     void animParameterToHash()
     {
         animIDisAiming = Animator.StringToHash("isAiming");
@@ -151,6 +156,12 @@ public class GameManager : MonoBehaviour
         animIDParkour_BracedHangShimmyRight = Animator.StringToHash("Parkour_BracedHangShimmyRight");
         animIDParkour_BracedHangShimmyLeft = Animator.StringToHash("Parkour_BracedHangShimmyLeft");
         animIDParkour_BracedHangToCrouch = Animator.StringToHash("Parkour_BracedHangToCrouch");
+
+        animIDisIdle = Animator.StringToHash("isIdle");
+        animIDisMove = Animator.StringToHash("isMove");
+        animIDisPlayerFound = Animator.StringToHash("isPlayerFound");
+        animIDisDead = Animator.StringToHash("isDead");
+        animIDisGrounded = Animator.StringToHash("isGrounded");
     }
     #endregion
     #region DEBUG_OPTION

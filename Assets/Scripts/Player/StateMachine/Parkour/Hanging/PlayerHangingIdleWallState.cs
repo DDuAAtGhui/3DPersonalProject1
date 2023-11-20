@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 
 //현재 버그 원인 : player.climbPoint를 레이캐스트 위치로 잡고있는데 파쿠르중엔 꺼놨으니 갱신이 안되기때문

@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 //스크립터블 오브젝트같은건 게임중에 값 변하고 게임 꺼져도 초기화 안되니까
 //중간중간 변해야 하는값 같은거 있으면 임시 변수 만들어서 그거 활용해야함

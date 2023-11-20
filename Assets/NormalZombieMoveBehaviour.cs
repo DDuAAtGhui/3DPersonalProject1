@@ -3,36 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class DeadBehaviour : StateMachineBehaviour
+public class NormalZombieMoveBehaviour : StateMachineBehaviour
 {
+    float roamingTimer = 0f;
+    GameManager gameManager;
+    FieldOfView fov;
+    NavMeshAgent navMeshAgent;
     Rigidbody rb;
-    float random;
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        gameManager = GameManager.instance;
+        fov = animator.GetComponentInChildren<FieldOfView>();
+        navMeshAgent = animator.GetComponent<NavMeshAgent>();
         rb = animator.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.mass = 10f;
-        animator.GetComponent<Collider>().enabled = false;
-        animator.applyRootMotion = true;
-
-        animator.SetFloat("deadMotionPar", Mathf.Clamp(Random.Range(0f, 1f), 0.15f, 1f));
-        animator.GetComponent<NavMeshAgent>().enabled = false;
-        Destroy(animator.gameObject, 20f);
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        roamingTimer += Time.deltaTime;
 
+        if (roamingTimer >= Random.Range(7f, 15f) &&
+            !fov.isTargetFound(gameManager.player.gameObject))
+        {
+            roamingTimer = 0f;
+            animator.SetBool(gameManager.animIDisMove, false);
+        }
+
+        if (fov.isTargetFound(gameManager.player.gameObject))
+        {
+            roamingTimer = 0f;
+            navMeshAgent.SetDestination(gameManager.player.transform.position);
+        }
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        animator.SetBool(gameManager.animIDisMove, false);
     }
-
     // OnStateMove is called before OnStateMove is called on any state inside this state machine
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
