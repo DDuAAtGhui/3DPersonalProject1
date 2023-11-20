@@ -15,6 +15,7 @@ public class NormalZombieIdleBehaviour : StateMachineBehaviour
     {
         gameManager = GameManager.instance;
         navMeshAgent = animator.GetComponent<NavMeshAgent>();
+        navMeshAgent.SetDestination(navMeshAgent.transform.position);
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
@@ -37,6 +38,9 @@ public class NormalZombieIdleBehaviour : StateMachineBehaviour
             navMeshAgent.SetDestination(animator.transform.position +
                 new Vector3(R, R, R));
         }
+
+        if (animator.GetComponentInChildren<FieldOfView>().isTargetFound(gameManager.player.gameObject))
+            animator.SetBool(gameManager.animIDisMove, true);
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine

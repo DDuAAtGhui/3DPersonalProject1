@@ -5,7 +5,9 @@ using UnityEngine.AI;
 
 public class NormalZombieMoveBehaviour : StateMachineBehaviour
 {
-    float roamingTimer = 0f;
+    [SerializeField] float roamingTimer = 0f;
+    float startViewAngle;
+    float startViewRadius;
     GameManager gameManager;
     FieldOfView fov;
     NavMeshAgent navMeshAgent;
@@ -17,6 +19,8 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
         fov = animator.GetComponentInChildren<FieldOfView>();
         navMeshAgent = animator.GetComponent<NavMeshAgent>();
         rb = animator.GetComponent<Rigidbody>();
+        startViewAngle = fov.viewAngle;
+        startViewRadius = fov.viewRadius;
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
@@ -34,14 +38,21 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
         if (fov.isTargetFound(gameManager.player.gameObject))
         {
             roamingTimer = 0f;
-            navMeshAgent.SetDestination(gameManager.player.transform.position);
+
+            if (navMeshAgent.enabled)
+                navMeshAgent.SetDestination(gameManager.player.transform.position);
+
+            fov.viewRadius = startViewRadius + 3f;
+            fov.viewAngle = 360f;
         }
+
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool(gameManager.animIDisMove, false);
+        fov.viewRadius = startViewRadius;
+        fov.viewAngle = startViewAngle;
     }
     // OnStateMove is called before OnStateMove is called on any state inside this state machine
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
