@@ -6,6 +6,8 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     public float hp = 100f;
+    public float chaseSpeed = 10f;
+    public float damage = 10f;
     GameManager gameManager;
     Animator anim;
     public FieldOfView fov;

@@ -1,4 +1,6 @@
 
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -80,12 +82,25 @@ public class PlayerStates
 
         StateTimer -= Time.deltaTime;
 
+
         player.isOnLedge = player.DetectingLedge(player.transform.forward, out LedgeData ledgeData,
             player.ledgeCheckHeightStandard_Top, player.ledgeCheckHeightStandard_Bottom);
         player.LedgeData = ledgeData;
 
+        hitTimer += Time.deltaTime;
+
+        Debug.Log(player.isSlow);
+        if (hitTimer < 0.2f)
+            player.isSlow = true;
+
+        else
+            player.isSlow = false;
+
+        HPBar();
         whenLostControl();
+        Dead();
     }
+
 
     public virtual void FixedUpdate()
     {
@@ -125,6 +140,22 @@ public class PlayerStates
             Debug.Log("Collision Stay Class : " + this.GetType().Name);
     }
 
+    float hitTimer = 0f;
+    public virtual void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("EnemyBullet"))
+        {
+            Enemy enemy = other.GetComponentInParent<Enemy>();
+
+            if (enemy != null)
+            {
+                hitTimer = 0f;
+                player.hp -= enemy.damage;
+            }
+        }
+    }
+
+
     public virtual void OnDrawGizmos()
     {
 
@@ -133,8 +164,11 @@ public class PlayerStates
 
     #region 메소드들
     float targetSpeed;
+    float speedMultiplier = 1f;
     protected void Move()
     {
+        speedMultiplier = 1f;
+
         if (gameManager.Log_PlayerSpeed)
             Debug.Log("Current Speed :" + speed);
 
@@ -148,16 +182,19 @@ public class PlayerStates
             player.moveSpeed = 0;
 
         else
-            player.moveSpeed = player.temp_moveSpeed;
+            player.moveSpeed = player.temp_moveSpeed * speedMultiplier;
 
 
-        targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed;
+        if (player.isArmed)
+            speedMultiplier = 0.7f;
 
         if (player.isAiming)
-            targetSpeed = walkSpeed / 2;
+            speedMultiplier = 0.3f;
 
-        else if (player.isArmed)
-            targetSpeed = player.moveSpeed * 0.7f;
+        if (player.isSlow)
+            speedMultiplier = 0.3f;
+
+        targetSpeed = player._inputWalk ? walkSpeed : player.moveSpeed * speedMultiplier;
 
         //   else if (!player.isArmed && !player.isAiming)
 
@@ -242,6 +279,31 @@ public class PlayerStates
 
         anim.SetFloat(gameManager.animIDSpeed, animationBlend);
         anim.SetFloat(gameManager.animIDMotionSpeed, inputMagnitude);
+    }
+    private void Dead()
+    {
+        float tempCCheight = CC.height;
+
+        if (player.hp <= 0f)
+        {
+            anim.SetBool(gameManager.animIDisDead, true);
+            player.isDead = true;
+            CC.height = 0f;
+        }
+
+        else
+        {
+            anim.SetBool(gameManager.animIDisDead, false);
+            player.isDead = false;
+            CC.height = tempCCheight;
+        }
+
+        tpsController.enabled = !player.isDead;
+        player.GetComponent<ActiveWepon>().enabled = !player.isDead;
+    }
+    void HPBar()
+    {
+        player.hpBarFront.fillAmount = player.hp / 100f;
     }
 
     //모서리에서의 움직임감지
@@ -331,5 +393,7 @@ public class PlayerStates
             //변수 초기해줘야 하는거 있으면 해주기
         }
     }
+
+
     #endregion
 }

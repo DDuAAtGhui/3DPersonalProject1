@@ -42,10 +42,18 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
             if (navMeshAgent.enabled)
                 navMeshAgent.SetDestination(gameManager.player.transform.position);
 
+            //animator.transform.rotation =
+            //    Quaternion.LookRotation(gameManager.player.transform.position);
+
             fov.viewRadius = startViewRadius + 3f;
             fov.viewAngle = 360f;
-        }
 
+            if (navMeshAgent.remainingDistance <= 1f)
+            {
+                animator.SetBool(gameManager.animIDisAttack, true);
+                animator.SetBool(gameManager.animIDisMove, false);
+            }
+        }
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine

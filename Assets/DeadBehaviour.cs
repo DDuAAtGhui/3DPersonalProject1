@@ -15,9 +15,9 @@ public class DeadBehaviour : StateMachineBehaviour
         rb.mass = 10f;
         animator.GetComponent<Collider>().enabled = false;
         animator.applyRootMotion = true;
+        animator.GetComponent<NavMeshAgent>().enabled = false;
 
         animator.SetFloat("deadMotionPar", Mathf.Clamp(Random.Range(0f, 1f), 0.15f, 1f));
-        animator.GetComponent<NavMeshAgent>().enabled = false;
         Destroy(animator.gameObject, 20f);
     }
 

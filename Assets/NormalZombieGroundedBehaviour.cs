@@ -22,7 +22,7 @@ public class NormalZombieGroundedBehaviour : StateMachineBehaviour
         animator.SetBool(gameManager.animIDisPlayerFound,
             fov.isTargetFound(gameManager.player.gameObject));
 
-        navMeshAgent.speed = fov.isTargetFound(gameManager.player.gameObject) ? 10f : 2f;
+        navMeshAgent.speed = fov.isTargetFound(gameManager.player.gameObject) ? animator.GetComponent<NormalZombie>().chaseSpeed : 2f;
 
     }
 

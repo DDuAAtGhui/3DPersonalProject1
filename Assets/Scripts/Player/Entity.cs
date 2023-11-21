@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Entity : MonoBehaviour
 {
@@ -10,6 +11,12 @@ public class Entity : MonoBehaviour
     #region Infos
     [Header("Entity")]
     public GameManager gameManager;
+
+    [Header("Object Info")]
+    public float hp = 100f;
+    public Image hpBarFront;
+    public Image hpBarBackGround;
+    public bool isDead;
 
     [Header("Collision Info")]
     [SerializeField] public bool isGrounded = false;
@@ -21,7 +28,8 @@ public class Entity : MonoBehaviour
     [HideInInspector] public float totalFallingTime = 0f;
 
     [SerializeField] public LayerMask Obstacle;
-    [Tooltip("플레이어가 서있는 모서리 체크")][Header("Ledge Check Info")]
+    [Tooltip("플레이어가 서있는 모서리 체크")]
+    [Header("Ledge Check Info")]
     [SerializeField] public float ledgeRayLength = 10f;
     [SerializeField] public float ledgeCheckOriginOffset = 0.5f;
     [SerializeField] public float ledgeCheckPlayerLRFootOffset = 0.34f;
@@ -217,4 +225,8 @@ public class Entity : MonoBehaviour
         }
         return false;
     }
+
+    [HideInInspector] public bool isSlow;
+    [HideInInspector] public bool isHit;
 }
+

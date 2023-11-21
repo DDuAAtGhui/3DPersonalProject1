@@ -35,8 +35,10 @@ public class NormalZombieIdleBehaviour : StateMachineBehaviour
         {
             transitionToMoveTimer = 0f;
             animator.SetBool(gameManager.animIDisMove, true);
-            navMeshAgent.SetDestination(animator.transform.position +
-                new Vector3(R, R, R));
+
+            if (navMeshAgent.enabled)
+                navMeshAgent.SetDestination(animator.transform.position +
+                    new Vector3(R, R, R));
         }
 
         if (animator.GetComponentInChildren<FieldOfView>().isTargetFound(gameManager.player.gameObject))

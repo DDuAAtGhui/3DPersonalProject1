@@ -277,6 +277,11 @@ public class Player : Entity
         stateMachine.currentState.OnCollisionStay(collision);
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        stateMachine.currentState.OnTriggerEnter(other);
+    }
+
     public override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int animIDisMove;
     [HideInInspector] public int animIDisPlayerFound;
     [HideInInspector] public int animIDisGrounded;
+    [HideInInspector] public int animIDisAttack;
     [HideInInspector] public int animIDisDead;
 
 
@@ -162,6 +163,7 @@ public class GameManager : MonoBehaviour
         animIDisPlayerFound = Animator.StringToHash("isPlayerFound");
         animIDisDead = Animator.StringToHash("isDead");
         animIDisGrounded = Animator.StringToHash("isGrounded");
+        animIDisAttack = Animator.StringToHash("isAttack");
     }
     #endregion
     #region DEBUG_OPTION
