@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2649137441969745184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1620058418217144382}
+  - component: {fileID: 2960495610326045554}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1620058418217144382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2649137441969745184}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2960495610326045554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2649137441969745184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836e4df2123a3994e96165b78f33d2c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StandardTargetMatchingObject: {fileID: 417669300081207530, guid: 87458c3cc8400bb418b0a165733b8957,
+    type: 3}
+  CustomTargetMatchingObject: {fileID: 417669300081207530, guid: 7a5fe6008a4df3d4fa8c0fe23283f357,
+    type: 3}
+  HangableNetworkSphereObject: {fileID: 417669300081207530, guid: d8dd414658826024683468690daf3b51,
+    type: 3}
+  StoredObjectForSwitching: {fileID: 0}
+  player: {fileID: 0}
+  LedgeToLedgeFrontHitRayLength_forward: 2
+  LedgeToLedgeFrontHitRayLength_up: 0.5
+  GetAxisStyle_inputXZ: {x: 0, y: 0}
+  current_GetAxisStyle_inputXZ: {x: 0, y: 0}
+  _inputXZtoGetAxisStyeSmoothTime: 0.05
+  animIDisAiming: 0
+  animIDisArmed: 0
+  animIDWeaponType: 0
+  animIDSpeed: 0
+  animIDMotionSpeed: 0
+  animIDJump: 0
+  animIDFreeFall: 0
+  animIDLanding_Roll: 0
+  animIDLanding_Small: 0
+  animIDLanding_Hard: 0
+  animIDGrounded: 0
+  animIDLanding: 0
+  animIDParkouring: 0
+  animIDParkour_StepUp: 0
+  animIDParkour_JumpUp: 0
+  animIDParkour_CrouchToClimbUp: 0
+  animIDParkour_JumpOver_Roll: 0
+  animIDParkour_StandJumpingDown: 0
+  animIDParkour_HangingIdle: 0
+  animIDParkour_IdleToHang: 0
+  animIDParkour_JumpFromHangingWall: 0
+  animIDParkour_BracedHangHopUp: 0
+  animIDParkour_BracedHangHopDown: 0
+  animIDParkour_BracedHangHopRight: 0
+  animIDParkour_BracedHangHopLeft: 0
+  animIDParkour_BracedHangShimmyRight: 0
+  animIDParkour_BracedHangShimmyLeft: 0
+  animIDParkour_BracedHangToCrouch: 0
+  animIDisIdle: 0
+  animIDisMove: 0
+  animIDisPlayerFound: 0
+  animIDisGrounded: 0
+  animIDisAttack: 0
+  animIDisDead: 0
+  Log_StateEnter: 0
+  Log_StateUpdate: 0
+  Log_StateFixedUpdate: 0
+  Log_StateLateUpdate: 0
+  Log_StateExit: 0
+  Log_StateOnCollisionEnter: 0
+  Log_StateOnCollisionStay: 0
+  Log_PlayerSpeed: 0
+  Log_PlayerCurrentVelocity: 0
+  Log_PlayerVerticalVelocity: 0
+  Log_PlayerTotalFallingTime: 0
+  Log_isBusy: 0
+  Log_RayInfo_Obstacle_DistanceAndHeight: 0
+  Log_LedgeHeight: 0
+  Log_moveDirAngle_toLedget: 0
+  Log_Local_ForwardHitPoint: 0
+  Log_TargetMatch: 0
+  Log_ObstacleThickness: 0
+  Log_WhatisRayHitObstacle: 0
+  Log_ParkourPossibleState: 0
+  Log_ParkourActionSuccessInfo: 0
+  Log_HangingInfo: 0
+  Log_isAnimEnd: 0
+  Visible_MatchPosition: 0
+  Visible_LedgeRay: 1

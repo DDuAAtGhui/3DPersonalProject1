@@ -1197,7 +1197,7 @@ GameObject:
   - component: {fileID: 1476297170167285038}
   - component: {fileID: 3507211670207051893}
   - component: {fileID: 3040521908880496179}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Zombie1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1221,7 +1221,7 @@ Transform:
   - {fileID: 4507569586190916641}
   - {fileID: 5055552877064463373}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4971092873070071564
 Animator:

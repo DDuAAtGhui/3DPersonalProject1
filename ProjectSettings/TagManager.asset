@@ -9,6 +9,7 @@ TagManager:
   - MagClip
   - PlayerBullet
   - EnemyBullet
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 430394}
   - component: {fileID: 3375980}
   - component: {fileID: 2365978}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: WallDoorWay
   m_TagString: Untagged
   m_Icon: {fileID: 0}

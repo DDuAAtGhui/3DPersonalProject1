@@ -1,10 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
+    //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
+    public GameObject StandardTargetMatchingObject;
+    public GameObject CustomTargetMatchingObject;
+    public GameObject HangableNetworkSphereObject;
+
+    //타겟매칭 설정할 오브젝트 교환용으로 바꾸기전에 예전 오브젝트 보관용
+    public GameObject StoredObjectForSwitching;
+
     #region 관리 멤버
     public Player player;
 
@@ -33,32 +44,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LoadResources();
+        LoadResources(StandardTargetMatchingObject, "StandardTargetMatchingPosition");
+        LoadResources(CustomTargetMatchingObject, "ClimbableLedgeTargetMatchingPosition");
+        LoadResources(HangableNetworkSphereObject, "HangableObject");
+        StoredObjectForSwitching = CustomTargetMatchingObject;
+
     }
 
-    //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
-    //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
-    [HideInInspector] public GameObject StandardTargetMatchingObject;
-    [HideInInspector] public GameObject CustomTargetMatchingObject;
-    [HideInInspector] public GameObject HangableNetworkSphereObject;
-
-    //타겟매칭 설정할 오브젝트 교환용으로 바꾸기전에 예전 오브젝트 보관용
-    [HideInInspector] public GameObject StoredObjectForSwitching;
-    private void LoadResources()
+    void LoadResources(GameObject loadObject, string path)
     {
-        StandardTargetMatchingObject = Resources.Load("StandardTargetMatchingPosition") as GameObject;
-        StandardTargetMatchingObject = Instantiate(StandardTargetMatchingObject, transform.position, Quaternion.identity);
-        StandardTargetMatchingObject.SetActive(false);
+        loadObject = Resources.Load<GameObject>(path);
 
-        CustomTargetMatchingObject = Resources.Load("ClimbableLedgeTargetMatchingPosition") as GameObject;
-        CustomTargetMatchingObject = Instantiate(CustomTargetMatchingObject, transform.position, Quaternion.identity);
-        CustomTargetMatchingObject.SetActive(false);
+        if (loadObject == null)
+            Debug.Log("불러오기 실패");
 
-        HangableNetworkSphereObject = Resources.Load("HangableObject") as GameObject;
-        HangableNetworkSphereObject = Instantiate(HangableNetworkSphereObject, transform.position, Quaternion.identity);
-        HangableNetworkSphereObject.SetActive(false);
-
-        StoredObjectForSwitching = CustomTargetMatchingObject;
+        loadObject = Instantiate(loadObject, transform.position, Quaternion.identity);
+        loadObject.SetActive(false);
     }
 
     private void Update()
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
         CursorContorl();
         animParameterToHash();
         CalculateDigitalInputToAnalog();
+
     }
 
     void CursorContorl()
@@ -84,47 +86,84 @@ public class GameManager : MonoBehaviour
     }
     private void CalculateDigitalInputToAnalog()
     {
+
         GetAxisStyle_inputXZ =
         Vector2.SmoothDamp(GetAxisStyle_inputXZ, player._inputXZ,
         ref current_GetAxisStyle_inputXZ, _inputXZtoGetAxisStyeSmoothTime);
     }
 
     #region 애니메이터 파라미터 해쉬화
-    [HideInInspector] public int animIDisAiming;
-    [HideInInspector] public int animIDisArmed;
-    [HideInInspector] public int animIDWeaponType;
-    [HideInInspector] public int animIDSpeed;
-    [HideInInspector] public int animIDMotionSpeed;
-    [HideInInspector] public int animIDJump;
-    [HideInInspector] public int animIDFreeFall;
-    [HideInInspector] public int animIDLanding_Roll;
-    [HideInInspector] public int animIDLanding_Small;
-    [HideInInspector] public int animIDLanding_Hard;
-    [HideInInspector] public int animIDGrounded;
-    [HideInInspector] public int animIDLanding;
-    [HideInInspector] public int animIDParkouring;
-    [HideInInspector] public int animIDParkour_StepUp;
-    [HideInInspector] public int animIDParkour_JumpUp;
-    [HideInInspector] public int animIDParkour_CrouchToClimbUp;
-    [HideInInspector] public int animIDParkour_JumpOver_Roll;
-    [HideInInspector] public int animIDParkour_StandJumpingDown;
-    [HideInInspector] public int animIDParkour_HangingIdle;
-    [HideInInspector] public int animIDParkour_IdleToHang;
-    [HideInInspector] public int animIDParkour_JumpFromHangingWall;
-    [HideInInspector] public int animIDParkour_BracedHangHopUp;
-    [HideInInspector] public int animIDParkour_BracedHangHopDown;
-    [HideInInspector] public int animIDParkour_BracedHangHopRight;
-    [HideInInspector] public int animIDParkour_BracedHangHopLeft;
-    [HideInInspector] public int animIDParkour_BracedHangShimmyRight;
-    [HideInInspector] public int animIDParkour_BracedHangShimmyLeft;
-    [HideInInspector] public int animIDParkour_BracedHangToCrouch;
+    public int animIDisAiming;
+    public int animIDisArmed;
+    public int animIDWeaponType;
+    public int animIDSpeed;
+    public int animIDMotionSpeed;
+    public int animIDJump;
+    public int animIDFreeFall;
+    public int animIDLanding_Roll;
+    public int animIDLanding_Small;
+    public int animIDLanding_Hard;
+    public int animIDGrounded;
+    public int animIDLanding;
+    public int animIDParkouring;
+    public int animIDParkour_StepUp;
+    public int animIDParkour_JumpUp;
+    public int animIDParkour_CrouchToClimbUp;
+    public int animIDParkour_JumpOver_Roll;
+    public int animIDParkour_StandJumpingDown;
+    public int animIDParkour_HangingIdle;
+    public int animIDParkour_IdleToHang;
+    public int animIDParkour_JumpFromHangingWall;
+    public int animIDParkour_BracedHangHopUp;
+    public int animIDParkour_BracedHangHopDown;
+    public int animIDParkour_BracedHangHopRight;
+    public int animIDParkour_BracedHangHopLeft;
+    public int animIDParkour_BracedHangShimmyRight;
+    public int animIDParkour_BracedHangShimmyLeft;
+    public int animIDParkour_BracedHangToCrouch;
 
-    [HideInInspector] public int animIDisIdle;
-    [HideInInspector] public int animIDisMove;
-    [HideInInspector] public int animIDisPlayerFound;
-    [HideInInspector] public int animIDisGrounded;
-    [HideInInspector] public int animIDisAttack;
-    [HideInInspector] public int animIDisDead;
+    public int animIDisIdle;
+    public int animIDisMove;
+    public int animIDisPlayerFound;
+    public int animIDisGrounded;
+    public int animIDisAttack;
+    public int animIDisDead;
+
+    //[HideInInspector] public int animIDisAiming;
+    //[HideInInspector] public int animIDisArmed;
+    //[HideInInspector] public int animIDWeaponType;
+    //[HideInInspector] public int animIDSpeed;
+    //[HideInInspector] public int animIDMotionSpeed;
+    //[HideInInspector] public int animIDJump;
+    //[HideInInspector] public int animIDFreeFall;
+    //[HideInInspector] public int animIDLanding_Roll;
+    //[HideInInspector] public int animIDLanding_Small;
+    //[HideInInspector] public int animIDLanding_Hard;
+    //[HideInInspector] public int animIDGrounded;
+    //[HideInInspector] public int animIDLanding;
+    //[HideInInspector] public int animIDParkouring;
+    //[HideInInspector] public int animIDParkour_StepUp;
+    //[HideInInspector] public int animIDParkour_JumpUp;
+    //[HideInInspector] public int animIDParkour_CrouchToClimbUp;
+    //[HideInInspector] public int animIDParkour_JumpOver_Roll;
+    //[HideInInspector] public int animIDParkour_StandJumpingDown;
+    //[HideInInspector] public int animIDParkour_HangingIdle;
+    //[HideInInspector] public int animIDParkour_IdleToHang;
+    //[HideInInspector] public int animIDParkour_JumpFromHangingWall;
+    //[HideInInspector] public int animIDParkour_BracedHangHopUp;
+    //[HideInInspector] public int animIDParkour_BracedHangHopDown;
+    //[HideInInspector] public int animIDParkour_BracedHangHopRight;
+    //[HideInInspector] public int animIDParkour_BracedHangHopLeft;
+    //[HideInInspector] public int animIDParkour_BracedHangShimmyRight;
+    //[HideInInspector] public int animIDParkour_BracedHangShimmyLeft;
+    //[HideInInspector] public int animIDParkour_BracedHangToCrouch;
+
+    //[HideInInspector] public int animIDisIdle;
+    //[HideInInspector] public int animIDisMove;
+    //[HideInInspector] public int animIDisPlayerFound;
+    //[HideInInspector] public int animIDisGrounded;
+    //[HideInInspector] public int animIDisAttack;
+    //[HideInInspector] public int animIDisDead;
 
 
     void animParameterToHash()

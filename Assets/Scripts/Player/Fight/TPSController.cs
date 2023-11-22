@@ -35,6 +35,10 @@ public class TPSController : MonoBehaviour
         player = GetComponent<Player>();
         activeWepon = GetComponent<ActiveWepon>();
         //기본 안보이는 상태
+
+        if (GameObject.Find("LaserPoint") == null)
+            LaserPoint = Instantiate(LaserPoint);
+
         LaserPoint.SetActive(false);
     }
 

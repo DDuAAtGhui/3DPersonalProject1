@@ -89,7 +89,6 @@ public class PlayerStates
 
         hitTimer += Time.deltaTime;
 
-        Debug.Log(player.isSlow);
         if (hitTimer < 0.2f)
             player.isSlow = true;
 

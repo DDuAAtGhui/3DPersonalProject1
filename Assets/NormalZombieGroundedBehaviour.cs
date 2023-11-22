@@ -23,7 +23,6 @@ public class NormalZombieGroundedBehaviour : StateMachineBehaviour
             fov.isTargetFound(gameManager.player.gameObject));
 
         navMeshAgent.speed = fov.isTargetFound(gameManager.player.gameObject) ? animator.GetComponent<NormalZombie>().chaseSpeed : 2f;
-
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine

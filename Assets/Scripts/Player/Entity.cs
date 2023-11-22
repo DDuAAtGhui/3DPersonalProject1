@@ -57,12 +57,17 @@ public class Entity : MonoBehaviour
 
 
     #endregion
+    private void Awake()
+    {
+    }
     public virtual void Start()
     {
+
     }
 
     public virtual void Update()
     {
+
         try
         {
 

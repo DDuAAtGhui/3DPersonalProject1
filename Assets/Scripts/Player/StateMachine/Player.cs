@@ -204,6 +204,9 @@ public class Player : Entity
         playerInput.CharacterControls.KeyboardNum3.started += onKeyboardNum3Action;
         playerInput.CharacterControls.KeyboardNum3.canceled += onKeyboardNum3Action;
         #endregion
+
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
     }
 
 
