@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public float hp = 100f;
     public float chaseSpeed = 10f;
     public float damage = 10f;
+    public bool isWandering;
     GameManager gameManager;
     Animator anim;
     public FieldOfView fov;

@@ -8,19 +8,21 @@ public class NormalZombieGroundedBehaviour : StateMachineBehaviour
     GameManager gameManager;
     FieldOfView fov;
     NavMeshAgent navMeshAgent;
+    Player player;
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         fov = animator.GetComponentInChildren<FieldOfView>();
         gameManager = GameManager.instance;
         navMeshAgent = animator.GetComponent<NavMeshAgent>();
+        player = gameManager.player;
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool(gameManager.animIDisPlayerFound,
-            fov.isTargetFound(gameManager.player.gameObject));
+            fov.isTargetFound(player.gameObject));
 
         navMeshAgent.speed = fov.isTargetFound(gameManager.player.gameObject) ? animator.GetComponent<NormalZombie>().chaseSpeed : 2f;
     }

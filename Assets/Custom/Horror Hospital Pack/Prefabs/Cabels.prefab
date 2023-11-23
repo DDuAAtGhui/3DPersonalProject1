@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 450356}
   - component: {fileID: 3308130}
   - component: {fileID: 2335516}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Cabels
   m_TagString: Untagged
   m_Icon: {fileID: 0}

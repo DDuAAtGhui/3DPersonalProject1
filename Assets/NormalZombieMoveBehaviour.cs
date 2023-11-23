@@ -9,6 +9,7 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
     float startViewAngle;
     float startViewRadius;
     GameManager gameManager;
+    Player player;
     FieldOfView fov;
     NavMeshAgent navMeshAgent;
     Rigidbody rb;
@@ -16,6 +17,7 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         gameManager = GameManager.instance;
+        player = gameManager.player;
         fov = animator.GetComponentInChildren<FieldOfView>();
         navMeshAgent = animator.GetComponent<NavMeshAgent>();
         rb = animator.GetComponent<Rigidbody>();
@@ -29,18 +31,18 @@ public class NormalZombieMoveBehaviour : StateMachineBehaviour
         roamingTimer += Time.deltaTime;
 
         if (roamingTimer >= Random.Range(7f, 15f) &&
-            !fov.isTargetFound(gameManager.player.gameObject))
+            !fov.isTargetFound(player.gameObject) && animator.GetComponent<Enemy>().isWandering)
         {
             roamingTimer = 0f;
             animator.SetBool(gameManager.animIDisMove, false);
         }
 
-        if (fov.isTargetFound(gameManager.player.gameObject))
+        if (fov.isTargetFound(player.gameObject))
         {
             roamingTimer = 0f;
 
             if (navMeshAgent.enabled)
-                navMeshAgent.SetDestination(gameManager.player.transform.position);
+                navMeshAgent.SetDestination(player.transform.position);
 
             //animator.transform.rotation =
             //    Quaternion.LookRotation(gameManager.player.transform.position);

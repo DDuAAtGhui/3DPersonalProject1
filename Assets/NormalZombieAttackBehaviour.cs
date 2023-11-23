@@ -5,10 +5,12 @@ using UnityEngine;
 public class NormalZombieAttackBehaviour : StateMachineBehaviour
 {
     GameManager gameManager;
+    Player player;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         gameManager = GameManager.instance;
+        player = gameManager.player;
         animator.SetFloat("attackMotionPar", Mathf.Clamp(Random.Range(0f, 1f), 0.15f, 1f));
 
     }
@@ -16,7 +18,7 @@ public class NormalZombieAttackBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (Vector3.Distance(gameManager.player.transform.position,
+        if (Vector3.Distance(player.transform.position,
             animator.transform.position) > 1f)
         {
             animator.SetBool(gameManager.animIDisAttack, false);

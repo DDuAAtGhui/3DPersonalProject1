@@ -196,9 +196,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.90592486, b: 0, a: 1}
-  m_Intensity: 0.1
-  m_Range: 1
+  m_Color: {r: 0.9528302, g: 0.93540215, b: 0.7676575, a: 1}
+  m_Intensity: 0.6
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -236,7 +236,7 @@ Light:
     serializedVersion: 2
     m_Bits: 32506103
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -312,7 +312,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.05
+  m_Time: 0.04
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -331,7 +331,7 @@ TrailRenderer:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 0.29508197
+        value: 0.13069904
         inSlope: 0
         outSlope: 0
         tangentMode: 0

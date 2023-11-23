@@ -64,6 +64,10 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (player == null)
+            player =
+            GameObject.FindWithTag("Player").GetComponent<Player>();
+
         CursorContorl();
         animParameterToHash();
         CalculateDigitalInputToAnalog();

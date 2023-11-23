@@ -9,11 +9,13 @@ public class NormalZombieIdleBehaviour : StateMachineBehaviour
     float idleMotionChangeTimer = 0f;
     float transitionToMoveTimer = 0f;
     GameManager gameManager;
+    Player player;
     NavMeshAgent navMeshAgent;
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         gameManager = GameManager.instance;
+        player = gameManager.player;
         navMeshAgent = animator.GetComponent<NavMeshAgent>();
         navMeshAgent.SetDestination(navMeshAgent.transform.position);
     }
@@ -41,7 +43,7 @@ public class NormalZombieIdleBehaviour : StateMachineBehaviour
                     new Vector3(R, R, R));
         }
 
-        if (animator.GetComponentInChildren<FieldOfView>().isTargetFound(gameManager.player.gameObject))
+        if (animator.GetComponentInChildren<FieldOfView>().isTargetFound(player.gameObject))
             animator.SetBool(gameManager.animIDisMove, true);
     }
 

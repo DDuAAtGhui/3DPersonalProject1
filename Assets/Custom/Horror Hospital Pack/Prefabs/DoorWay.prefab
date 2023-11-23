@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 459742}
   - component: {fileID: 3348210}
   - component: {fileID: 2399928}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: DoorWay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
