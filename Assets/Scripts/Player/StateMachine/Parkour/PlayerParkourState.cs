@@ -97,16 +97,16 @@ public class PlayerParkourState : PlayerStates
 
 
         bodypartXpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRayX_Space, player.transform.forward,
-            out RaycastHit bodypartXpositiveHit, 3f);
+            out RaycastHit bodypartXpositiveHit, 3f, player.whatIsNotVoid);
 
         bodypartXnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRayX_Space, player.transform.forward,
-            out RaycastHit bodypartXnegativeHit, 3f);
+            out RaycastHit bodypartXnegativeHit, 3f, player.whatIsNotVoid);
 
         bodypartYpositiveHitFound = Physics.Raycast(matchTargetPosition + player.bodyPartRayY_Space, player.transform.forward,
-            out RaycastHit bodypartYpositiveHit, 3f);
+            out RaycastHit bodypartYpositiveHit, 3f, player.whatIsNotVoid);
 
         bodypartYnegativeHitFound = Physics.Raycast(matchTargetPosition - player.bodyPartRayY_Space, player.transform.forward,
-            out RaycastHit bodypartYnegativeHit, 3f);
+            out RaycastHit bodypartYnegativeHit, 3f, player.whatIsNotVoid);
 
 
     }

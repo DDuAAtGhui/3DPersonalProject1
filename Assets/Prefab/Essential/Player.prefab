@@ -219,6 +219,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rig: {fileID: 0}
   AimFeature: 1
+  aimSpine1: {fileID: 0}
+  aimSpine2: {fileID: 0}
 --- !u!1 &1743212822346217497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,9 +1622,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 11534336
   totalFallingTime: 0
+  whatIsNotVoid:
+    serializedVersion: 2
+    m_Bits: 28311568
   Obstacle:
     serializedVersion: 2
-    m_Bits: 11534336
+    m_Bits: 8388608
   ledgeRayLength: 100
   ledgeCheckOriginOffset: 0.34
   ledgeCheckPlayerLRFootOffset: 0.34
@@ -1640,8 +1645,8 @@ MonoBehaviour:
     m_Bits: 16777216
   isHangable: 0
   isHanging: 0
-  bodyPartRayX_Space: {x: 0.25, y: 0, z: 0}
-  bodyPartRayY_Space: {x: 0, y: 0.3, z: 0}
+  bodyPartRayX_Space: {x: 0.25, y: 0, z: -0.5}
+  bodyPartRayY_Space: {x: 0, y: 0.3, z: -0.5}
   climbPoint: {fileID: 0}
   HangablePositionSnapshot: {x: 0, y: 0, z: 0}
   isSlow: 0
@@ -2061,6 +2066,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47b820d2dd69997479acb2d6f33ef561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightCheckSphereRadius: 0
+  lights: []
 --- !u!1 &5797843650038998213
 GameObject:
   m_ObjectHideFlags: 0
@@ -2832,6 +2839,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rig: {fileID: 0}
   AimFeature: 1
+  aimSpine1: {fileID: 8461528601347633074}
+  aimSpine2: {fileID: 7842578598925955837}
 --- !u!1 &7713796836473099330
 GameObject:
   m_ObjectHideFlags: 0

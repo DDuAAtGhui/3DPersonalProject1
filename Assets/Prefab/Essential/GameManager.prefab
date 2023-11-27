@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2960495610326045554
 MonoBehaviour:
@@ -44,6 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 836e4df2123a3994e96165b78f33d2c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StandardTargetMatchingObject_prefab: {fileID: 417669300081207530, guid: 87458c3cc8400bb418b0a165733b8957,
+    type: 3}
+  CustomTargetMatchingObject_prefab: {fileID: 417669300081207530, guid: 7a5fe6008a4df3d4fa8c0fe23283f357,
+    type: 3}
+  HangableNetworkSphereObject_prefab: {fileID: 417669300081207530, guid: d8dd414658826024683468690daf3b51,
+    type: 3}
   StandardTargetMatchingObject: {fileID: 417669300081207530, guid: 87458c3cc8400bb418b0a165733b8957,
     type: 3}
   CustomTargetMatchingObject: {fileID: 417669300081207530, guid: 7a5fe6008a4df3d4fa8c0fe23283f357,
@@ -112,7 +118,7 @@ MonoBehaviour:
   Log_WhatisRayHitObstacle: 0
   Log_ParkourPossibleState: 0
   Log_ParkourActionSuccessInfo: 0
-  Log_HangingInfo: 0
+  Log_HangingInfo: 1
   Log_isAnimEnd: 0
-  Visible_MatchPosition: 0
+  Visible_MatchPosition: 1
   Visible_LedgeRay: 1

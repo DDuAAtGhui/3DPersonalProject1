@@ -747,7 +747,6 @@ GameObject:
   - component: {fileID: 1835781240761465980}
   - component: {fileID: 8582324087534371423}
   - component: {fileID: 7118227322313117057}
-  - component: {fileID: 3353142850363742005}
   m_Layer: 0
   m_Name: Shimmy
   m_TagString: Untagged
@@ -874,16 +873,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3353142850363742005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7676374935403946314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c87045a37777ea042b9c69c17e18abbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  neighbours: []

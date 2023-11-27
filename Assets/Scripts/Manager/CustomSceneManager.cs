@@ -32,6 +32,8 @@ public class CustomSceneManager : MonoBehaviour
             {
                 aa.SetActive(false);
             }
+
+            GameManager.instance.LoadParkourPositionObejcts();
         }
     }
 

@@ -26,6 +26,7 @@ public class Entity : MonoBehaviour
     [SerializeField] public float CanPlayFallingAnimationDistance = 0f;
     [SerializeField] public LayerMask CanPlayFallingAimationLayer;
     [HideInInspector] public float totalFallingTime = 0f;
+    [SerializeField] public LayerMask whatIsNotVoid;
 
     [SerializeField] public LayerMask Obstacle;
     [Tooltip("플레이어가 서있는 모서리 체크")]
@@ -90,6 +91,8 @@ public class Entity : MonoBehaviour
                 else
                     gameManager.CustomTargetMatchingObject.SetActive(false);
             }
+
+            gameManager.CustomTargetMatchingObject.transform.position = hangableData.HangableHit.point;
         }
 
         catch (Exception e)

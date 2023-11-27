@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ public class PlayerHangingState : PlayerParkourState
     public override void Update()
     {
         base.Update();
+        LedgeToLedgeTopHit = LedgeToLedgeCheck();
 
 
         //구 크기 커가지고 키 입력할때만 보이게했음
@@ -39,10 +41,6 @@ public class PlayerHangingState : PlayerParkourState
         if (isAnimEnd)
             stateMachine.ChangeState(player.hangingIdleWallState);
 
-
-        RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
-
-        this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
 
 
         if (player.climbPoint != null && gameManager.Log_HangingInfo)
@@ -62,25 +60,67 @@ public class PlayerHangingState : PlayerParkourState
     {
         base.OnDrawGizmos();
 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(LedgeToLedgeFrontHit.point, 0.05f);
+
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(LedgeToLedgeTopHit.point, 0.05f);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(LedgeToLedgeFrontHit.point, 0.05f);
     }
 
     protected RaycastHit LedgeToLedgeCheck()
     {
-        Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
-        player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
-        out RaycastHit LedgeToLedgeFrontHit, player.hangableLayer);
+        //bool frontHit = Physics.Raycast(player.climbPoint.transform.position +
+        //    player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+        //player.climbPoint.transform.forward * -gameManager.LedgeToLedgeFrontHitRayLength_forward,
+        //out RaycastHit frontHitResult, player.hangableLayer);
 
-        this.LedgeToLedgeFrontHit = LedgeToLedgeFrontHit;
+        bool frontHit = Physics.Raycast(player.climbPoint.transform.position +
+            player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+            -player.climbPoint.transform.forward, out RaycastHit frontHitResult,
+            gameManager.LedgeToLedgeFrontHitRayLength_forward, player.hangableLayer);
 
-        Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
-        Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
-        out RaycastHit LedgeToLedgeTopHit, player.hangableLayer);
+        LedgeToLedgeFrontHit = frontHitResult;
 
-        return LedgeToLedgeTopHit;
+        Debug.DrawRay(player.climbPoint.transform.position + player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+            -player.climbPoint.transform.forward * gameManager.LedgeToLedgeFrontHitRayLength_forward,
+            frontHit ? Color.green : Color.red);
+
+        ////테스트
+        //Physics.Raycast(player.climbPoint.transform.position + player.climbPoint.transform.forward * 10f,
+        //    -player.climbPoint.transform.forward, out RaycastHit test1, 10f, player.hangableLayer);
+        //Debug.DrawRay(player.climbPoint.transform.position + player.climbPoint.transform.forward * 10f, player.climbPoint.transform.forward * -10f, Color.yellow);
+
+        //bool isTest2 = Physics.Raycast(test1.point + test1.transform.up * 2f - test1.transform.forward * 0.15f, -test1.transform.up, out RaycastHit test2, 2f, player.hangableLayer);
+        //Debug.DrawRay(test1.point + test1.transform.up * 2f - test1.transform.forward * 0.15f, -test1.transform.up * 2f, isTest2 ? Color.yellow : Color.blue);
+
+        //Debug.Log("test2 : " + test2.collider.name + $" {test2.point}");
+
+        //bool topHit = Physics.Raycast(LedgeToLedgeFrontHit.point + Vector3.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
+        //Vector3.down * gameManager.LedgeToLedgeFrontHitRayLength_up,
+        //out RaycastHit topHitResult, player.hangableLayer);    
+
+        bool topHit = Physics.Raycast(LedgeToLedgeFrontHit.point - LedgeToLedgeFrontHit.transform.forward * 0.15f
+            + LedgeToLedgeFrontHit.transform.up * gameManager.LedgeToLedgeFrontHitRayLength_up
+            , -LedgeToLedgeFrontHit.transform.up, out RaycastHit topHitResult, gameManager.LedgeToLedgeFrontHitRayLength_up, player.hangableLayer);
+
+        //Debug.Log("Layer Mask Value: " + player.hangableLayer.value);
+
+        try
+        {
+            Debug.Log("frontHitResult 오브젝트 이름 : " + frontHitResult.collider.gameObject.name);
+            Debug.Log("topHitResult 오브젝트 이름 : " + topHitResult.collider.gameObject.name);
+
+            Debug.DrawRay(topHitResult.point, topHitResult.transform.forward * 100f, Color.yellow);
+            Debug.DrawRay(LedgeToLedgeFrontHit.point - LedgeToLedgeFrontHit.transform.forward * 0.15f 
+                + LedgeToLedgeFrontHit.transform.up * gameManager.LedgeToLedgeFrontHitRayLength_up,
+                -LedgeToLedgeFrontHit.transform.up * gameManager.LedgeToLedgeFrontHitRayLength_up, topHit ? Color.green : Color.red);
+        }
+
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+        return topHitResult;
     }
 }

@@ -31,74 +31,77 @@ public class PlayerHangingIdleWallState : PlayerHangingState
         #region 모서리액션
         //타겟매칭 이뤄지는 신체부위의 오브젝트
         if (bodyPartHits.Count() > 0)
-            player.climbPoint = bodyPartHits[0].transform.GetComponent<ClimbPoint>();
-
-        //입력 방향따라 결정
-        neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
-
-        if (neighbour != null)
         {
-            if (neighbour.connectionType == ConnectionType.Jump)
+            foreach (var item in bodyPartHits)
+                if (item.transform.GetComponent<ClimbPoint>())
+                    player.climbPoint = item.transform.GetComponent<ClimbPoint>();
+
+            //입력 방향따라 결정
+            neighbour = player.climbPoint?.GetNeighbour(new Vector2(Mathf.Round(player._inputXZ.x), Mathf.Round(player._inputXZ.y)));
+
+            if (neighbour != null)
             {
-                player.climbPoint = neighbour.climbpoint;
-
-
-                ////뛸 예정지의 레이캐스트
-                //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
-
-                //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
-
-                //연타하면 고장나는 버그있어서 막아둠
-                if (player._inputJump && StateTimer <= 0f)
+                if (neighbour.connectionType == ConnectionType.Jump)
                 {
-                    if (neighbour.direction.y == 1)
-                        player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopUpState);
+                    player.climbPoint = neighbour.climbpoint;
 
-                    if (neighbour.direction.y == -1)
-                        player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopDownState);
 
-                    if (neighbour.direction.x == 1)
+                    ////뛸 예정지의 레이캐스트
+                    //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
+
+                    //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
+
+                    //연타하면 고장나는 버그있어서 막아둠
+                    if (player._inputJump && StateTimer <= 0f)
                     {
-                        matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.LeftHand).position;
-                        player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopRightState);
-                    }
-                    if (neighbour.direction.x == -1)
-                    {
-                        matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.RightHand).position;
-                        player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangHopLeftState);
+                        if (neighbour.direction.y == 1)
+                            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangHopUpState);
+
+                        if (neighbour.direction.y == -1)
+                            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangHopDownState);
+
+                        if (neighbour.direction.x == 1)
+                        {
+                            matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangHopRightState);
+                        }
+                        if (neighbour.direction.x == -1)
+                        {
+                            matchTargetPosition = anim.GetBoneTransform(HumanBodyBones.RightHand).position;
+                            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangHopLeftState);
+                        }
                     }
                 }
+
+                else if (neighbour.connectionType == ConnectionType.Move)
+                {
+                    player.climbPoint = neighbour.climbpoint;
+
+                    ////뛸 예정지의 레이캐스트
+                    //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
+
+                    //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
+
+                    Debug.Log("current LedgeToLedgeTopHit pos : " + LedgeToLedgeTopHit.point);
+
+                    if (neighbour.direction.x == 1 && bodypartXpositiveHitFound)
+                        player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangShimmyRightState);
+
+                    if (neighbour.direction.x == -1 && bodypartXnegativeHitFound)
+                        player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangShimmyLeftState);
+                }
             }
+            #endregion
 
-            else if (neighbour.connectionType == ConnectionType.Move)
-            {
-                player.climbPoint = neighbour.climbpoint;
 
-                ////뛸 예정지의 레이캐스트
-                //RaycastHit LedgeToLedgeTopHit = LedgeToLedgeCheck();
+            //가만히 붙어서 점프누르면 밖으로 튕겨나가기
+            if (player._inputJump && player._inputXZ == Vector2.zero)
+                stateMachine.ChangeState(player.jumpFromHangingWallState);
 
-                //this.LedgeToLedgeTopHit = LedgeToLedgeTopHit;
-
-                Debug.Log("current LedgeToLedgeTopHit pos : " + this.LedgeToLedgeTopHit.point);
-
-                if (neighbour.direction.x == 1 && bodypartXpositiveHitFound)
-                    player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangShimmyRightState);
-
-                if (neighbour.direction.x == -1 && bodypartXnegativeHitFound)
-                    player.PerformParkourState(this.LedgeToLedgeTopHit.point, player.bracedHangShimmyLeftState);
-            }
+            if (!bodypartYpositiveHitFound && player._inputXZ.y == 1 && player._inputJump)
+                player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangToCrouchState);
         }
-        #endregion
-
-
-        //가만히 붙어서 점프누르면 밖으로 튕겨나가기
-        if (player._inputJump && player._inputXZ == Vector2.zero)
-            stateMachine.ChangeState(player.jumpFromHangingWallState);
-
-        if (!bodypartYpositiveHitFound && player._inputXZ.y == 1 && player._inputJump)
-            player.PerformParkourState(LedgeToLedgeTopHit.point, player.bracedHangToCrouchState);
     }
-
     public override void Exit()
     {
         base.Exit();

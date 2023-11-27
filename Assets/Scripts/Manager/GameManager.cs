@@ -9,12 +9,16 @@ public class GameManager : MonoBehaviour
 
     //heightHit 위치로 생성되고 파쿠르 시 오프셋 값 만큼 로컬 기준으로 이동할 프리팹(오프셋 지점)
     //파쿠르 동작동안은 남아있어야 하니까 파쿠르 끝날 때 active를 false로 돌릴것
-    public GameObject StandardTargetMatchingObject;
-    public GameObject CustomTargetMatchingObject;
-    public GameObject HangableNetworkSphereObject;
+    [SerializeField] GameObject StandardTargetMatchingObject_prefab;
+    [SerializeField] GameObject CustomTargetMatchingObject_prefab;
+    [SerializeField] GameObject HangableNetworkSphereObject_prefab;
+
+    [HideInInspector] public GameObject StandardTargetMatchingObject;
+    [HideInInspector] public GameObject CustomTargetMatchingObject;
+    [HideInInspector] public GameObject HangableNetworkSphereObject;
 
     //타겟매칭 설정할 오브젝트 교환용으로 바꾸기전에 예전 오브젝트 보관용
-    public GameObject StoredObjectForSwitching;
+    [HideInInspector] public GameObject StoredObjectForSwitching;
 
     #region 관리 멤버
     public Player player;
@@ -44,11 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LoadResources(StandardTargetMatchingObject, "StandardTargetMatchingPosition");
-        LoadResources(CustomTargetMatchingObject, "ClimbableLedgeTargetMatchingPosition");
-        LoadResources(HangableNetworkSphereObject, "HangableObject");
-        StoredObjectForSwitching = CustomTargetMatchingObject;
-
+        LoadParkourPositionObejcts();
     }
 
     void LoadResources(GameObject loadObject, string path)
@@ -60,6 +60,17 @@ public class GameManager : MonoBehaviour
 
         loadObject = Instantiate(loadObject, transform.position, Quaternion.identity);
         loadObject.SetActive(false);
+    }
+    public void LoadParkourPositionObejcts()
+    {
+        StandardTargetMatchingObject = Instantiate(StandardTargetMatchingObject_prefab, transform.position, Quaternion.identity);
+        CustomTargetMatchingObject = Instantiate(CustomTargetMatchingObject_prefab, transform.position, Quaternion.identity);
+        HangableNetworkSphereObject = Instantiate(HangableNetworkSphereObject_prefab, transform.position, Quaternion.identity);
+        StoredObjectForSwitching = CustomTargetMatchingObject;
+
+        StandardTargetMatchingObject.SetActive(false);
+        CustomTargetMatchingObject.SetActive(false);
+        HangableNetworkSphereObject.SetActive(false);
     }
 
     private void Update()

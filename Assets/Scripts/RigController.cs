@@ -31,4 +31,5 @@ public class RigController : MonoBehaviour
                 targetWeight = 0f;
         }
     }
+
 }
