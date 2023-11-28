@@ -541,6 +541,7 @@ public class Player : Entity
     #endregion
 
     #region 인풋액션 - 액션들
+
     void onMoveAction(InputAction.CallbackContext context)
         => _inputXZ = context.ReadValue<Vector2>();
 
@@ -554,6 +555,7 @@ public class Player : Entity
     }
     void onJumpAction(InputAction.CallbackContext context)
     {
+
         _inputJump = context.ReadValueAsButton();
     }
     void onCurosrVisible(InputAction.CallbackContext context)
@@ -563,17 +565,20 @@ public class Player : Entity
 
     void onLookAction(InputAction.CallbackContext context)
     {
-        Look = context.ReadValue<Vector2>();
+        if (!gameManager.isClear)
+            Look = context.ReadValue<Vector2>();
     }
 
     void onAimAction(InputAction.CallbackContext context)
     {
-        _InputAim = context.ReadValueAsButton();
+        if (!gameManager.isClear)
+            _InputAim = context.ReadValueAsButton();
     }
 
     void onFireAction(InputAction.CallbackContext context)
     {
-        _inputFire = context.ReadValueAsButton();
+        if (!gameManager.isClear)
+            _inputFire = context.ReadValueAsButton();
     }
 
     private void onReloadAction(InputAction.CallbackContext context)

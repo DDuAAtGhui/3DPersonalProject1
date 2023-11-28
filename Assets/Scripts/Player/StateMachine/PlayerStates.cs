@@ -66,6 +66,9 @@ public class PlayerStates
 
     public virtual void Update()
     {
+        if (gameManager.isClear)
+            return;
+
         if (gameManager.Log_StateUpdate)
             Debug.Log("Update : " + this.GetType().Name);
 
@@ -103,6 +106,9 @@ public class PlayerStates
 
     public virtual void FixedUpdate()
     {
+        if (gameManager.isClear)
+            return;
+
         if (gameManager.Log_StateFixedUpdate)
             Debug.Log("FixedUpdate : " + this.GetType().Name);
 
@@ -113,6 +119,9 @@ public class PlayerStates
 
     public virtual void LateUpdate()
     {
+        if (gameManager.isClear)
+            return;
+
         if (gameManager.Log_StateLateUpdate)
             Debug.Log("LateUpdate : " + this.GetType().Name);
 

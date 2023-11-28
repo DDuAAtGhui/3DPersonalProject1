@@ -7,11 +7,25 @@ using UnityEngine.SceneManagement;
 public class CustomSceneManager : MonoBehaviour
 {
     [SerializeField] GameObject migratePackage;
+
+    public static CustomSceneManager instance;
+
     private void Awake()
     {
+        if (instance != null)
+            Destroy(instance.gameObject);
+
+
+        else
+            instance = this;
+
         SceneManager.sceneLoaded += onSceneLoaded;
         SceneManager.sceneUnloaded += onSceneUnLoaded;
         DontDestroyOnLoad(gameObject);
+    }
+    private void Start()
+    {
+
     }
     public void onSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
@@ -34,6 +48,11 @@ public class CustomSceneManager : MonoBehaviour
             }
 
             GameManager.instance.LoadParkourPositionObejcts();
+        }
+
+        if (arg0.name == "Hospital")
+        {
+            AudioManager.instance.PlayBGM("Hospital");
         }
     }
 

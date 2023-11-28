@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7493548030992599521}
   - component: {fileID: 2687402706599257156}
   - component: {fileID: 1645048806541380124}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Equip Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

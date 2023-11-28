@@ -13,6 +13,8 @@ public class NormalZombieAttackBehaviour : StateMachineBehaviour
         player = gameManager.player;
         animator.SetFloat("attackMotionPar", Mathf.Clamp(Random.Range(0f, 1f), 0.15f, 1f));
 
+        
+        AudioManager.instance.PlaySFX($"ZombieAttack{Random.Range(0, 4)}");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

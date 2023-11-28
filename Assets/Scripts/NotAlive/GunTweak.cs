@@ -35,6 +35,9 @@ public class GunTweak : MonoBehaviour
     public Transform clipSlot; //인스펙터에서 넣기
     public GameObject MagClip; //인스펙터에서 넣기
     GameObject instance_mag;
+
+    [SerializeField] GameObject flashLight;
+
     private void Start()
     {
         //스크립터블 오브젝트는 씬 끝나도 데이터 저장되어있으므로
@@ -98,6 +101,9 @@ public class GunTweak : MonoBehaviour
 
         muzzleFireObject.transform.rotation =
     Quaternion.LookRotation(fireTransform.forward, Vector3.up);
+
+        if (isOwnerPlayer)
+            flashLight.SetActive(player.isAiming);
     }
 
     Vector3 aimDir;

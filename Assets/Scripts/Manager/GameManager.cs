@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,8 @@ public class GameManager : MonoBehaviour
     public Vector2 GetAxisStyle_inputXZ;
     [HideInInspector] public Vector2 current_GetAxisStyle_inputXZ;
     [SerializeField] public float _inputXZtoGetAxisStyeSmoothTime = 0.05f;
+
+    public bool isClear;
     #endregion
     private void Awake()
     {
@@ -76,13 +79,21 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (player == null)
-            player =
-            GameObject.FindWithTag("Player").GetComponent<Player>();
+            player = GameObject.FindWithTag("Player").GetComponent<Player>();
 
         CursorContorl();
         animParameterToHash();
         CalculateDigitalInputToAnalog();
+        GameClear();
+    }
 
+    private void GameClear()
+    {
+        if (isClear)
+        {
+            Time.timeScale = 0f;
+
+        }
     }
 
     void CursorContorl()

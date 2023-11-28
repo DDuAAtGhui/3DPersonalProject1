@@ -6011,14 +6011,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13525bba006ee642a9669dfd9a2d34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 7.44
-  viewAngle: 140
+  viewRadius: 5
+  viewAngle: 70
   targetMask:
     serializedVersion: 2
     m_Bits: 64
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 28311552
+    m_Bits: 28311553
   targetsInSight: []
 --- !u!1 &8548403218385511394
 GameObject:

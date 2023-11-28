@@ -219,8 +219,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rig: {fileID: 0}
   AimFeature: 1
-  aimSpine1: {fileID: 0}
-  aimSpine2: {fileID: 0}
 --- !u!1 &1743212822346217497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,7 +1614,7 @@ MonoBehaviour:
   GroundedCheckRadius: 0.34
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 11534336
+    m_Bits: 28311552
   CanPlayFallingAnimationDistance: 2.3
   CanPlayFallingAimationLayer:
     serializedVersion: 2
@@ -2839,8 +2837,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rig: {fileID: 0}
   AimFeature: 1
-  aimSpine1: {fileID: 8461528601347633074}
-  aimSpine2: {fileID: 7842578598925955837}
 --- !u!1 &7713796836473099330
 GameObject:
   m_ObjectHideFlags: 0
