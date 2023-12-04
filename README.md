@@ -1,4 +1,5 @@
 # Zombie Shooter
+![ezgif com-video-to-gif (4)](https://github.com/DDuAAtGhui/3DPersonalProject1/assets/135325796/68a6be15-fc7b-4184-b691-22edcd35eb77)
 
 ## 프로젝트 소개
 원신 스타일의 TPS 기본 움직임과 파쿠르를 구현해보고자 시작했습니다
