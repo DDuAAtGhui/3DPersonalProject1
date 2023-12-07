@@ -10,6 +10,9 @@
 - 개발언어 : C#
 - 플랫폼 : PC
 
+## 작업내용
+New Input System 활용, 프로빌더를 사용한 프로토타이핑 맵 만들기, 맵 배치, 플레이어의 모든 행동, 모든 이펙트, 포스트프로세싱, 적 시야 시스템, 적 기본적 AI 등
+
 ## 영상 및 기술서
 영상 : [https://youtu.be/S7EUdjjhM7Q](https://youtu.be/S01JNRozg6c)
 
